@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="Agro Tech">
+    <meta property="og:description" content="Helping farmers connect with buyers and track produce quality.">
+    <meta property="og:image" content="./assets/preview.jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgroPlug | Fresh Farm Connections</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,52 +25,65 @@
             }
         }
     </script>
+
+
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 antialiased">
+
+<body class="bg-black font-sans text-slate-800 antialiased">
 
     <!-- NAVIGATION_BAR -->
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md">
+    <nav class="sticky top-0 z-50 bg-transparent absolute" id="navbar">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <!-- NAV_LOGO -->
-            <a href="#" class="flex items-center">
-                <img src="images/Agroplug_logo.png" alt="AgroPlug Logo" class="h-10 md:h-24">
-                <span class="md:text-3xl font-black tracking-tight text-slate-900">Agro<span class="text-emerald-600">Plug</span></span>
+            <a href="#" class="flex items-center ">
+                <img src="images/Agroplug_logo.png" alt="AgroPlug Logo" class="h-10 md:h-22 ">
+                <span class="md:text-3xl font-black tracking-tight text-slate-900">Agro<span
+                        class="text-emerald-600">Plug</span></span>
             </a>
 
             <!-- NAV_LINKS -->
-            <div class="hidden space-x-8 md:flex font-medium text-slate-600">
-                <a href="#how-it-works" class="hover:text-emerald-600 transition">How it works</a>
-                <a href="#marketplace" class="hover:text-emerald-600 transition">Marketplace</a>
-                <a href="#faq" class="hover:text-emerald-600 transition">FAQ</a>
+            <div
+                class="hidden space-x-8 md:flex font-medium bg-white/10 backdrop-blur-xl rounded-full p-5 text-white   ">
+                <a href="#how-it-works" class="nav-link hover:text-emerald-4600 transition">How it works</a>
+                <a href="#marketplace" class="nav-link hover:text-emerald-4600 transition">Marketplace</a>
+                <a href="#faq" class="nav-link hover:text-emerald-4600 transition">FAQ</a>
             </div>
 
             <!-- GET_PLUGGED_BUTTON -->
-            <a href="" class="rounded-full bg-emerald-600 px-5 py-3 text-sm font-bold text-white hover:scale-[1.07] transition duration-700">Get Plugged 🔌</a>
+            <a href=""
+                class="rounded-full bg-emerald-600 px-5 py-3 text-sm font-bold text-white hover:scale-[1.07] transition duration-700">Get
+                Plugged 🔌</a>
 
         </div>
     </nav>
 
     <!-- HERO_TEXT -->
-    <header class="relative overflow-hidden px-6 py-16 md:py-28 text-center bg-[url('images/hero_bg.png')] bg-black/80 bg-blend-darken bg-center">
-        <div class="mx-auto max-w-3xl">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-800 mb-6">
+    <header
+        class="relative overflow-hidden px-6 py-16 md:py-28 text-center bg-[url('images/hero_bg.png')] bg-black/80 bg-blend-darken bg-center">
+        <div class="mx-auto max-w-3xl ">
+            <span
+                class="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-800 mb-6">
                 🚀 Direct from farm to plug. No middlemen.
             </span>
-            
-            <h1 class="text-4xl font-extrabold tracking-tight text-white/70 sm:text-6xl px-2">
-                Connecting Abia's Hardest Working Farmers to <span class="text-emerald-600">Local Buyers</span> instantly.
+
+            <h1 class="text-4xl z-10 font-extrabold tracking-tight text-white/70 sm:text-6xl px-2">
+                Connecting Abia's Hardest Working Farmers to <span class="text-emerald-600">Local Buyers</span>
+                instantly.
             </h1>
-            
+
             <p class="mt-6 text-lg leading-8 text-slate-500 px-4 max-w-2xl mx-auto">
-                Got excess produce? Sell it fast. Looking for cheap, bulk foodstuffs straight from the soil? Buy it fresh.
+                Got excess produce? Sell it fast. Looking for cheap, bulk foodstuffs straight from the soil? Buy it
+                fresh.
             </p>
 
             <!--  HERO_BUTTONS -->
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 px-6">
-                <a href="register.php?role=farmer" class="w-full sm:w-auto inline-flex justify-center items-center rounded-2xl bg-emerald-900 px-8 py-4 text-lg font-bold text-white hover:bg-emerald-700 transition hover:scale-[1.07] duration-700">
+                <a href="/frontend/SignUp.html"
+                    class="w-full sm:w-auto inline-flex justify-center items-center rounded-2xl bg-emerald-900 px-8 py-4 text-lg font-bold text-white hover:bg-emerald-700 transition hover:scale-[1.07] duration-700">
                     <i class="fa-solid fa-user"></i> I am a Farmer
                 </a>
-                <a href="marketplace.php" class="w-full sm:w-auto inline-flex justify-center items-center rounded-2xl bg-white/80 border-2 border-slate-400 px-8 py-4 text-lg font-bold text-slate-900 hover:border-emerald-900 hover:text-emerald-900 transition hover:scale-[1.07] duration-700">
+                <a href="marketplace.php"
+                    class="w-full sm:w-auto inline-flex justify-center items-center rounded-2xl bg-white/80 border-2 border-slate-400 px-8 py-4 text-lg font-bold text-slate-900 hover:border-emerald-900 hover:text-emerald-900 transition hover:scale-[1.07] duration-700">
                     <i class="fa-solid fa-cart-shopping"></i>I am a Buyer
                 </a>
             </div>
@@ -85,56 +102,115 @@
             <!-- CARDS -->
             <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- POST CARD -->
-                <div class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl shadow-lg shadow-gray-800">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl mb-6"><i class="fa-solid fa-camera"></i></div>
+                <div
+                    class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl shadow-lg shadow-gray-800">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl mb-6"><i
+                            class="fa-solid fa-camera"></i></div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Farmers Post Harvest</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">Snap a picture, set your price, and list your location. Takes less than 60 seconds.</p>
+                    <p class="text-slate-600 text-sm leading-relaxed">Snap a picture, set your price, and list your
+                        location. Takes less than 60 seconds.</p>
                 </div>
 
                 <!-- BROWSE CARD -->
-                <div class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl shadow-lg shadow-gray-800">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-2xl mb-6"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <div
+                    class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl shadow-lg shadow-gray-800">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-2xl mb-6"><i
+                            class="fa-solid fa-magnifying-glass"></i></div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Buyers Browse Locally</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">Filter by crop type or proximity. Discover crazy deals on bulk foods instantly.</p>
+                    <p class="text-slate-600 text-sm leading-relaxed">Filter by crop type or proximity. Discover crazy
+                        deals on bulk foods instantly.</p>
                 </div>
 
                 <!-- CLAIM CARD -->
-                <div class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl lg:col-span-1 sm:col-span-2 shadow-lg shadow-gray-800">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-2xl mb-6"><i class="fa-solid fa-message"></i></div>
+                <div
+                    class="relative flex flex-col items-center text-center p-6 bg-slate-50 rounded-2xl lg:col-span-1 sm:col-span-2 shadow-lg shadow-gray-800">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-2xl mb-6"><i
+                            class="fa-solid fa-message"></i></div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Claim on WhatsApp</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">Hit "Claim" to instantly message the farmer. Deal closed, no complex online payments needed.</p>
+                    <p class="text-slate-600 text-sm leading-relaxed">Hit "Claim" to instantly message the farmer. Deal
+                        closed, no complex online payments needed.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- MARKET_PLACE -->
-     <section id="marketplace" class="py-12 bg-slate-200 min-h-screen">
-    <div class="mx-auto max-w-7xl px-6">
-        
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
-            <div>
-                <h1 class="text-3xl font-black tracking-tight text-slate-900">The Fresh Drop</h1>
-                <p class="text-slate-500 text-sm">Snag local harvests before they are gone.</p>
-            </div>
-            
-            <div class="relative w-full md:w-80">
-                <input type="text" placeholder="Search crops or locations..." class="w-full rounded-2xl border border-slate-200 bg-white px-5 py-3 pr-10 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-sm transition">
-                <span class="absolute right-4 top-3.5 text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
-            </div>
-        </div>
+    <section class="py-12 bg-slate-200 min-h-screen">
+        <div class="mx-auto max-w-7xl px-6">
 
-        <!-- FILTERS -->
-        <div class="flex items-center gap-3 overflow-x-auto pb-4 mb-8 no-scrollbar">
-            <button class="bg-emerald-600 text-white font-bold px-5 py-2 rounded-full text-xs shadow-md shadow-emerald-600/10 whitespace-nowrap">⚡ All Drops</button>
-            <button class="bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🍅 Veggies</button>
-            <button class="bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🍠 Tubers & Grains</button>
-            <button class="bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🐓 Livestock</button>
-        </div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight text-slate-900">The Fresh Drop</h1>
+                    <p class="text-slate-500 text-sm">Snag local harvests before they are gone.</p>
+                </div>
 
-        <!-- PRODUCTS -->
-        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <!-- DEFAULT -->
+                <div class="relative w-full md:w-80">
+                    <input type="text" placeholder="Search crops or locations..."
+                        class="search w-full rounded-2xl border border-slate-200 bg-white px-5 py-3 pr-10 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-sm transition">
+                    <span class="absolute right-4 top-3.5 text-slate-400"><i
+                            class="fa-solid fa-magnifying-glass"></i></span>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="flex items-center gap-3 overflow-x-auto pb-4 mb-8 no-scrollbar">
+                <button data-id="all"
+                    class="btn bg-emerald-600 text-white font-bold px-5 py-2 rounded-full text-xs shadow-md shadow-emerald-600/10 whitespace-nowrap">⚡
+                    All Drops</button>
+                <button data-id="vegetables"
+                    class="btn bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🍅
+                    Veggies</button>
+                <button data-id="tubers"
+                    class="btn bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🍠
+                    Tubers & Grains</button>
+                <button data-id="livestock"
+                    class="btn bg-white hover:border-emerald-500 hover:text-emerald-600 border border-slate-200 text-slate-600 font-bold px-5 py-2 rounded-full text-sm transition whitespace-nowrap">🐓
+                    Livestock</button>
+            </div>
+
+            <!-- PRODUCTS -->
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 marketplace data-id=" all"">
+                <!-- DEFAULT
+            <div class="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCOuXVNcYasznU0DDjnQPp8W8MA1q_8xX-ppbiEKkIXg&s=10" alt="Tomatoes" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    
+                    <span class="absolute left-3 top-3 inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-2xs font-extrabold tracking-wider uppercase text-white shadow-sm">
+                        🔥 Fresh Drop
+                    </span>
+                    <span class="absolute right-3 top-3 inline-flex items-center rounded-full bg-slate-900/80 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white">
+                        4 Baskets left
+                    </span>
+                </div>
+
+                <div class="flex flex-1 flex-col p-6">
+                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Vegetables</span>
+                        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
+                            📍 Umudike (2.5km)
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-lg font-black text-slate-900 mb-1">
+                        Plump Organic Red Tomatoes
+                    </h3>
+                    
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-4">
+                        Harvested this morning. Super sweet, thick skin, perfect for restaurants or family storage.
+                    </p>
+
+                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="block text-2xs uppercase tracking-wider text-slate-400 font-bold">Price</span>
+                            <span class="text-xl font-black text-slate-900">₦12,500 <span class="text-xs font-medium text-slate-500">/ basket</span></span>
+                        </div>
+                        
+                        <a href="claim.php?listing_id=1" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-black text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/10 transition transform active:scale-95">
+                            Get Plugged 🔌
+                        </a>
+                    </div>
+                </div> -->
+                <!-- </div>
             <div class="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCOuXVNcYasznU0DDjnQPp8W8MA1q_8xX-ppbiEKkIXg&s=10" alt="Tomatoes" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -215,57 +291,20 @@
                     </div>
                 </div>
             </div>
-            <div class="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCOuXVNcYasznU0DDjnQPp8W8MA1q_8xX-ppbiEKkIXg&s=10" alt="Tomatoes" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    
-                    <span class="absolute left-3 top-3 inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-2xs font-extrabold tracking-wider uppercase text-white shadow-sm">
-                        🔥 Fresh Drop
-                    </span>
-                    <span class="absolute right-3 top-3 inline-flex items-center rounded-full bg-slate-900/80 backdrop-blur-sm px-3 py-1 text-xs font-bold text-white">
-                        4 Baskets left
-                    </span>
-                </div>
 
-                <div class="flex flex-1 flex-col p-6">
-                    <div class="flex items-center justify-between gap-2 mb-1.5">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Vegetables</span>
-                        <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-                            📍 Umudike (2.5km)
-                        </span>
-                    </div>
-                    
-                    <h3 class="text-lg font-black text-slate-900 mb-1">
-                        Plump Organic Red Tomatoes
-                    </h3>
-                    
-                    <p class="text-xs text-slate-500 line-clamp-2 mb-4">
-                        Harvested this morning. Super sweet, thick skin, perfect for restaurants or family storage.
-                    </p>
-
-                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-                        <div>
-                            <span class="block text-2xs uppercase tracking-wider text-slate-400 font-bold">Price</span>
-                            <span class="text-xl font-black text-slate-900">₦12,500 <span class="text-xs font-medium text-slate-500">/ basket</span></span>
-                        </div>
-                        
-                        <a href="claim.php?listing_id=1" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-xs font-black text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/10 transition transform active:scale-95">
-                            Get Plugged 🔌
-                        </a>
-                    </div>
-                </div>
+            </div> -->
             </div>
-
-            </div>
-    </div>
-</section>
+    </section>
 
     <!-- FREQUENTLY_ASKED_QUESTIONS -->
     <section id="faq" class="py-20 bg-slate-50 border-t border-slate-100">
         <div class="mx-auto max-w-4xl px-6">
             <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Got Questions?</span>
-                <h2 class="text-3xl font-bold tracking-tight text-slate-900 mt-3 sm:text-4xl">The AgroPlug Blueprint</h2>
+                <span
+                    class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Got
+                    Questions?</span>
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 mt-3 sm:text-4xl">The AgroPlug Blueprint
+                </h2>
                 <p class="mt-2 text-slate-600">Why we do things differently around here.</p>
             </div>
 
@@ -275,7 +314,9 @@
                         ✨ <span>How is AgroPlug different from big agro platforms?</span>
                     </h3>
                     <p class="text-slate-600 text-sm leading-relaxed">
-                        Those platforms deal with massive commercial supply chains and long-distance shipping. AgroPlug is for the local hustle. We connect you directly to nearby farms so you can score fresh harvests on the same day without corporate middle-men or long wait times.
+                        Those platforms deal with massive commercial supply chains and long-distance shipping. AgroPlug
+                        is for the local hustle. We connect you directly to nearby farms so you can score fresh harvests
+                        on the same day without corporate middle-men or long wait times.
                     </p>
                 </div>
 
@@ -284,7 +325,8 @@
                         💸 <span>Are there any hidden transaction fees?</span>
                     </h3>
                     <p class="text-slate-600 text-sm leading-relaxed">
-                        Nope. Zero fees. AgroPlug is completely free to use. We don't trap your money in online digital wallets or take a percentage cut from the farmer's profit. 
+                        Nope. Zero fees. AgroPlug is completely free to use. We don't trap your money in online digital
+                        wallets or take a percentage cut from the farmer's profit.
                     </p>
                 </div>
 
@@ -293,7 +335,9 @@
                         🔌 <span>Why do transactions happen over WhatsApp?</span>
                     </h3>
                     <p class="text-slate-600 text-sm leading-relaxed">
-                        Because everyone already uses WhatsApp! Instead of making you learn a complicated, clunky checkout system, hitting "Claim" securely connects buyer and seller on WhatsApp so you can negotiate delivery and payment instantly on your own terms.
+                        Because everyone already uses WhatsApp! Instead of making you learn a complicated, clunky
+                        checkout system, hitting "Claim" securely connects buyer and seller on WhatsApp so you can
+                        negotiate delivery and payment instantly on your own terms.
                     </p>
                 </div>
             </div>
@@ -302,8 +346,12 @@
 
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 py-12 px-6 text-center border-t border-slate-800">
-        <p class="text-sm">&copy; 2026 AgroPlug Inc. Built with confidence  by Team Three. All rights reserved.</p>
+        <p class="text-sm">&copy; <span id="year"></span> AgroPlug Inc. Built with confidence by Team Three. All rights
+            reserved.
+        </p>
     </footer>
 
+    <script src="index.js"></script>
 </body>
+
 </html>

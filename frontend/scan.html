@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Plug Scanner</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+    <div class="max-w-3xl mx-auto px-4 py-10">
+
+        <h1 class="text-4xl font-bold text-center mb-2">
+            Agro Plug Scanner
+        </h1>
+
+        <p class="text-center text-gray-600 mb-10">
+            Scan vegetables, fruits, and livestock for AI analysis.
+        </p>
+
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center">
+
+                <img id="preview" src="https://placehold.co/600x350?text=Upload+Image" alt="Preview"
+                    class="w-full max-h-[350px] object-cover rounded-lg mb-6">
+
+                <input type="file" id="imageInput" accept="image/*" capture="camera" class="hidden">
+
+                <button id="uploadBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">
+                    Choose Image
+                </button>
+
+            </div>
+
+            <button id="scanBtn"
+                class="w-full mt-6 bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800">
+                Scan Crop
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- <script src="../js/scanner.js"></script> -->
+;
+    </script>
+</body>
+
+</html>
