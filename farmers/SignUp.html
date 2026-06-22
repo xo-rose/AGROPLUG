@@ -1,72 +1,160 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgroPlug | Farmer Signup</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="images/Agroplug_logo.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-</head>
+    <link rel="icon" href="/images/Agroplug_logo.png" />
 
-<body class="bg-gradient-to-r from-green-700 to-emerald-700">
-    <form action="signup.php" method="post" id="form">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+  </head>
 
-        <div class="flex h-screen justify-center items-center p-3">
-            <div class="flex-col items-center px-10 py-6 bg-white rounded-lg w-100 text-justify">
-                <label for="fullName">Full Name</label> <br>
-                <input type="text" name="fullname" id="fullName" required
-                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
-                    placeholder="Enter Your Name"><br>
-                <label for="email">Email</label> <br>
-                <input type="email" name="email" id="email"  required
-                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
-                    placeholder="Enter Your Email"> <br>
-                <label for="password">Password</label><br>
-                <input type="password" name="password" id="password"  required 
-                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
-                    placeholder="Enter Your Password"><br>
-                <label for="phoneNumber">Phone Number</label><br>
-                <input type="text" name="phone" id="phoneNumber" required
-                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
-                    placeholder="Enter Your Phone Number"> <br>
-                <button id="submit" type="submit">
-                    Submit
-                </button>
-            </div>
+  <body class="bg-gradient-to-r from-green-700 to-emerald-700">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <form
+        action="signup.php"
+        method="POST"
+        class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8"
+      >
+        <!-- LOGO -->
+        <div class="text-center mb-8">
+          <div class="flex justify-center items-center">
+            <img
+              src="/images/Agroplug_logo.png"
+              alt="AgroPlug Logo"
+              class="h-14"
+            />
+
+            <span class="text-3xl font-black text-slate-900">
+              Agro<span class="text-emerald-600">Plug</span>
+            </span>
+          </div>
+
+          <h1 class="text-3xl font-bold mt-6 text-slate-900">
+            Create your
+            <span class="text-emerald-600">farmer</span>
+            account
+          </h1>
+
         </div>
-    </form>
 
+        <!-- FULL_NAME -->
+        <div class="mb-4">
+          <label for="fullName" class="font-semibold text-slate-700">
+            Full Name
+          </label>
 
-    <script>
+          <div class="relative mt-2">
+            <i
+              class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
 
-        // THE FORM TESTING WITH LOCAL STORAGE
-        // const sub = document.getElementById('form');
-        // const btn = document.getElementById(`submit`)
+            <input
+              type="text"
+              id="fullName"
+              name="fullname"
+              placeholder="Enter your full name"
+              required
+              class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+        </div>
 
-        // btn.addEventListener("click", () => {
-        //     sub.addEventListener("submit", (e) => {
-        //         e.preventDefault();
+        <!-- EMAIL -->
+        <div class="mb-4">
+          <label for="email" class="font-semibold text-slate-700">
+            Email Address
+          </label>
 
-        //         const user = {
-        //             name: document.getElementById("fullName").value,
-        //             email: document.getElementById("email").value,
-        //             password: document.getElementById("password").value,
-        //             phone: document.getElementById("phoneNumber").value
-        //         };
+          <div class="relative mt-2">
+            <i
+              class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
 
-        //         localStorage.setItem("user", JSON.stringify(user));
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email address"
+              required
+              class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+        </div>
 
-        //         alert("Registration Successfull".toUpperCase());
-        //     });
-        //     const savedUser = JSON.parse(localStorage.getItem("user"));
-        //     console.log(savedUser);
+        <!-- PHONE -->
+        <div class="mb-4">
+          <label for="phoneNumber" class="font-semibold text-slate-700">
+            Phone Number
+          </label>
 
-        // })
+          <div class="relative mt-2">
+            <i
+              class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
 
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phone"
+              placeholder="08012345678"
+              required
+              class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+        </div>
 
-    </script>
-</body>
+        <!-- PASSWORD -->
+        <div class="mb-6">
+          <label for="password" class="font-semibold text-slate-700">
+            Password
+          </label>
 
+          <div class="relative mt-2">
+            <i
+              class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            ></i>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              required
+              class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+
+            <i
+              id="togglePassword"
+              class="fa-regular fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
+            ></i>
+          </div>
+        </div>
+
+        <!-- SUBMIT_BUTTON -->
+        <button
+          type="submit"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition duration-300"
+        >
+          Create Account
+        </button>
+
+        <!-- LOGIN_LINK -->
+        <p class="text-center mt-6 text-slate-500">
+          Already have an account?
+
+          <a
+            href="login.php"
+            class="text-emerald-600 font-semibold hover:underline"
+          >
+            Login here
+          </a>
+        </p>
+
+    <script src="signup.js"></script>
+  </body>
 </html>
