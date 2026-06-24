@@ -50,6 +50,8 @@ hiddenElements.forEach(el => observer.observe(el));
 document.getElementById(`year`).textContent = new Date().getFullYear()
 
 
+
+
 const products = [
     {
         id: 1,
@@ -78,7 +80,20 @@ const products = [
 ]
 const section = document.querySelector(".marketplace");
 const filterBtn = document.querySelectorAll(".btn")
-const filter = document.querySelector(`search`)
+const filter = document.querySelector(`.search`)
+
+filter.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase();
+
+    const filtered = products.filter(item => {
+        return (
+            item.title.toLowerCase().includes(value) ||
+            item.category.toLowerCase().includes(value)
+        );
+    });
+
+    displayItems(filtered);
+});
 
 // filter.addEventListener(`input`, () => {
 //     const category = e.currentTarget.dataset.id;
@@ -118,7 +133,7 @@ function displayItems(menuItems) {
         return ` 
      <div class="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
-                    <img src="${item.img}" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <img src="${item.img}" class="h-full w-full object-cover grgt roup-hover:scale-105 transition-transform duration-500">
                     
                     <span class="absolute left-3 top-3 inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-2xs font-extrabold tracking-wider uppercase text-white shadow-sm">
                         🔥 Fresh Drop
@@ -161,3 +176,25 @@ function displayItems(menuItems) {
     display = display.join("");
     section.innerHTML = display
 }
+//     const openBuyerForm = document.getElementById("openBuyerForm");
+// const buyerModal = document.getElementById("buyerModal");
+// const closeBuyerForm = document.getElementById("closeBuyerForm");
+
+// if (openBuyerForm && buyerModal && closeBuyerForm) {
+
+//     openBuyerForm.addEventListener("click", function (e) {
+//         e.preventDefault();
+//         buyerModal.classList.remove("hidden");
+//     });
+
+//     closeBuyerForm.addEventListener("click", function () {
+//         buyerModal.classList.add("hidden");
+//     });
+
+//     buyerModal.addEventListener("click", function (e) {
+//         if (e.target === buyerModal) {
+//             buyerModal.classList.add("hidden");
+//         }
+//     });
+
+// }

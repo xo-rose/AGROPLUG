@@ -84,7 +84,7 @@
                 </a>
                 <a href="./AGROPLUG/buyer/Signup.html"
                     class="w-full sm:w-auto inline-flex justify-center items-center rounded-2xl bg-white/80 border-2 border-slate-400 px-8 py-4 text-lg font-bold text-slate-900 hover:border-emerald-900 hover:text-emerald-900 transition hover:scale-[1.07] duration-700">
-                    <i class="fa-solid fa-cart-shopping"></i>I am a Buyer
+                        <i class="fa-solid fa-cart-shopping"></i> I am a Buyer
                 </a>
             </div>
         </div>
@@ -169,7 +169,7 @@
             </div>
 
             <!-- PRODUCTS -->
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 marketplace data-id=" all"">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 marketplace data-id=">
                 <!-- DEFAULT
             <div class="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -351,7 +351,40 @@
         </p>
     </footer>
 
-    <script src="index.js"></script>
+    </footer>
+
+<!-- BUYER MODAL GOES HERE
+<div id="buyerModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="bg-white w-full max-w-md rounded-2xl p-6 relative">
+
+        <button id="closeBuyerForm" class="absolute top-3 right-3 text-xl">✕</button>
+
+        <h2 class="text-xl font-bold mb-4">Buyer Form</h2>
+
+        <form class="space-y-4">
+            <input type="text" placeholder="Full Name" class="w-full border px-4 py-3 rounded-xl">
+            <input type="tel" placeholder="Phone Number" class="w-full border px-4 py-3 rounded-xl">
+
+            <select class="w-full border px-4 py-3 rounded-xl">
+                <option>Select LGA (Abia)</option>
+                <option>Aba North</option>
+                <option>Aba South</option>
+                <option>Umuahia North</option>
+                <option>Umuahia South</option>
+                <option>Bende</option>
+                <option>Ohafia</option>
+            </select>
+
+            <button class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold">
+                Submit
+            </button>
+        </form>
+
+    </div>
+</div> -->
+
+<script src="index.js"></script>
+
 </body>
 
 </html>
