@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Signup | AgroPlug</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-900 flex items-center justify-center p-6">
+
+    <!-- CARD -->
+    <div class="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8">
+
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+
+            <a href="../index.html" class="text-white/70 hover:text-white text-sm">
+                ← Back to Home
+            </a>
+
+            <h1 class="text-4xl font-black text-white mt-4">
+                Agro<span class="text-emerald-400">Plug</span>
+            </h1>
+
+            <p class="text-white/70 mt-2 text-sm">
+                Connect with trusted farmers and get fresh farm produce in Abia State
+            </p>
+        </div>
+
+        <!-- FORM -->
+        <form id="buyerForm" class="space-y-4">
+
+            <!-- FULL NAME -->
+            <input
+                id="name"
+                type="text"
+                placeholder="Full Name"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+
+            <!-- PHONE -->
+            <input
+                id="phone"
+                type="tel"
+                placeholder="Phone Number"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+
+            <!-- EMAIL -->
+            <input
+                id="email"
+                type="email"
+                placeholder="Email Address"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+
+            <!-- LGA -->
+            <select
+                id="lga"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+                <option value="">Select Local Government Area</option>
+                <option>Aba North</option>
+                <option>Aba South</option>
+                <option>Arochukwu</option>
+                <option>Bende</option>
+                <option>Ikwuano</option>
+                <option>Isiala Ngwa North</option>
+                <option>Isiala Ngwa South</option>
+                <option>Isuikwuato</option>
+                <option>Obi Ngwa</option>
+                <option>Ohafia</option>
+                <option>Osisioma Ngwa</option>
+                <option>Ugwunagbo</option>
+                <option>Ukwa East</option>
+                <option>Ukwa West</option>
+                <option>Umuahia North</option>
+                <option>Umuahia South</option>
+                <option>Umu Nneochi</option>
+            </select>
+
+            <!-- PRODUCT -->
+            <input
+                id="product"
+                type="text"
+                placeholder="Product Needed (e.g. Yam, Rice, Tomatoes)"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+
+            <!-- QUANTITY -->
+            <input
+                id="qty"
+                type="text"
+                placeholder="Quantity Needed (e.g. 10 baskets)"
+                required
+                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"
+            >
+
+            <!-- BUTTON -->
+            <button
+                type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 py-4 rounded-xl font-bold text-white transition active:scale-95"
+            >
+                Get Connected 🔌
+            </button>
+
+        </form>
+
+        <!-- SUCCESS MESSAGE -->
+        <p id="msg" class="hidden text-green-400 text-center mt-4 font-semibold">
+            ✅ Registration successful!
+        </p>
+
+    </div>
+
+   <script>
+   document.getElementById("buyerForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+    const lga = document.getElementById("lga").value;
+    const product = document.getElementById("product").value;
+    const qty = document.getElementById("qty").value;
+
+    const message =
+`Hello AgroPlug 👋
+
+I am a Buyer.
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Location: ${lga}
+Product Needed: ${product}
+Quantity: ${qty}`;
+
+    const whatsappNumber = "09068431413"; // 
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, "_blank");
+});
+</script>
+
+</body>
+</html>
