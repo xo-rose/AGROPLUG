@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Document</title> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="icon" href="images/Agroplug_logo.png"> -->
+    <title>AgroPlug | Buyer Signup</title>
+    <link rel="icon" href="/images/Agroplug_logo.png" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body class="bg-gradient-to-r from-green-700 to-emerald-700">
+    <form action="signup.php" method="post" id="form">
+
+        <div class="flex h-screen justify-center items-center p-3">
+            <div class="flex-col items-center px-10 py-6 bg-white rounded-lg w-100 text-justify">
+                <label for="fullName">Full Name</label> <br>
+                <input type="text" name="fullname" id="fullName" required
+                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
+                    placeholder="Enter Your Name"><br>
+                <label for="email">Email</label> <br>
+                <input type="email" name="email" id="email" required
+                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
+                    placeholder="Enter Your Email"> <br>
+                <label for="password">Password</label><br>
+                <input type="password" name="password" id="password" required
+                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
+                    placeholder="Enter Your Password"><br>
+                <label for="phoneNumber">Phone Number</label><br>
+                <input type="text" name="phone" id="phoneNumber" required
+                    class="border text-gray-500 font-[sana-serif] w-full px-5 py-3 rounded-full border-gray-500 outline-none focus:border-green-500 focus:ring-4 focus:ring-green-200 trasnition mt-3 mb-2"
+                    placeholder="Enter Your Phone Number"> <br>
+                <button id="submit" type="submit">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
+        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease]">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-slate-800">
+                    WELCOME SIR / MA.
+                </h2>
+
+                <button class="rounded-full object-cover text-white font-extrabold p-3 bg-emerald-500" id="closeBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <span id="overlay" class="font-semibold text-slate-700">
+                Please if you don't have an account kindy register to access amazing
+                products for affordabel prices.
+            </span>
+            <div class="mt-6 flex gap-4">
+                <!-- <button id="cancelBtn"
+                    class="flex-1 font-extrabold rounded-xl border text-white bg-slate-700 py-3 font-mediumhover:bg-slate-50">
+                    Cancel
+                </button> -->
+
+                <button
+                    class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 font-medium text-white hover:bg-emerald-600"
+                    id="signIn">
+                    Ok
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MODAL FUNCTIONS
+        const closeBtn = document.getElementById("closeBtn")
+        const cancelBtn = document.getElementById("cancelBtn")
+        window.addEventListener("DOMContentLoaded", () => {
+            modal.classList.remove("hidden")
+            modal.classList.add("flex")
+        })
+        signIn.addEventListener("click", hideModal)
+        function hideModal() {
+            modal.classList.add("hidden")
+            modal.classList.remove("flex")
+        }
+        // cancelBtn.addEventListener("click", hideModal)
+        closeBtn.addEventListener("click", hideModal)
+
+
+
+    </script>
+</body>
+
+</html>
