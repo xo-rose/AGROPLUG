@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
 
         // CHECK IF EMAIL EXISTS
-        $check = "SELECT * FROM users WHERE email = ?";
+        $check = "SELECT * FROM farmers WHERE email = ?";
         $stmt = $pdo->prepare($check);
         $stmt->execute([$email]);
 
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // INSERT USER
-        $sql = "INSERT INTO users (fullname, email, phone, password)
+        $sql = "INSERT INTO farmers (fullname, email, phone, password)
                 VALUES (?, ?, ?, ?)";
 
         $stmt = $pdo->prepare($sql);

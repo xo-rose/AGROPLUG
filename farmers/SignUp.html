@@ -135,6 +135,7 @@
           </div>
         </div>
 
+
         <!-- SUBMIT_BUTTON -->
         <button
           type="submit"
@@ -154,6 +155,57 @@
             Login here
           </a>
         </p>
+
+        <!-- MODAL SECTION-->
+            <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
+        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease]">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-slate-800">
+                    WELCOME SIR / MA.
+                </h2>
+
+                <button class="rounded-full object-cover text-white font-extrabold p-3 bg-emerald-500" id="closeBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <span id="overlay" class="font-semibold text-slate-700">
+            </span>
+            <div class="mt-6 flex gap-4">
+                <!-- <button id="cancelBtn"
+                    class="flex-1 font-extrabold rounded-xl border text-white bg-slate-700 py-3 font-mediumhover:bg-slate-50">
+                    Cancel
+                </button> -->
+
+                <button type="submit"
+                class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 font-medium text-white hover:bg-emerald-600" id="signIn">
+                   Ok
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+        <!-- SUBMIT_BUTTON -->
+        <button
+          type="submit"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition duration-300"
+        >
+          Create Account
+        </button>
+
+        <!-- LOGIN_LINK -->
+        <p class="text-center mt-6 text-slate-500">
+          Already have an account?
+
+          <a
+            href="login.php"
+            class="text-emerald-600 font-semibold hover:underline"
+          >
+            Login here
+          </a>
+        </p>
+
 
     <script src="signup.js"></script>
   </body>

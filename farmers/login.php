@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
 
         // ✅ FIND USER
-        $sql = "SELECT * FROM users WHERE email = ?";
+        $sql = "SELECT * FROM farmers WHERE email = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$email]);
 
