@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your AgroPlug - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+</head>
+
+<body class="bg-gray-200">
+    <!--SIDE BAR NAVIGATION-->
+    <aside id='default-sidebar'
+        class='fixed top-0 left-0 z-50 w-44 h-screen transition-transform -translate-x-full sm:translate-x-0'
+        aria-label='Sidebar'>
+        <div class='h-full px-3 py-4 overflow-y-hidden  bg-green-700'>
+            <div class='flex gap-2 text-blue-800 items-center text-lg mb-8   animate__hinge'>
+                <svg xmlns='http://www.w3.org/2000/svg' width='21' height='21' viewBox='0 0 24 24' fill='none'
+                    stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
+                    class='lucide lucide-graduation-cap-icon lucide-graduation-cap'>
+                    <path
+                        d='M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z' />
+                    <path d='M22 10v6' />
+                    <path d='M6 12.5V16a6 3 0 0 0 12 0v-3.5' />
+                </svg>
+                <h4 class='text-sm font-bold text-black font-[nothing-writing, sana-serif]'>AgroPlug</h4>
+            </div>
+            <div class="flex flex-col items-center">
+                <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
+                    alt="..." title="Famer's_Picture" class="w-20 h-20 rounded-full object-cover mb-2">
+                <span id="greetings" class="text-white text-sm">Good Morning,</span>
+                <span class="text-white font-bold text-lg ">Sandra Kyle</span>
+                <span
+                    class="bg-emerald-600 text-white text-xs rounded-full px-[5px] py-[5px] mb-4 gap-[6px] flex items-center justify-center">
+                    <i class="fa-regular fa-circle-check shadow-lg rounded-full"></i>Verified
+                    Famrer</span>
+            </div>
+
+            <ul class='space-y-2 font-medium items-center'>
+                <li class='' id="dashboard_btn">
+                    <a href='#' class='flex bg-blue-100 rounded items-center p-[6px] text-blue-700 gap-1 '>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
+                            stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
+                            class='lucide lucide-house-icon lucide-house'>
+                            <path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8' />
+                            <path
+                                d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' />
+                        </svg> <span class='ml-1 font-[sans-serif] font-semibold '>Dashboard</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href='#' class='flex items-center p-2 text-gray-900 gap-1  '>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-box-icon lucide-box">
+                            <path
+                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                            <path d="m3.3 7 8.7 5 8.7-5" />
+                            <path d="M12 22V12" />
+                        </svg> <span class='ml-1'>My Listing</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-circle-plus-icon lucide-circle-plus">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 12h8" />
+                            <path d="M12 8v8" />
+                        </svg> <span class='ml-1'>Add New Produce</span>
+                    </a>
+                </li>
+                <li class='mb-3'>
+                    <a href='#' class='flex items-center  text-gray-900 gap-1 '>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-shopping-bag-icon lucide-shopping-bag">
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                            <path d="M3.103 6.034h17.794" />
+                            <path
+                                d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" />
+                        </svg> <span class='ml-1'>Orders</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '><svg
+                            xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
+                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
+                            class='lucide lucide-message-circle-icon lucide-message-circle'>
+                            <path
+                                d='M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719' />
+                        </svg>C <span class='ml-1'>Messages</span></a>
+                </li>
+                <li class=''>
+                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '> <span
+                            class='ml-1'>Earnings</span>
+                    </a>
+                </li>
+                <li class=''>
+                    <a href="up" class='flex items-center p-[6px] text-gray-900 gap-1 '><svg
+                            xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
+                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
+                            class='lucide lucide-user-round-pen-icon lucide-user-round-pen'>
+                            <path d='M2 21a8 8 0 0 1 10.821-7.487' />
+                            <path
+                                d='M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z' />
+                            <circle cx='10' cy='8' r='5' />
+                        </svg> <span class='ml-1'>Profile</span> </a>
+                </li>
+                <li class=''>
+                    <a href='logout.php' class=' text-gray-800 p-[6px] flex items-center gap-1'>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
+                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
+                            class='lucide lucide-log-out-icon lucide-log-out'>
+                            <path d='m16 17 5-5-5-5' />
+                            <path d='M21 12H9' />
+                            <path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4' />
+                        </svg> <span class=' text-black ml-1'>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <!--VERTICAL NAVIGATION-->
+    <nav class="sticky top-0 z-20 bg-transparent absolute lg:ml-43 sm:ml-44 mt-2" id="navbar">
+        <div class="flex justify-between items-center p-2">
+            <div class="flex flex-col ml-1">
+                <span class="text-slate-600 font-semibold text-2xl">Welecom Back Sandra <i
+                        class="fa-solid fa-hand-sparkles text-md"></i></span>
+                <span class="text-slate-400 font-semibold text-sm">Here's what's happening with you farm</span>
+            </div>
+            <div class="flex items-center gap-[12px] md:flex hidden">
+                <div class="flex items-center">
+                    <i class="fa-regular fa-bell text-2xl text-emerald-800"></i>
+                    <span
+                        class="bg-emerald-700 rounded-full p-2 w-6 h-6 flex justify-center items-center -mt-4 -ml-3 text-white">3</span>
+                </div>
+                <button type="button"
+                    class="bg-emerald-600 px-2 py-2 rounded-lg text-white flex items-center gap-[6px]"><i
+                        class="fa-solid fa-plus shadow-lg  rounded-full "></i>Add New Product</button>
+            </div>
+            <button class="md:hidden flex">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+
+    </nav>
+
+    <!--FIRST GRID SECTION-->
+    <div class="grid lg:grid-cols-4  lg:ml-45 sm:ml-44 -gap-10 mt-10">
+        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
+            <span><i
+                    class="fa-solid fa-shopping-bag bg-blue-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16"></i></span>
+            <div class="flex flex-col">
+                <span>Order</span>
+                <span>5</span>
+                <span>inprogress</span>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
+            <span><i
+                    class="fa-solid fa-shopping-cart bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
+            <div class="flex flex-col">
+                <span>My Listings</span>
+                <span>10</span>
+                <span>Active</span>
+            </div>
+        </div>
+        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
+            <span><i
+                    class="fa-solid fa-naira-sign bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
+            <div class="flex flex-col">
+                <span>Earnings</span>
+                <span>10</span>
+                <span>This Month</span>
+            </div>
+        </div>
+        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
+            <span><i
+                    class="fa-regular fa-eye bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
+            <div class="flex flex-col">
+                <span>Profile Views</span>
+                <span>10</span>
+                <span>Active</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

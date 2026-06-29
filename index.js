@@ -283,7 +283,7 @@ const Close = document.getElementById("close")
 const text = document.getElementById("over")
 const Welcome = document.getElementById("welcome")
 const textSeries = [
-    "Welcome to AGROPLUG",
+    "Your digital farming companion.",
     "Track Your Crops",
     "Manage Your Harvest",
     "Connect With Buyers"
@@ -345,22 +345,3 @@ Welcome.addEventListener("click", (e) => {
 });
 
 
-// PAGE LOADER
-window.addEventListener("load", () => {
-    const loader = document.getElementById("page-loader");
-
-    loader.classList.add("opacity-0");
-
-    setTimeout(() => {
-    loader.remove();
-
-    setTimeout(() => {
-        showModal();
-    }, 300);
-}, 500);
-});
-
-
-
-
-  
