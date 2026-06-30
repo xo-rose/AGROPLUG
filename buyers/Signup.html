@@ -1,163 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buyer Signup | AgroPlug</title>
-
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgroPlug | Buyer Signup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/images/Agroplug_logo.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
-<body
-    class="min-h-screen bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-900 flex items-center justify-center p-6">
+<body class="bg-gradient-to-r from-green-700 to-emerald-700">
+  <div class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- CARD -->
-    <div class="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8">
+    <form id="farmerSignupForm" class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
 
-        <!-- HEADER -->
-        <div class="text-center mb-8">
-
-            <a href="../index.html" class="text-white/70 hover:text-white text-sm">
-                ← Back to Home
-            </a>
-
-            <h1 class="text-4xl font-black text-white mt-4">
-                Agro<span class="text-emerald-400">Plug</span>
-            </h1>
-
-            <p class="text-white/70 mt-2 text-sm">
-                Connect with trusted farmers and get fresh farm produce in Abia State
-            </p>
+      <div class="text-center mb-8">
+        <div class="flex flex-col justify-center items-center">
+          <a href="../index.html" class="text-slate-400 hover:text-slate-700 text-sm mb-2 transition">
+            &larr; Back to Home
+          </a>
+          <span class="text-3xl font-black text-slate-900 flex items-center gap-1">
+            <img src="/images/Agroplug_logo.png" alt="AgroPlug Logo" class="h-14" />
+            Agro<span class="text-emerald-600">Plug</span>
+          </span>
         </div>
 
-        <!-- FORM -->
-        <form action="signup.php" method="post" class="space-y-4">
+        <h1 class="text-3xl font-bold mt-6 text-slate-900">
+          Create your
+          <span class="text-emerald-600">buyer</span>
+          account
+        </h1>
+      </div>
 
-            <!-- FULL NAME -->
-            <div class="relative mt-2">
-                <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="name" name="fullname" type="text" placeholder="Full Name" required
-                    class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400 pl-12">
-
-            </div>
-            <!-- PHONE -->
-            <div class="relative mt-2">
-                <i class="fa-solid fa-mobile absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="phone" type="tel" placeholder="Phone Number" name="phone" required
-                    class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400 pl-12">
-
-            </div>
-            <!-- EMAIL -->
-            <div class="relative mt-2">
-                <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input id="email" type="email" placeholder="Email Address" name="email" required
-                    class="w-full p-4 rounded-xl bg-white/10  text-white border border-white/20 outline-none focus:border-emerald-400 pl-12">
-            </div>
-            <!-- LGA -->
-            <div class="relative mt-2">
-                <i class="fa-solid fa-earth-africa absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <select id="lga" required name="lga"
-                    class="w-full p-4 rounded-xl bg-white/10  text-white border border-white/20 outline-none focus:border-emerald-400 pl-12">
-
-                    <option value="" selected class="bg-emerald-700 text-white hover:bg-emerald-100">Select Local
-                        Government
-                        Area</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Aba_North">Aba North</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Aba_South">Aba South</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Arochukwu">Arochukwu</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Bende">Bende</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Ikwuano">Ikwuano</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Isiala_Ngwa_North">Isiala Ngwa North</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Isiala_Ngwa_South">Isiala Ngwa South</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Isuikwuato">Isuikwuato</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Obi_Ngwa">Obi Ngwa</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value=" Ohafia">Ohafia</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Osisioma_Ngwa">Osisioma Ngwa</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Ugwunagbo">Ugwunagbo</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Ukwa_East">Ukwa East</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Ukwa_West">Ukwa West</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Umuahia_North">Umuahia North</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Umuahia_South">Umuahia South</option>
-                    <option class="bg-emerald-700 text-white hover:bg-emerald-100" value="Umu_Nneochi">Umu Nneochi</option>
-
-                </select>
-            </div>
-            <!-- PRODUCT
-            <input id="product" type="text" placeholder="Product Needed (e.g. Yam, Rice, Tomatoes)" required
-                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400">
-
-            QUANTITY
-            <input id="qty" type="text" placeholder="Quantity Needed (e.g. 10 baskets)" required
-                class="w-full p-4 rounded-xl bg-white/10 text-white border border-white/20 outline-none focus:border-emerald-400"> -->
-
-            <!-- PASSWORD -->
-            <div class="mb-6">
-                <!-- <label for="password" class="font-semibold text-slate-700">
-                    Password
-                </label> -->
-
-                <div class="relative mt-2">
-                    <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-                    <input type="password" id="password" name="password" placeholder="Create a password" required
-                        class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white/10
-                         text-white" />
-
-                    <i id="togglePassword"
-                        class="fa-regular  absolute right-4 top-1/2 -translate-y-1/2 text-slate-100 cursor-pointer"></i>
-                </div>
-            </div>
-            <!-- BUTTON -->
-            <button type="submit"
-                class="w-full bg-emerald-600 hover:bg-emerald-700 py-4 rounded-xl font-bold text-white transition active:scale-95">
-                Get Connected <i class="fa-solid fa-plug"></i>
-            </button>
-
-        </form>
-
-        <!-- SUCCESS MESSAGE -->
-        <p id="msg" class="hidden text-green-400 text-center mt-4 font-semibold">
-            ✅ Registration successful!
-        </p>
-
-    </div>
-    <!-- MODAL SECTION-->
-    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
-        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease]">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold text-slate-800">
-                    WELCOME SIR / MA.
-                </h2>
-
-                <button class="rounded-full object-cover text-white font-extrabold p-3 bg-emerald-500" id="closeBtn">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <span id="overlay" class="font-semibold text-slate-700">
-            </span>
-            <div class="mt-6 flex gap-4">
-                <!-- <button id="cancelBtn"
-                    class="flex-1 font-extrabold rounded-xl border text-white bg-slate-700 py-3 font-mediumhover:bg-slate-50">
-                    Cancel
-                </button> -->
-
-                <button type="submit"
-                    class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 font-medium text-white hover:bg-emerald-600"
-                    id="signIn">
-                    Ok
-                </button>
-
-            </div>
+      <div class="mb-4">
+        <label for="fullName" class="font-semibold text-slate-700">Full Name</label>
+        <div class="relative mt-2">
+          <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="text" id="fullName" placeholder="Enter your full name" required
+            class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
         </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="email" class="font-semibold text-slate-700">Email Address</label>
+        <div class="relative mt-2">
+          <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="email" id="email" placeholder="Enter your email address" required
+            class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="phoneNumber" class="font-semibold text-slate-700">Phone Number</label>
+        <div class="relative mt-2">
+          <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="text" id="phoneNumber" placeholder="08012345678" required
+            class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label for="password" class="font-semibold text-slate-700">Password</label>
+        <div class="relative mt-2">
+          <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="password" id="password" placeholder="Create a password" required
+            class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+          <i id="togglePassword"
+            class="fa-regular fa-eye-slash absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-slate-600 transition"></i>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition duration-300 active:scale-[0.99]">
+        Create Account
+      </button>
+
+      <p id="errorMsg" class="text-red-500 mt-3 text-center text-sm font-semibold min-h-[20px]"></p>
+
+      <p class="text-center mt-6 text-slate-500">
+        Already have an account?
+        <a href="../farmers/login.html" class="text-emerald-600 font-semibold hover:underline">Login here</a>
+      </p>
+
+    </form>
+  </div>
+
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
+    <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-slate-800">WELCOME</h2>
+        <button type="button" class="rounded-full text-white font-extrabold p-2.5 bg-emerald-500 flex items-center justify-center w-9 h-9" id="closeBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p id="overlay" class="font-semibold text-slate-700 mt-4"></p>
+      <div class="mt-6 flex gap-4">
+        <button type="button"
+          class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 text-white hover:bg-emerald-700 transition"
+          id="signIn">
+          Ok
+        </button>
+      </div>
     </div>
+  </div>
 
-    <script src="signup.js"></script>
+  <script type="module" src="signup.js"></script>
 
+  <script>
+    // Visibility toggle functionality for password inputs
+    const togglePassword = document.getElementById("togglePassword");
+    const password = document.getElementById("password");
+
+    togglePassword.addEventListener("click", () => {
+      if (password.type === "password") {
+        password.type = "text";
+        togglePassword.classList.remove("fa-eye-slash");
+        togglePassword.classList.add("fa-eye");
+      } else {
+        password.type = "password";
+        togglePassword.classList.remove("fa-eye");
+        togglePassword.classList.add("fa-eye-slash");
+      }
+    });
+  </script>
 </body>
 
 </html>
