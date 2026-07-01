@@ -93,7 +93,7 @@ if (loginForm) {
                 if (userData.role === "farmer") {
                     window.location.href = "dashboard.html"
                 } else if (userData.role === "buyer") {
-                    window.location.href = "/buyers/marketplace.html"
+                    window.location.href = "./buyers/marketplace.html"
                 } else {
                     showPopup("Account access role unrecognized.", false);
                 }

@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Marketplace</title>
+     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="/farmers/firebase-config.js"></script>
+
+    <script>
+        // You can instantly use 'auth' and 'db' here!
+        auth.onAuthStateChanged(user => {
+      window.location.href = "/farmers/login.html"
+        });
+    </script>
     <style>
         body { font-family: 'Poppins', sans-serif; }
     </style>
