@@ -3,15 +3,423 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/images/Agroplug_logo.png">
-    <script src="https://cd.tailwindcss.com"></script>
-    <title>AgroPlug MarketPLace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Marketplace</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
 </head>
-<body>
-    <div class="flex justify-center items-center min-h-screen">
-        <div class="bg-beige-600 p-4 m-5 rounded-md mx-14">
-            <h2>WELCOME USER</h2>
-        </div>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Dashboard Layout Wrapper -->
+    <div class="flex flex-col md:flex-row min-h-screen">
+        
+        <!-- Navbar / Sidebar -->
+        <nav class="w-full md:w-[260px] md:bg-slate-700 bg-slate-800 text-white md:p-5 p-4 flex flex-col md:min-h-screen shrink-0" id="sidebar">
+            <div class="flex items-center justify-between md:flex-col md:items-start">
+                <!-- Logo Block -->
+                <div class="flex items-center md:items-start md:flex-col gap-3 md:gap-0">
+                    <img src="/assets/Agroplug_logo.png" alt="Logo" class="h-[50px] md:h-[80px] md:mb-4 object-contain">
+                    <div>
+                        <p class="text-xl md:text-2xl font-bold">Agro<span class="text-green-700">Plug</span></p>
+                        <p class="text-xs text-gray-300 hidden sm:block md:w-[180px] mt-1">Fresh from farm to you</p>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-2xl focus:outline-none hover:text-green-400 transition" id="toggle" onclick="toggleMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <div id="menuList" class="hidden md:flex flex-col justify-between mt-6 text-lg transition-all duration-300">
+                <ul class="md:space-y-[40px] space-y-[5px] text-lg font-medium">
+                    <li>
+                        <a href="#" class="flex items-center gap-3 bg-blue-900 md:bg-opacity-40 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-house w-5 text-center"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-leaf w-5 text-center"></i>
+                            <span>Browse Produce</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-bag-shopping w-5 text-center"></i>
+                            <span>My Orders</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-regular fa-heart w-5 text-center"></i>
+                            <span>Favorites</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-regular fa-comment-dots w-5 text-center"></i>
+                            <span>Messages</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-location-dot w-5 text-center"></i>
+                            <span>Addresses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-user w-5 text-center"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-3 hover:bg-slate-600 p-3 rounded-xl transition duration-300">
+                            <i class="fa-solid fa-gear w-5 text-center"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Logout Block -->
+                <div class="md:pt-[100px] pt-[30px] border-t border-slate-600 mt-6">
+                    <a href="#" class="flex items-center gap-3 hover:bg-red-600 p-3 rounded-xl transition duration-300 text-red-300 hover:text-white">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
+                        <span>Log Out</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class=" p-4 md:p-8 max-w-7xl mx-auto w-full">
+            
+            <!-- Header section -->
+            <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 mb-6 border-b border-gray-200">
+                <div>
+                    <h1 class="font-bold text-xl md:text-2xl text-gray-800">Welcome back, Chinedu! 🖐</h1>
+                    <p class="text-sm text-gray-500">Find the freshest produce directly from local farmers.</p>
+                </div>
+                <!-- Top Utility Icons -->
+                <div class="flex items-center gap-4 text-xl text-gray-600 self-end sm:self-auto">
+                    <button class="p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-100 transition relative">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                    <button class="p-2.5 bg-white rounded-full shadow-sm hover:bg-gray-100 transition relative">
+                        <i class="fa-regular fa-bell"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Grid System -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                <!-- Total Orders -->
+                <div class="bg-white rounded-2xl shadow-sm p-5 flex justify-between items-start border border-gray-100">
+                   <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-bag-shopping text-green-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wider">Total Orders</p>
+                        <h2 class="text-3xl font-bold mt-1 text-gray-800">12</h2>
+                        <p class="text-green-600 text-xs font-semibold mt-2">All time</p>
+                    </div>
+                    
+                </div>
+
+                <!-- Orders in Progress -->
+                <div class="bg-white rounded-2xl shadow-sm p-5 flex justify-between items-start border border-gray-100">
+                   <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-cube text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wider">In Progress</p>
+                        <h2 class="text-3xl font-bold mt-1 text-gray-800">3</h2>
+                        <p class="text-blue-600 text-xs font-semibold mt-2">Active orders</p>
+                    </div>
+                    
+                </div>
+
+                <!-- Total Spent -->
+                <div class="bg-white rounded-2xl shadow-sm p-5 flex justify-between items-start border border-gray-100">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-naira-sign text-yellow-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wider">Total Spent</p>
+                        <h2 class="text-3xl font-bold mt-1 text-gray-800">₦68,250</h2>
+                        <p class="text-yellow-600 text-xs font-semibold mt-2">All time</p>
+                    </div>
+                    
+                </div>
+
+                <!-- Favorites -->
+                <div class="bg-white rounded-2xl shadow-sm p-5 flex justify-between items-start border border-gray-100">
+                   <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center shrink-0">
+                        <i class="fa-regular fa-heart text-purple-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-xs md:text-sm font-medium uppercase tracking-wider">Favorites</p>
+                        <h2 class="text-3xl font-bold mt-1 text-gray-800">8</h2>
+                        <p class="text-purple-600 text-xs font-semibold mt-2">Saved items</p>
+                    </div>
+                    
+                </div>
+            </section>
+            
+            <!-- Shop by Category Section -->
+            <section class="bg-white rounded-2xl shadow-sm p-5 md:p-6 mb-8 border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg md:text-2xl font-bold text-gray-800">Shop by Category</h2>
+                    <a href="#" class="text-sm font-semibold text-green-600 hover:underline">View all</a>
+                </div>
+
+                <!-- Categories Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+                    <!-- Veggies -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-green-100 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-seedling text-green-600 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Vegetables</p>
+                    </div>
+                    <!-- Tubers -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-amber-100 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-potato text-amber-700 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Tubers</p>
+                    </div>
+                    <!-- Fruits -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-purple-100 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-grapes text-purple-600 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Fruits</p>
+                    </div>
+                    <!-- Grains -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-yellow-100 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-wheat-awn text-yellow-500 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Grains</p>
+                    </div>
+                    <!-- Livestock -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-red-100 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-cow text-red-500 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Livestock</p>
+                    </div>
+                    <!-- Others -->
+                    <div class="border border-gray-100 rounded-xl p-4 flex items-center gap-3 hover:shadow-md hover:border-gray-300 transition duration-300 cursor-pointer bg-gray-50/50">
+                        <i class="fa-solid fa-grip text-gray-500 text-2xl shrink-0"></i>
+                        <p class="font-medium text-sm text-gray-700 truncate">Others</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Multi-Column Layout -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-[30px]">
+
+                <!-- Recommended Produce Column -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="flex justify-between items-center p-5 border-b border-gray-100">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-800">Recommended Produce</h2>
+                        <a href="#" class="text-sm font-semibold text-green-600 hover:underline">View all</a>
+                    </div>
+
+                    <div class="divide-y divide-gray-50">
+                        <!-- Item 1 -->
+                        <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/tomato.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Fresh Tomatoes</h3>
+                                    <p class="text-xs text-gray-400">Umuahia, Abia</p>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">By Good Harvest <i class="fa-solid fa-circle-check text-green-600 text-[10px] ml-0.5"></i></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 md:gap-5 shrink-0">
+                                <div class="text-right">
+                                    <h3 class="text-base md:text-lg font-bold text-gray-800">₦1,200</h3>
+                                    <p class="text-[10px] text-gray-400">per basket</p>
+                                </div>
+                                <button class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-green-200 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition">
+                                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/yam.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Yam Tubers</h3>
+                                    <p class="text-xs text-gray-400">Aba, Abia</p>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">By Greenfield Farms <i class="fa-solid fa-circle-check text-green-600 text-[10px] ml-0.5"></i></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 md:gap-5 shrink-0">
+                                <div class="text-right">
+                                    <h3 class="text-base md:text-lg font-bold text-gray-800">₦2,500</h3>
+                                    <p class="text-[10px] text-gray-400">per piece</p>
+                                </div>
+                                <button class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-green-200 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition">
+                                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/ugu.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Ugu Leaves</h3>
+                                    <p class="text-xs text-gray-400">Bende, Abia</p>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">By Nature's Farm <i class="fa-solid fa-circle-check text-green-600 text-[10px] ml-0.5"></i></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 md:gap-5 shrink-0">
+                                <div class="text-right">
+                                    <h3 class="text-base md:text-lg font-bold text-gray-800">₦500</h3>
+                                    <p class="text-[10px] text-gray-400">per bundle</p>
+                                </div>
+                                <button class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-green-200 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition">
+                                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/plantain.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Plantain (Bunch)</h3>
+                                    <p class="text-xs text-gray-400">Ohafia, Abia</p>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">By Fresh & Natural <i class="fa-solid fa-circle-check text-green-600 text-[10px] ml-0.5"></i></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 md:gap-5 shrink-0">
+                                <div class="text-right">
+                                    <h3 class="text-base md:text-lg font-bold text-gray-800">₦1,000</h3>
+                                    <p class="text-[10px] text-gray-400">per bunch</p>
+                                </div>
+                                <button class="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-green-200 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition">
+                                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Column -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="flex justify-between items-center p-5 border-b border-gray-100">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-800">Recent Orders</h2>
+                        <a href="#" class="text-sm font-semibold text-green-600 hover:underline">View all</a>
+                    </div>
+
+                    <div class="divide-y divide-gray-50">
+                        <!-- Order 1 -->
+                        <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/tomato.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Order #AGP-OO18</h3>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">Fresh Tomatoes(2 baskets)</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 ml-14 sm:ml-0">
+                                <span class="bg-green-200 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Delivered</span>
+                                <div class="text-right">
+                                    <p class="text-[10px] text-gray-400">May 28, 2025</p>
+                                    <h3 class="font-bold text-sm text-gray-800">₦2,400</h3>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300 hidden sm:block"></i>
+                            </div>
+                        </div>
+
+                        <!-- Order 2 -->
+                                 <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/yam.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Order #AGP-OO17</h3>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">Yam Tubers (3 pieces)</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 ml-14 sm:ml-0">
+                                <span class="bg-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">Processing</span>
+                                <div class="text-right">
+                                    <p class="text-[10px] text-gray-400">May 25, 2025</p>
+                                    <h3 class="font-bold text-sm text-gray-800">₦7,500</h3>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300 hidden sm:block"></i>
+                            </div>
+                        </div>
+
+                        <!-- Order 3 -->
+                            <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/ugu.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Order #AGP-OO16</h3>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">ugu leaves (5 bundles)</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 ml-14 sm:ml-0">
+                                <span class="bg-green-200 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Delivered</span>
+                                <div class="text-right">
+                                    <p class="text-[10px] text-gray-400">May 20, 2025</p>
+                                    <h3 class="font-bold text-sm text-gray-800">₦2,500</h3>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300 hidden sm:block"></i>
+                            </div>
+                        </div>
+
+                        <!-- Order 4 -->
+                              <div class="flex items-center justify-between p-4 md:p-5 hover:bg-gray-50 transition gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="/assets/plantain.jfif" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shrink-0 bg-gray-200">
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-sm md:text-base text-gray-800 truncate">Order #AGP-OO15</h3>
+                                    <p class="text-xs text-gray-500 truncate mt-0.5">Plantain (2 bunches)</p>
+                                </div>
+                            </div>
+                             <div class="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 ml-14 sm:ml-0">
+                                <span class="bg-gray-200 text-black px-3 py-1 rounded-full text-xs font-medium">Cancelled</span>
+                                <div class="text-right">
+                                    <p class="text-[10px] text-gray-400">May 18, 2025</p>
+                                    <h3 class="font-bold text-sm text-gray-800">₦2,000</h3>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-300 hidden sm:block"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <!-- footer -->
+            <section class="relative shadow-sm border border-gray-100 bg-gradient-to-r from-green-50/80 to-green-50 rounded-[20px] w-full min-h-[90px] md:h-[110px] flex items-center p-5 md:px-8 overflow-hidden bg-no-repeat bg-right-bottom bg-contain" style="background-image: url('/assets/greenhouse.jfif');">
+                <div class="flex items-center gap-4 md:gap-5 max-w-[70%] md:max-w-[55%] z-10">
+                    <div class="bg-[#52B743] rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0 text-white text-base md:text-lg">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div> 
+                    <div class="flex flex-col gap-0.5">
+                        <h3 class="text-sm md:text-base font-bold text-[#1E5622] tracking-wide">
+                            Fresh. Local. Reliable.
+                        </h3>
+                        <p class="text-xs md:text-sm text-[#3B7A40] font-medium leading-tight">
+                            You are supporting local farmers and getting the best quality.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
+
+    
+    <script src="dash.js"></script>
 </body>
 </html>
