@@ -19,9 +19,12 @@
     <script>
         // Authentication Route Guard Verification
         auth.onAuthStateChanged(user => {
+
             if (!user) {
                 window.location.href = "login.html";
             }
+
+
         });
     </script>
 </head>
