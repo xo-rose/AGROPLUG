@@ -253,9 +253,9 @@ okBtn.addEventListener("click", () => {
     const userType = overlayInput.value.trim().toLowerCase();
 
     if (userType === "farmer") {
-        window.location.href = "farmers/SignUp.html";
+        window.location.href = "./farmers/SignUp.html";
     } else if (userType === "buyer") {
-        window.location.href = "buyers/SignUp.html";
+        window.location.href = "./buyers/SignUp.html";
     } else {
         errorTxt.textContent = "Please enter Farmer or Buyer";
     }

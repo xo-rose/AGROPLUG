@@ -4,13 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your AgroPlug - Dashboard</title>
-
-    <style>
-        body {
-            display: none !important;
-        }
-    </style>
+    <title>AgroPlug | Farmer Dashboard</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -23,319 +17,362 @@
     <script src="firebase-config.js"></script>
 
     <script>
-        // You can instantly use 'auth' and 'db' here!
+        // Authentication Route Guard Verification
         auth.onAuthStateChanged(user => {
-            // ... route guard or user checks ...
+            if (!user) {
+                window.location.href = "login.html";
+            }
         });
     </script>
 </head>
 
-<body class="bg-[#F8F9FA]">
+<body class="bg-slate-50 font-sans antialiased text-slate-800">
 
-    <aside id='default-sidebar'
-        class='fixed top-0 left-0 z-50 w-48 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4'
-        aria-label='Sidebar'>
+
+
+    <aside id="default-sidebar"
+        class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+
         <div>
-            <div class='flex flex-col mb-8 px-2'>
-                <h1 class='text-2xl font-bold tracking-tight flex items-center gap-1 text-white'>Agro<span
-                        class="text-[#3CD670]">Plug</span></h1>
-                <p class="text-[10px] text-gray-300 opacity-80 font-light mt-[-2px]">Plug in. Sell more. Grow more.</p>
+            <div class="flex items-center justify-between mb-8 px-2">
+                <div class="flex flex-col">
+                    <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
+                            class="text-[#3CD670]">Plug</span></h1>
+                    <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
+                </div>
+                <button id="closeSidebarBtn" type="button"
+                    class="sm:hidden text-emerald-200 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <div class="flex flex-col items-center text-center mb-8">
-                <div class="relative w-20 h-20 mb-3">
+            <div
+                class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
+                <div class="relative w-16 h-16 mb-2.5 group">
                     <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
                         alt="Farmer's avatar"
-                        class="w-full h-full rounded-full object-cover border-2 border-emerald-500">
+                        class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
+                    <span
+                        class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
                 </div>
-                <span class="text-xs text-gray-300 font-light">Good morning,</span>
-                <span id="farmerName" class="font-semibold text-sm tracking-wide truncate w-full px-1">Loading...</span>
+                <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
+                <span id="farmerName"
+                    class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
+                    Profile...</span>
                 <span
-                    class="bg-[#2EB85C]/20 text-[#3CD670] border border-[#3CD670]/30 text-[10px] font-medium rounded-full px-3 py-0.5 mt-2 flex items-center gap-1 shadow-sm">
-                    <i class="fa-solid fa-circle-check text-xs"></i> Verified Farmer
+                    class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
                 </span>
             </div>
 
-            <ul class='space-y-1 font-medium'>
+            <ul class="space-y-1 font-medium">
                 <li>
-                    <a href='#'
-                        class='flex bg-[#125C30] rounded-xl items-center p-3 text-white gap-3 transition text-sm'>
-                        <i class="fa-solid fa-house-chimney text-base"></i>
+                    <a href="#"
+                        class="flex bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                        <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm gap-3 transition'>
-                        <i class="fa-solid fa-box text-base"></i>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-box text-base opacity-75"></i>
                         <span>My Listings</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm gap-3 transition'>
-                        <i class="fa-solid fa-circle-plus text-base"></i>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
                         <span>Add New Produce</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm gap-3 transition'>
-                        <i class="fa-solid fa-basket-shopping text-base"></i>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
                         <span>Orders</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex justify-between items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm transition'>
+                    <a href="#"
+                        class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
                         <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-comment-dots text-base"></i>
+                            <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
                             <span>Messages</span>
                         </div>
                         <span
-                            class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                            class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm gap-3 transition'>
-                        <i class="fa-solid fa-wallet text-base"></i>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-wallet text-base opacity-75"></i>
                         <span>Earnings</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'
-                        class='flex items-center p-3 text-gray-200/90 hover:bg-[#125C30]/50 rounded-xl text-sm gap-3 transition'>
-                        <i class="fa-solid fa-user text-base"></i>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-user text-base opacity-75"></i>
                         <span>Profile</span>
                     </a>
                 </li>
             </ul>
         </div>
 
-        <div>
+        <div class="pt-4 border-t border-emerald-800/40">
             <a href="#" id="logoutBtn"
-                class='text-gray-300 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium'>
+                class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
                 <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
                 <span>Logout</span>
             </a>
         </div>
     </aside>
 
-    <main class="sm:ml-48 min-h-screen p-6 max-w-[1200px]">
-        <nav class="mb-6" id="navbar">
-            <div class="flex justify-between items-center">
+    <div id="sidebarBackdrop"
+        class="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
+
+    <main class="sm:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 max-w-(screen-xl) mx-auto transition-all">
+
+        <nav class="mb-8" id="navbar">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div class="flex flex-col">
-                    <h2 class="text-[#0f172a] font-bold text-2xl tracking-tight flex items-center gap-1.5">
+                    <h2
+                        class="text-slate-900 font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-2">
                         Welcome back 👋
                     </h2>
-                    <span class="text-gray-500 text-xs">Here's what's happening with your farm.</span>
+                    <span class="text-slate-500 text-xs sm:text-sm mt-0.5">Here's what's happening with your farm
+                        operations today.</span>
                 </div>
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 self-stretch sm:self-auto justify-end hidden md:flex">
                     <div
-                        class="relative md:flex hidden bg-white p-2.5 rounded-full border border-gray-100 shadow-sm cursor-pointer">
-                        <i class="fa-regular fa-bell text-lg text-gray-600"></i>
+                        class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition">
+                        <i class="fa-regular fa-bell text-base text-slate-700"></i>
                         <span
-                            class="absolute top-1.5 right-1.5 bg-emerald-600 rounded-full w-4 h-4 border-2 border-white flex justify-center items-center text-[8px] text-white font-bold">2</span>
+                            class="absolute -top-1 -right-1 bg-emerald-600 rounded-full w-4 h-4 border-2 border-white flex justify-center items-center text-[8px] text-white font-bold">2</span>
                     </div>
                     <button type="button"
-                        class="bg-[#0A4D26] md:flex hidden hover:bg-emerald-900 px-4 py-2 rounded-xl text-white text-xs font-semibold flex items-center gap-2 transition shadow-sm">
+                        class="bg-[#0A4D26] hover:bg-emerald-900 px-4 py-2.5 rounded-xl text-white text-xs font-bold flex items-center gap-2 transition shadow-sm hover:shadow-md active:scale-[0.98]">
                         <i class="fa-solid fa-plus text-[10px]"></i>Add New Produce
                     </button>
                 </div>
+                <button id="mobileMenuBtn" type="button"
+                    class="text-white hover:text-[#3CD670] focus:outline-none text-xl transition p-1 md:hidden flex">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
             </div>
         </nav>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white shadow-xs border border-gray-100/80 rounded-2xl p-5 flex items-center gap-4">
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
                 <div
-                    class="bg-emerald-50 text-emerald-600 rounded-full w-12 h-12 flex items-center justify-center text-xl">
+                    class="bg-emerald-50 text-emerald-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
                     <i class="fa-solid fa-basket-shopping"></i>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-gray-400 text-xs font-medium">My Listings</span>
-                    <span id="totalListingsCount" class="text-gray-800 font-bold text-xl leading-tight">7</span>
-                    <span class="text-emerald-600 text-[10px] font-semibold mt-0.5">Active</span>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">My Listings</span>
+                    <span id="totalListingsCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">7</span>
+                    <span class="text-emerald-600 text-[10px] font-bold mt-1 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Active
+                        items
+                    </span>
                 </div>
             </div>
 
-            <div class="bg-white shadow-xs border border-gray-100/80 rounded-2xl p-5 flex items-center gap-4">
-                <div class="bg-blue-50 text-blue-600 rounded-full w-12 h-12 flex items-center justify-center text-xl">
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-blue-50 text-blue-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
                     <i class="fa-solid fa-bag-shopping"></i>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-gray-400 text-xs font-medium">Orders</span>
-                    <span id="todayOrdersCount" class="text-gray-800 font-bold text-xl leading-tight">5</span>
-                    <span class="text-blue-600 text-[10px] font-semibold mt-0.5">In progress</span>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Orders</span>
+                    <span id="todayOrdersCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">5</span>
+                    <span class="text-blue-600 text-[10px] font-bold mt-1">In progress dispatch</span>
                 </div>
             </div>
 
-            <div class="bg-white shadow-xs border border-gray-100/80 rounded-2xl p-5 flex items-center gap-4">
-                <div class="bg-amber-50 text-amber-600 rounded-full w-12 h-12 flex items-center justify-center text-xl">
-                    <i class="fa-solid fa-naira-sign text-base"></i>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-gray-400 text-xs font-medium">Earnings</span>
-                    <span id="todayEarningsCount"
-                        class="text-gray-800 font-bold text-xl leading-tight">&#8358;45,600</span>
-                    <span class="text-amber-600 text-[10px] font-semibold mt-0.5">This month</span>
-                </div>
-            </div>
-
-            <div class="bg-white shadow-xs border border-gray-100/80 rounded-2xl p-5 flex items-center gap-4">
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
                 <div
-                    class="bg-indigo-50 text-indigo-600 rounded-full w-12 h-12 flex items-center justify-center text-xl">
+                    class="bg-amber-50 text-amber-600 rounded-xl w-12 h-12 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-naira-sign"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Earnings</span>
+                    <span id="todayEarningsCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">&#8358;45,600</span>
+                    <span class="text-amber-600 text-[10px] font-bold mt-1">This current month</span>
+                </div>
+            </div>
+
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-indigo-50 text-indigo-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
                     <i class="fa-regular fa-eye"></i>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-gray-400 text-xs font-medium">Profile Views</span>
-                    <span class="text-gray-800 font-bold text-xl leading-tight">32</span>
-                    <span class="text-indigo-600 text-[10px] font-semibold mt-0.5">This month</span>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Profile Views</span>
+                    <span class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">32</span>
+                    <span class="text-indigo-600 text-[10px] font-bold mt-1">30 days engagement</span>
                 </div>
             </div>
         </div>
 
-        <h3 class="text-gray-800 font-bold text-sm mb-4">What do you want to do?</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <h3 class="text-slate-800 font-bold text-sm mb-4 tracking-wide uppercase">Quick Actions Shortcuts</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <div
-                class="bg-[#F2F7F4] border border-emerald-100/50 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:scale-[1.01] transition">
+                class="bg-emerald-50/60 border border-emerald-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-emerald-50 hover:shadow-sm transition group">
                 <div
-                    class="bg-white text-emerald-700 w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-xl shadow-xs">
+                    class="bg-white text-emerald-700 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
                     <i class="fa-solid fa-plus text-sm"></i>
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-emerald-950">Add New Produce</h4>
-                    <p class="text-[11px] text-gray-500">List a new crop or item</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">List a fresh harvest crop catalog item</p>
                 </div>
             </div>
             <div
-                class="bg-[#F4F7FA] border border-blue-100/50 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:scale-[1.01] transition">
+                class="bg-blue-50/60 border border-blue-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-blue-50 hover:shadow-sm transition group">
                 <div
-                    class="bg-white text-blue-700 w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-xl shadow-xs">
+                    class="bg-white text-blue-700 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
                     <i class="fa-solid fa-box-open text-sm"></i>
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-blue-950">View My Listings</h4>
-                    <p class="text-[11px] text-gray-500">See all your active items</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Manage stock availability parameters</p>
                 </div>
             </div>
             <div
-                class="bg-[#FFF9F2] border border-amber-100/50 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:scale-[1.01] transition">
+                class="bg-amber-50/60 border border-amber-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-amber-50 hover:shadow-sm transition group">
                 <div
-                    class="bg-white text-amber-600 w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center text-xl shadow-xs">
+                    class="bg-white text-amber-600 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
                     <i class="fa-solid fa-basket-shopping text-sm"></i>
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-amber-950">View Orders</h4>
-                    <p class="text-[11px] text-gray-500">Check your orders</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Check pending consumer request pipelines</p>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white p-5 border border-gray-100 rounded-2xl shadow-xs">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-2">
-                    <h4 class="font-bold text-sm text-slate-800">My Listings</h4>
-                    <a href="#" class="text-emerald-700 font-semibold text-xs hover:underline">View all</a>
-                </div>
-                <div class="space-y-3.5">
-                    <div class="flex items-center justify-between p-1 hover:bg-slate-50/50 rounded-xl transition">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=120"
-                                alt="Fresh Tomatoes" class="w-12 h-12 rounded-xl object-cover">
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Fresh Tomatoes</h5>
-                                <p class="text-[11px] text-gray-500">&#8358;1,200 <span class="text-[10px] font-light">/
-                                        basket</span></p>
-                            </div>
-                        </div>
-                        <span
-                            class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-lg">Active</span>
+            <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                        <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">My Crop Catalog
+                            Listings</h4>
+                        <a href="#" class="text-emerald-700 font-bold text-xs hover:underline">View All</a>
                     </div>
-                    <div class="flex items-center justify-between p-1 hover:bg-slate-50/50 rounded-xl transition">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1590244921253-447f35b34f6A?w=120"
-                                alt="Yam Tubers" class="w-12 h-12 rounded-xl object-cover">
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Yam Tubers</h5>
-                                <p class="text-[11px] text-gray-500">&#8358;2,500 <span class="text-[10px] font-light">/
-                                        piece</span></p>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=120"
+                                    alt="Fresh Tomatoes" class="w-12 h-12 rounded-xl object-cover shrink-0">
+                                <div class="min-w-0">
+                                    <h5 class="font-bold text-xs text-slate-900 truncate">Fresh Red Round Tomatoes</h5>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;1,200 <span
+                                            class="text-[10px] font-normal">/ basket</span></p>
+                                </div>
                             </div>
+                            <span
+                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
                         </div>
-                        <span
-                            class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-lg">Active</span>
-                    </div>
-                    <div class="flex items-center justify-between p-1 hover:bg-slate-50/50 rounded-xl transition">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1628773822503-930a8581e285?w=120"
-                                alt="Ugu Leaves" class="w-12 h-12 rounded-xl object-cover">
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Ugu Leaves</h5>
-                                <p class="text-[11px] text-gray-500">&#8358;500 <span class="text-[10px] font-light">/
-                                        bundle</span></p>
+                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="https://images.unsplash.com/photo-1590244921253-447f35b34f6A?w=120"
+                                    alt="Yam Tubers" class="w-12 h-12 rounded-xl object-cover shrink-0">
+                                <div class="min-w-0">
+                                    <h5 class="font-bold text-xs text-slate-900 truncate">Abuja Sweet Yam Tubers</h5>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;2,500 <span
+                                            class="text-[10px] font-normal">/ piece</span></p>
+                                </div>
                             </div>
+                            <span
+                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
                         </div>
-                        <span
-                            class="bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2.5 py-1 rounded-lg">Active</span>
+                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="https://images.unsplash.com/photo-1628773822503-930a8581e285?w=120"
+                                    alt="Ugu Leaves" class="w-12 h-12 rounded-xl object-cover shrink-0">
+                                <div class="min-w-0">
+                                    <h5 class="font-bold text-xs text-slate-900 truncate">Fresh Harvest Ugu Leaves</h5>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;500 <span
+                                            class="text-[10px] font-normal">/ bundle</span></p>
+                                </div>
+                            </div>
+                            <span
+                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-5 border border-gray-100 rounded-2xl shadow-xs">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-2">
-                    <h4 class="font-bold text-sm text-slate-800">Recent Orders</h4>
-                    <a href="#" class="text-emerald-700 font-semibold text-xs hover:underline">View all</a>
+            <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs">
+                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                    <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">Recent Purchase Requests
+                    </h4>
+                    <a href="#" class="text-emerald-700 font-bold text-xs hover:underline">View All</a>
                 </div>
-                <div class="space-y-3.5">
-                    <div class="flex items-center justify-between p-1">
-                        <div class="flex items-center gap-3">
+                <div class="space-y-4">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
                             <div
-                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-full flex items-center justify-center text-lg">
+                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
                                 <i class="fa-solid fa-cart-shopping text-xs"></i>
                             </div>
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Order #AGP-0018</h5>
-                                <p class="text-[10px] text-gray-400">Fresh Tomatoes (2 baskets)</p>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0018</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Fresh Tomatoes (2 baskets)</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <span class="font-bold text-xs text-gray-800">&#8358;2,400</span>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;2,400</span>
                             <span
-                                class="bg-emerald-50 text-emerald-700 text-[10px] font-medium px-2 py-0.5 rounded-md">Delivered</span>
+                                class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Delivered</span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between p-1">
-                        <div class="flex items-center gap-3">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
                             <div
-                                class="bg-blue-50 text-blue-700 w-11 h-11 rounded-full flex items-center justify-center text-lg">
+                                class="bg-blue-50 text-blue-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
                                 <i class="fa-solid fa-cart-shopping text-xs"></i>
                             </div>
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Order #AGP-0017</h5>
-                                <p class="text-[10px] text-gray-400">Yam Tubers (3 pieces)</p>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0017</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Yam Tubers (3 pieces)</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <span class="font-bold text-xs text-gray-800">&#8358;7,500</span>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;7,500</span>
                             <span
-                                class="bg-blue-50 text-blue-700 text-[10px] font-medium px-2 py-0.5 rounded-md">Processing</span>
+                                class="bg-blue-100 text-blue-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Processing</span>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between p-1">
-                        <div class="flex items-center gap-3">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
                             <div
-                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-full flex items-center justify-center text-lg">
+                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
                                 <i class="fa-solid fa-cart-shopping text-xs"></i>
                             </div>
-                            <div>
-                                <h5 class="font-bold text-xs text-gray-900">Order #AGP-0016</h5>
-                                <p class="text-[10px] text-gray-400">Ugu Leaves (5 bundles)</p>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0016</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Ugu Leaves (5 bundles)</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <span class="font-bold text-xs text-gray-800">&#8358;2,500</span>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;2,500</span>
                             <span
-                                class="bg-emerald-50 text-emerald-700 text-[10px] font-medium px-2 py-0.5 rounded-md">Delivered</span>
+                                class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Delivered</span>
                         </div>
                     </div>
                 </div>
@@ -343,22 +380,40 @@
         </div>
 
         <div
-            class="bg-[#EEF7F1] text-[#0A4D26] p-3 px-4 rounded-xl flex items-center gap-2 text-xs font-medium border border-emerald-100/50">
-            <i class="fa-solid fa-leaf text-emerald-600"></i>
-            <span>Tip: Good photos and accurate prices help you sell faster!</span>
+            class="bg-emerald-800 text-emerald-50 p-4 rounded-2xl flex items-center gap-3 text-xs font-semibold shadow-xs border border-emerald-700/30">
+            <div class="bg-emerald-900/60 p-2 rounded-xl text-base text-[#3CD670]">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <span>Expert Tip: Uploading HD, well-lit photos with exact marketplace prices helps your listings convert 3x
+                faster!</span>
         </div>
     </main>
 
     <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+        const sidebar = document.getElementById('default-sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+        closeSidebarBtn.addEventListener('click', toggleMobileSidebar);
+        sidebarBackdrop.addEventListener('click', toggleMobileSidebar);
+
+        // Core Logout Action Execution Pipeline
         document.getElementById("logoutBtn").addEventListener("click", (e) => {
             e.preventDefault();
             auth.signOut().then(() => {
                 window.location.href = "login.html";
             }).catch((err) => {
-                console.error("Logout system crash: ", err);
+                console.error("Logout runtime system anomaly detected: ", err);
             });
         });
     </script>
 </body>
 
-</html>
+</html>`
