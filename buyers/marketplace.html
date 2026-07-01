@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/images/Agroplug_logo.png">
     <script src="https://cd.tailwindcss.com"></script>
     <title>AgroPlug MarketPLace</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="/farmers/firebase-config.js"></script>
+
+    <script>
+        // You can instantly use 'auth' and 'db' here!
+        auth.onAuthStateChanged(user => {
+            window.location.href = "/farmers/login.html"
+        });
+    </script>
 </head>
+
 <body>
     <div class="flex justify-center items-center min-h-screen">
         <div class="bg-beige-600 p-4 m-5 rounded-md mx-14">
@@ -14,4 +28,5 @@
         </div>
     </div>
 </body>
+
 </html>
