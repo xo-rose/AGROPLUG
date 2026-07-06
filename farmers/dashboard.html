@@ -19,22 +19,18 @@
     <script>
         // Authentication Route Guard Verification
         auth.onAuthStateChanged(user => {
-
             if (!user) {
                 window.location.href = "login.html";
             }
-
-
         });
     </script>
 </head>
 
 <body class="bg-slate-50 font-sans antialiased text-slate-800">
 
-
-
-    <aside id="default-sidebar"
-        class="fixed top-0 left-0 z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+    <!-- Sidebar Drawer (Responsive Drawer Panel) -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
 
         <div>
             <div class="flex items-center justify-between mb-8 px-2">
@@ -43,12 +39,14 @@
                             class="text-[#3CD670]">Plug</span></h1>
                     <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
                 </div>
+                <!-- Close Button inside Drawer for Mobile Layouts -->
                 <button id="closeSidebarBtn" type="button"
-                    class="sm:hidden text-emerald-200 hover:text-white text-lg p-1">
+                    class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
+            <!-- Profile Info Module Container -->
             <div
                 class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
                 <div class="relative w-16 h-16 mb-2.5 group">
@@ -68,7 +66,8 @@
                 </span>
             </div>
 
-            <ul class="space-y-1 font-medium">
+            <!-- Application Navigation Context Links List -->
+            <ul id="menuList" class="space-y-1 font-medium">
                 <li>
                     <a href="#"
                         class="flex bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
@@ -77,14 +76,14 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="mylistings.html"
                         class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                         <i class="fa-solid fa-box text-base opacity-75"></i>
                         <span>My Listings</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="addProduct.html"
                         class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                         <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
                         <span>Add New Produce</span>
@@ -134,13 +133,16 @@
         </div>
     </aside>
 
+    <!-- Translucent Overlay Component for Mobile Side Viewport -->
     <div id="sidebarBackdrop"
-        class="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
+        class="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
 
+    <!-- Application Workspace Workspace View Area -->
     <main class="sm:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 max-w-(screen-xl) mx-auto transition-all">
 
+        <!-- Top Navigation Status Header Area Bar Layout -->
         <nav class="mb-8" id="navbar">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex justify-between items-center gap-4">
                 <div class="flex flex-col">
                     <h2
                         class="text-slate-900 font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-2">
@@ -149,25 +151,30 @@
                     <span class="text-slate-500 text-xs sm:text-sm mt-0.5">Here's what's happening with your farm
                         operations today.</span>
                 </div>
-                <div class="flex items-center gap-3 self-stretch sm:self-auto justify-end hidden md:flex">
+
+                <!-- Right Side Interactive Actions Menu Block -->
+                <div class="flex items-center gap-3">
                     <div
-                        class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition">
+                        class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition hidden sm:block">
                         <i class="fa-regular fa-bell text-base text-slate-700"></i>
                         <span
                             class="absolute -top-1 -right-1 bg-emerald-600 rounded-full w-4 h-4 border-2 border-white flex justify-center items-center text-[8px] text-white font-bold">2</span>
                     </div>
                     <button type="button"
-                        class="bg-[#0A4D26] hover:bg-emerald-900 px-4 py-2.5 rounded-xl text-white text-xs font-bold flex items-center gap-2 transition shadow-sm hover:shadow-md active:scale-[0.98]">
+                        class="bg-[#0A4D26] hover:bg-emerald-900 px-4 py-2.5 rounded-xl text-white text-xs font-bold flex items-center gap-2 transition shadow-sm hover:shadow-md active:scale-[0.98] hidden sm:flex">
                         <i class="fa-solid fa-plus text-[10px]"></i>Add New Produce
                     </button>
+
+                    <!-- Hamburger Icon Trigger Menu Action Component Block (Only visible on mobile) -->
+                    <button id="mobileMenuBtn" type="button"
+                        class="text-slate-700 hover:text-[#0A4D26] focus:outline-none text-2xl transition p-2 border border-slate-200 rounded-xl bg-white shadow-xs sm:hidden flex">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
                 </div>
-                <button id="mobileMenuBtn" type="button"
-                    class="text-white hover:text-[#3CD670] focus:outline-none text-xl transition p-1 md:hidden flex">
-                    <i class="fa-solid fa-bars-staggered"></i>
-                </button>
             </div>
         </nav>
 
+        <!-- Metric Scoreboard Analytical Matrix Summary Section Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div
                 class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
@@ -178,7 +185,7 @@
                 <div class="flex flex-col min-w-0">
                     <span class="text-slate-400 text-xs font-medium truncate">My Listings</span>
                     <span id="totalListingsCount"
-                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">7</span>
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5"></span>
                     <span class="text-emerald-600 text-[10px] font-bold mt-1 flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Active
                         items
@@ -222,12 +229,13 @@
                 </div>
                 <div class="flex flex-col min-w-0">
                     <span class="text-slate-400 text-xs font-medium truncate">Profile Views</span>
-                    <span class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">32</span>
+                    <span class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5"> </span>
                     <span class="text-indigo-600 text-[10px] font-bold mt-1">30 days engagement</span>
                 </div>
             </div>
         </div>
 
+        <!-- Shortcuts Options Component Grid Layout Context Link -->
         <h3 class="text-slate-800 font-bold text-sm mb-4 tracking-wide uppercase">Quick Actions Shortcuts</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <div
@@ -237,7 +245,7 @@
                     <i class="fa-solid fa-plus text-sm"></i>
                 </div>
                 <div>
-                    <h4 class="font-bold text-sm text-emerald-950">Add New Produce</h4>
+                    <a href="addProduct.html" class="font-bold text-sm text-emerald-950">Add New Produce</a>
                     <p class="text-[11px] text-slate-500 mt-0.5">List a fresh harvest crop catalog item</p>
                 </div>
             </div>
@@ -248,7 +256,7 @@
                     <i class="fa-solid fa-box-open text-sm"></i>
                 </div>
                 <div>
-                    <h4 class="font-bold text-sm text-blue-950">View My Listings</h4>
+                    <a href="mylistings.html" class="font-bold text-sm text-blue-950">View My Listings</a>
                     <p class="text-[11px] text-slate-500 mt-0.5">Manage stock availability parameters</p>
                 </div>
             </div>
@@ -265,58 +273,31 @@
             </div>
         </div>
 
+        <!-- Inventory and Request Splitting Row Configuration Blocks Data Grid Columns -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
-                        <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">My Crop Catalog
-                            Listings</h4>
-                        <a href="#" class="text-emerald-700 font-bold text-xs hover:underline">View All</a>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=120"
-                                    alt="Fresh Tomatoes" class="w-12 h-12 rounded-xl object-cover shrink-0">
-                                <div class="min-w-0">
-                                    <h5 class="font-bold text-xs text-slate-900 truncate">Fresh Red Round Tomatoes</h5>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;1,200 <span
-                                            class="text-[10px] font-normal">/ basket</span></p>
-                                </div>
-                            </div>
-                            <span
-                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
-                        </div>
-                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <img src="https://images.unsplash.com/photo-1590244921253-447f35b34f6A?w=120"
-                                    alt="Yam Tubers" class="w-12 h-12 rounded-xl object-cover shrink-0">
-                                <div class="min-w-0">
-                                    <h5 class="font-bold text-xs text-slate-900 truncate">Abuja Sweet Yam Tubers</h5>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;2,500 <span
-                                            class="text-[10px] font-normal">/ piece</span></p>
-                                </div>
-                            </div>
-                            <span
-                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
-                        </div>
-                        <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <img src="https://images.unsplash.com/photo-1628773822503-930a8581e285?w=120"
-                                    alt="Ugu Leaves" class="w-12 h-12 rounded-xl object-cover shrink-0">
-                                <div class="min-w-0">
-                                    <h5 class="font-bold text-xs text-slate-900 truncate">Fresh Harvest Ugu Leaves</h5>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">&#8358;500 <span
-                                            class="text-[10px] font-normal">/ bundle</span></p>
-                                </div>
-                            </div>
-                            <span
-                                class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">Active</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                    <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">
+                        My Crop Catalog Listings
+                    </h4>
+
+                    <a href="mylistings.html" class="text-emerald-700 font-bold text-xs hover:underline">
+                        View All
+                    </a>
+                </div>
+
+                <!-- Dynamic Products -->
+                <div id="dashboardProducts" class="space-y-4">
+
+                    <div class="text-center py-4 text-slate-500">
+                        Loading products...
+                    </div>
+
+                </div>
+
+            </div>
             <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs">
                 <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
                     <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">Recent Purchase Requests
@@ -382,6 +363,7 @@
             </div>
         </div>
 
+        <!-- System Recommendations Banner Bar -->
         <div
             class="bg-emerald-800 text-emerald-50 p-4 rounded-2xl flex items-center gap-3 text-xs font-semibold shadow-xs border border-emerald-700/30">
             <div class="bg-emerald-900/60 p-2 rounded-xl text-base text-[#3CD670]">
@@ -391,13 +373,65 @@
                 faster!</span>
         </div>
     </main>
+    <!-- ASSISTANT-->
+    <!-- AI ASSISTANT BUTTON -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="assistantBtn"
+            class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
+            <i class="fa-solid fa-robot text-2xl"></i>
+        </button>
+    </div>
 
+    <!-- CHAT WINDOW -->
+    <div id="assistantChat"
+        class="fixed bottom-24 right-6 w-80 max-w-[90vw] bg-white rounded-2xl shadow-2xl hidden overflow-hidden z-50 border border-slate-200">
+
+        <!-- Header -->
+        <div class="bg-emerald-600 text-white p-4 flex justify-between items-center">
+            <div>
+                <h3 class="font-bold">AgroPlug Assistant</h3>
+                <p class="text-xs opacity-80">Online</p>
+            </div>
+
+            <button id="closeAssistant">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="chatMessages" class="h-80 overflow-y-auto p-4 bg-slate-50">
+            <div class="bg-emerald-100 text-slate-700 p-3 rounded-xl text-sm">
+                👋 Welcome to AgroPlug!
+
+                <br><br>
+
+                Try asking:
+                <ul class="list-disc ml-4 mt-2">
+                    <li>How do I add a product?</li>
+                    <li>How do I sell produce?</li>
+                    <li>Where can I see my orders?</li>
+                    <li>How do I update my profile?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="border-t border-slate-200 flex">
+            <input type="text" id="userMessage" placeholder="Type a message..." class="flex-1 p-3 outline-none text-sm">
+
+            <button id="sendMessage" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    <!-- JavaScript Navigation Control Pipeline Engine Scripts -->
     <script>
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-        const sidebar = document.getElementById('default-sidebar');
+        const sidebar = document.getElementById('sidebar'); // Fixed to map correctly to container element ID
         const sidebarBackdrop = document.getElementById('sidebarBackdrop');
 
+        // Combined Toggle Navigation Handler Logic Execution Core
         function toggleMobileSidebar() {
             sidebar.classList.toggle('-translate-x-full');
             sidebarBackdrop.classList.toggle('hidden');
@@ -416,7 +450,224 @@
                 console.error("Logout runtime system anomaly detected: ", err);
             });
         });
+
+        // ======================
+        // AGROPLUG ASSISTANT
+        // ======================
+
+        const assistantBtn = document.getElementById("assistantBtn");
+        const assistantChat = document.getElementById("assistantChat");
+        const closeAssistant = document.getElementById("closeAssistant");
+        const sendMessage = document.getElementById("sendMessage");
+        const userMessage = document.getElementById("userMessage");
+        const chatMessages = document.getElementById("chatMessages");
+
+        // Open chat
+        assistantBtn.addEventListener("click", () => {
+            assistantChat.classList.remove("hidden");
+        });
+
+        // Close chat
+        closeAssistant.addEventListener("click", () => {
+            assistantChat.classList.add("hidden");
+        });
+
+        // Send message
+        function sendUserMessage() {
+            const message = userMessage.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            chatMessages.innerHTML += `
+        <div class="flex justify-end mt-3">
+            <div class="bg-emerald-600 text-white px-4 py-2 rounded-xl max-w-[80%] text-sm">
+                ${message}
+            </div>
+        </div>
+    `;
+
+            let reply =
+                "I can help you navigate AgroPlug. Try asking about products, orders, listings, or your profile.";
+
+            const msg = message.toLowerCase();
+
+            if (msg.includes("add product") || msg.includes("listing")) {
+                reply =
+                    "To add a product, click the 'Add New Produce' button at the top of your dashboard.";
+            }
+
+            else if (msg.includes("sell")) {
+                reply =
+                    "You can sell on AgroPlug by creating a listing with product details, price, quantity and photos.";
+            }
+
+            else if (msg.includes("order")) {
+                reply =
+                    "You can monitor customer orders from the Orders section on your dashboard.";
+            }
+
+            else if (msg.includes("profile")) {
+                reply =
+                    "You can update your profile information from the Profile section in the sidebar.";
+            }
+
+            else if (msg.includes("earnings")) {
+                reply =
+                    "Your current earnings are displayed in the Earnings card on the dashboard.";
+            }
+
+            else if (
+                msg.includes("hello") ||
+                msg.includes("hi") ||
+                msg.includes("hey")
+            ) {
+                reply = "Hello 👋 How can I help you today?";
+            }
+
+            setTimeout(() => {
+                chatMessages.innerHTML += `
+            <div class="flex justify-start mt-3">
+                <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl max-w-[80%] text-sm">
+                    ${reply}
+                </div>
+            </div>
+        `;
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+
+            userMessage.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send button
+        sendMessage.addEventListener("click", sendUserMessage);
+
+        // Press Enter
+        userMessage.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                sendUserMessage();
+            }
+        });
+
+        //LOAD LISTING CONTENT//let currentUser = null;
+
+        auth.onAuthStateChanged((user) => {
+
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            currentUser = user;
+
+            loadDashboardProducts();
+        });
+
+        async function loadDashboardProducts() {
+
+            const container =
+                document.getElementById("dashboardProducts");
+
+            if (!container) return;
+
+            try {
+
+                const snapshot = await db
+                    .collection("listings")
+                    .where("farmerId", "==", currentUser.uid)
+                    .limit(3)
+                    .get();
+
+                container.innerHTML = "";
+
+                if (snapshot.empty) {
+
+                    container.innerHTML = `
+                <div class="text-center py-4 text-slate-500">
+                    No products uploaded yet.
+                </div>
+            `;
+
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+
+                    const item = doc.data();
+
+                    container.innerHTML += `
+            
+                <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
+
+                    <div class="flex items-center gap-3 min-w-0">
+
+                        <img
+                            src="${item.imageUrl || 'https://via.placeholder.com/120'}"
+                            alt="${item.productName}"
+                            class="w-12 h-12 rounded-xl object-cover shrink-0"
+                        >
+
+                        <div class="min-w-0">
+
+                            <h5 class="font-bold text-xs text-slate-900 truncate">
+                                ${item.productName || 'Unnamed Product'}
+                            </h5>
+
+                            <p class="text-[11px] text-slate-500 mt-0.5">
+                                ₦${Number(item.price || 0).toLocaleString()}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">
+                        ${item.status || 'Active'}
+                    </span>
+
+                </div>
+
+            `;
+                });
+
+            } catch (error) {
+
+                console.error("Dashboard Products Error:", error);
+
+                container.innerHTML = `
+            <div class="text-red-500 text-sm">
+                Failed to load products.
+            </div>
+        `;
+            }
+        }
     </script>
+
+    <!-- ADD PRODUCT MODAL -->
+    <div id="productModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100]">
+        <div class="bg-white w-[95%] max-w-lg rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-bold text-slate-800">Add New Produce</h2>
+                <button id="closeProductModal"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <form id="productForm" class="space-y-4">
+                <input type="text" id="productName" placeholder="Product Name" class="w-full border p-3 rounded-xl"
+                    required>
+                <input type="number" id="productPrice" placeholder="Price" class="w-full border p-3 rounded-xl"
+                    required>
+                <input type="number" id="productQuantity" placeholder="Quantity" class="w-full border p-3 rounded-xl"
+                    required>
+
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl">
+                    Add Product
+                </button>
+            </form>
+        </div>
+    </div>
+
 </body>
 
-</html>`
+</html>
