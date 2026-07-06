@@ -15,7 +15,7 @@ window.addEventListener("scroll", () => {
     } else {
         // Back to original top state
         nav.classList.remove("bg-white");
-        nav.classList.add("bg-white/30", "shadow-md", "backdrop-blur-lg");
+        nav.classList.add("bg-black", "shadow-md", "backdrop-blur-lg");
 
         links.forEach(link => {
             link.classList.add("text-white", "hover:text-emerald-500");
@@ -253,9 +253,9 @@ okBtn.addEventListener("click", () => {
     const userType = overlayInput.value.trim().toLowerCase();
 
     if (userType === "farmer") {
-        window.location.href = "/farmers/SignUp.html";
+        window.location.href = "./farmers/SignUp.html";
     } else if (userType === "buyer") {
-        window.location.href = "/buyers/SignUp.html";
+        window.location.href = "./buyers/SignUp.html";
     } else {
         errorTxt.textContent = "Please enter Farmer or Buyer";
     }

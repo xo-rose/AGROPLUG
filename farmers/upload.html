@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Produce | AgroPlug</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6">
+
+<div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-xl">
+
+    <h1 class="text-2xl font-bold mb-6">
+        Add New Produce
+    </h1>
+
+    <form id="uploadForm" class="space-y-4">
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Product Name"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+
+        <select
+            id="category"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+            <option value="">Select Category</option>
+            <option>Vegetables</option>
+            <option>Fruits</option>
+            <option>Grains</option>
+            <option>Tubers</option>
+            <option>Livestock</option>
+        </select>
+
+        <input
+            type="number"
+            id="price"
+            placeholder="Price"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+
+        <input
+            type="number"
+            id="quantity"
+            placeholder="Quantity"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+
+        <input
+            type="text"
+            id="unit"
+            placeholder="Unit (kg, basket, bag...)"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+
+        <textarea
+            id="description"
+            placeholder="Description"
+            rows="4"
+            class="w-full border rounded-xl p-3"
+        ></textarea>
+
+        <input
+            type="file"
+            id="image"
+            accept="image/*"
+            required
+            class="w-full border rounded-xl p-3"
+        >
+
+        <button
+            type="submit"
+            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl"
+        >
+            Upload Product
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+
+auth.onAuthStateChanged(user => {
+
+    if (!user) {
+        location.href = "login.html";
+        return;
+    }
+
+    document
+    .getElementById("uploadForm")
+    .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const file =
+            document.getElementById("image").files[0];
+
+            const productName =
+            document.getElementById("name").value;
+
+            const category =
+            document.getElementById("category").value;
+
+            const price =
+            document.getElementById("price").value;
+
+            const quantity =
+            document.getElementById("quantity").value;
+
+            const unit =
+            document.getElementById("unit").value;
+
+            const description =
+            document.getElementById("description").value;
+
+            const fileName =
+            Date.now() + "_" + file.name;
+
+            const storageRef =
+            storage.ref("product-images/" + fileName);
+
+            await storageRef.put(file);
+
+            const imageUrl =
+            await storageRef.getDownloadURL();
+
+            await db.collection("listings").add({
+
+                farmerId: user.uid,
+                farmerName: user.displayName || "",
+
+                productName,
+                category,
+                price: Number(price),
+                quantity: Number(quantity),
+                unit,
+                description,
+
+                imageUrl,
+
+                createdAt:
+                firebase.firestore.FieldValue.serverTimestamp()
+
+            });
+
+            alert("Product uploaded successfully");
+
+            window.location.href =
+            "mylistings.html";
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+            alert(error.message);
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

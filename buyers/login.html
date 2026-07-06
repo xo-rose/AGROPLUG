@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AgroPlug</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/images/Agroplug_logo.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-15deg);
+            }
+
+            75% {
+                transform: rotate(15deg);
+            }
+        }
+
+        .wiggle {
+            animation: wiggle 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-tr from-[#06231D] to-[#096250]">
+
+    <div class="flex justify-center items-center h-screen p-4">
+
+        <form id="loginForm" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-[340px]">
+
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-slate-800">
+                Welcome Back
+                <i class="fa-regular fa-face-smile text-green-600" id="smile"></i>
+            </h2>
+
+            <input type="email" id="email" placeholder="Email"
+                class="border border-slate-300 p-2 w-full mb-3 rounded focus:outline-none focus:border-green-600"
+                required>
+
+            <input type="password" id="password" placeholder="Password"
+                class="border border-slate-300 p-2 w-full mb-3 rounded focus:outline-none focus:border-green-600"
+                required>
+
+            <button type="submit"
+                class="bg-emerald-600 text-white w-full p-2 rounded font-semibold hover:bg-emerald-500 transition active:scale-[0.98]">
+                Login
+            </button>
+
+            <p id="errorMsg" class="text-red-500 mt-2 text-sm font-medium min-h-[20px]"></p>
+
+        </form>
+
+    </div>
+
+    <script type="module" src="login.js"></script>
+
+    <script>
+        const smile = document.getElementById("smile");
+        setInterval(() => {
+            smile.classList.add("wiggle");
+            setTimeout(() => smile.classList.remove("wiggle"), 500);
+        }, 2000);
+    </script>
+
+</body>
+
+</html>
