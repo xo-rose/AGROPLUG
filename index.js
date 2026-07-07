@@ -15,7 +15,7 @@ window.addEventListener("scroll", () => {
     } else {
         // Back to original top state
         nav.classList.remove("bg-white");
-        nav.classList.add("bg-white/30", "shadow-md", "backdrop-blur-lg");
+        nav.classList.add("bg-black", "shadow-md", "backdrop-blur-lg");
 
         links.forEach(link => {
             link.classList.add("text-white", "hover:text-emerald-500");
@@ -47,6 +47,22 @@ const observer = new IntersectionObserver((entries) => {
 // Activate the observer on elements with the 'scroll-animate' class
 const hiddenElements = document.querySelectorAll('.scroll-animate');
 hiddenElements.forEach(el => observer.observe(el));
+
+
+
+// NAVLINKS SMOOTH ENTRY
+document.addEventListener("DOMContentLoaded", () => {
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach((item, index) => {
+        setTimeout(() => {
+            // Remove the initial hidden/shifted states
+            item.classList.remove('opacity-0', 'translate-y-2');
+            // Add the final visible states (Tailwind's transition takes care of the animation)
+            item.classList.add('opacity-100', 'translate-y-0');
+        }, index * 150); // 150ms delay multiplier creates the staggered effect
+    });
+});
 // NAVIGATION CLOSE
 
 
@@ -65,31 +81,31 @@ const products = [
         stock: "Red Tomatoes Avaliable",
         desc: "Harvested this morning. Super sweet, thick skin, perfect for restaurants or family storage.",
         price: "₦12,500",
-        location: "Zamfara State",
-        img: "https://myhealthopedia.com/wp-content/uploads/2025/11/Tomatoes-1.jpg"
+        location: "Umuahia South    ",
+        img: "https://plus.unsplash.com/premium_photo-1661811820259-2575b82101bf?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dG9tYXRvZXN8ZW58MHx8MHx8fDA%3D"
     },
     {
         id: 2,
         title: "Cucumbers",
         category: "vegetables",
         stockleft: "10",
-        stock: "Fresh Cucumbers Avaliable",
+        stock: "Fresh Cucumbers",
         desc: "Harvested this morning. Super sweet, thick skin, perfect for restaurants or family storage.",
         price: "₦16,500",
-        location: "Kano State",
-        img: "https://images.pexels.com/photos/33707194/pexels-photo-33707194/free-photo-of-shopping-for-fresh-cucumbers-at-market.jpeg?w=800"
+        location: "Umuhaia North",
+        img: "https://images.unsplash.com/photo-1694153192731-ab5445654427?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGN1Y3VtYmVyc3xlbnwwfHwwfHx8MA%3D%3D"
     },
     {
         id: 3,
-        title: "Carrots",
+        title: "Potatoes",
         category: "tubers",
         stockleft: "10",
         stock: "Fresh Carrots Avaliabe",
         desc: "Harvested this morning. Super sweet, thick skin, perfect for restaurants or family storage.",
         price: "₦50,500",
-        location: "Rivers State",
+        location: "Obi Ngwa",
         img:
-            "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2Fycm90fGVufDB8fDB8fHww"
+            "https://images.unsplash.com/photo-1730815048561-45df6f7f331d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8WWFtfGVufDB8fDB8fHww"
     },
 
 ]
@@ -141,7 +157,7 @@ function displayItems(menuItems) {
             Purchase <i class="fa-solid fa-basket-shopping"></i>
         </button>
         <span
-            class="absolute left-3 top-3 inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-2xs font-bold tracking-wider uppercase text-white shadow-sm">
+            class="absolute left-3 top-3 inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-2xs font-semibold tracking-wide uppercase text-white shadow-sm text-sm">
             ${item.stock}
         </span>
         <span
@@ -210,18 +226,18 @@ function showModal() {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
 }
-function modalBtn() {
-    modal.classList.remove("hidden");
-    modal.classList.add("flex")
-}
-function hideModal() {
+// function modalBtn() {
+//     modal.classList.remove("hidden");
+//     modal.classList.add("flex")
+// }
+function Modal() {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
 }
 
 // CLOSE MODAL
-closeBtn.addEventListener("click", hideModal);
-cancelBtn.addEventListener("click", hideModal);
+closeBtn.addEventListener("click", Modal);
+cancelBtn.addEventListener("click", Modal);
 
 // CLOSE WHEN CLICKING OUTSIDE
 modal.addEventListener("click", (e) => {

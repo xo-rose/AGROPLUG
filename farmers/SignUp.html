@@ -6,24 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AgroPlug | Farmer Signup</title>
   <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="icon" href="images/Agroplug_logo.png">
+
   <link rel="icon" href="/images/Agroplug_logo.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
 <body class="bg-gradient-to-r from-green-700 to-emerald-700">
   <div class="min-h-screen flex items-center justify-center p-4">
-    <form action="signup.php" method="POST" class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
 
-      <!-- LOGO -->
+    <form id="farmerSignupForm" class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8">
+
       <div class="text-center mb-8">
         <div class="flex flex-col justify-center items-center">
-          <a href="../index.html" class="text-slate-400 hover:text-slate-700 text-sm mb-2">
-            ← Back to Home
+          <a href="../index.html" class="text-slate-400 hover:text-slate-700 text-sm mb-2 transition">
+            &larr; Back to Home
           </a>
-          <a href="dashboard.html">dashboard</a>
-
           <span class="text-3xl font-black text-slate-900 flex items-center gap-1">
-            <img src="/images/Agroplug_logo.png" alt="" class="h-14" />
+            <img src="../images/Agroplug_logo.png" alt="AgroPlug Logo" class="h-14" />
             Agro<span class="text-emerald-600">Plug</span>
           </span>
         </div>
@@ -33,117 +33,126 @@
           <span class="text-emerald-600">farmer</span>
           account
         </h1>
-
       </div>
 
-      <!-- FULL_NAME -->
       <div class="mb-4">
-        <label for="fullName" class="font-semibold text-slate-700">
-          Full Name
-        </label>
-
+        <label for="fullName" class="font-semibold text-slate-700">Full Name</label>
         <div class="relative mt-2">
           <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-          <input type="text" id="fullName" name="fullname" placeholder="Enter your full name" required
+          <input type="text" id="fullName" placeholder="Enter your full name" required
             class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
         </div>
       </div>
 
-      <!-- EMAIL -->
       <div class="mb-4">
-        <label for="email" class="font-semibold text-slate-700">
-          Email Address
-        </label>
-
+        <label for="email" class="font-semibold text-slate-700">Email Address</label>
         <div class="relative mt-2">
           <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-          <input type="email" id="email" name="email" placeholder="Enter your email address" required
+          <input type="email" id="email" placeholder="Enter your email address" required
             class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
         </div>
       </div>
 
-      <!-- PHONE -->
       <div class="mb-4">
-        <label for="phoneNumber" class="font-semibold text-slate-700">
-          Phone Number
-        </label>
-
+        <label for="phoneNumber" class="font-semibold text-slate-700">Phone Number</label>
         <div class="relative mt-2">
           <i class="fa-solid fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-          <input type="text" id="phoneNumber" name="phone" placeholder="08012345678" required
+          <input type="text" id="phoneNumber" placeholder="08012345678" required
             class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
         </div>
       </div>
 
-      <!-- PASSWORD -->
       <div class="mb-6">
-        <label for="password" class="font-semibold text-slate-700">
-          Password
-        </label>
-
+        <label for="password" class="font-semibold text-slate-700">Password</label>
         <div class="relative mt-2">
           <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-
-          <input type="password" id="password" name="password" placeholder="Create a password" required
+          <input type="password" id="password" placeholder="Create a password" required
             class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
-
           <i id="togglePassword"
-            class="fa-regular  absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"></i>
+            class="fa-regular fa-eye-slash absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-slate-600 transition"></i>
         </div>
       </div>
 
-
-      <!-- SUBMIT_BUTTON -->
       <button type="submit"
-        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition duration-300">
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition duration-300 active:scale-[0.99]">
         Create Account
       </button>
 
-      <!-- LOGIN_LINK -->
+      <p id="errorMsg" class="text-red-500 mt-3 text-center text-sm font-semibold min-h-[20px]"></p>
+
       <p class="text-center mt-6 text-slate-500">
         Already have an account?
-
-        <a href="login.php" class="text-emerald-600 font-semibold hover:underline">
-          Login here
-        </a>
+        <a href="login.html" class="text-emerald-600 font-semibold hover:underline">Login here</a>
       </p>
 
-      <!-- MODAL SECTION-->
-      <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
-        <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease]">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-bold text-slate-800">
-              WELCOME SIR / MA.
-            </h2>
+    </form>
+  </div>
 
-            <button class="rounded-full object-cover text-white font-extrabold p-3 bg-emerald-500" id="closeBtn">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-          <span id="overlay" class="font-semibold text-slate-700">
-          </span>
-          <div class="mt-6 flex gap-4">
-            <!-- <button id="cancelBtn"
-                    class="flex-1 font-extrabold rounded-xl border text-white bg-slate-700 py-3 font-mediumhover:bg-slate-50">
-                    Cancel
-                </button> -->
-
-            <button type="submit"
-              class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 font-medium text-white hover:bg-emerald-600"
-              id="signIn">
-              Ok
-            </button>
-
-          </div>
-        </div>
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
+    <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-slate-800">WELCOME</h2>
+        <button class="rounded-full text-white font-extrabold p-2.5 bg-emerald-500" id="closeBtn">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
+      <p id="overlay" class="font-semibold text-slate-700 mt-4"></p>
+      <div class="mt-6 flex gap-4">
+        <button type="button"
+          class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 text-white hover:bg-emerald-700 transition"
+          id="signIn">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="signup.js"></script>
+
+  <script>
+
+    // FOR THE HIDE AND SHOW PASSWORD
+    const togglePassword =
+      document.getElementById("togglePassword");
+
+    const password =
+      document.getElementById("password");
+
+    togglePassword.addEventListener("click", () => {
+
+      if (password.type === "password") {
+        password.type = "text";
+        togglePassword.classList.remove("fa-eye");
+        togglePassword.classList.add("fa-eye-slash");
+      } else {
+        password.type = "password";
+        togglePassword.classList.remove("fa-eye-slash");
+        togglePassword.classList.add("fa-eye");
+
+      }
+
+    });
+
+    // MODAL FUNCTIONS 
+    // const closeBtn = document.getElementById("closeBtn")
+    // const cancelBtn = document.getElementById("cancelBtn")
+    // const overlayTxt = document.getElementById("overlay")
+    // window.addEventListener("DOMContentLoaded", () => {
+    //   modal.classList.remove("hidden")
+    //   modal.classList.add("flex")
+    // })
+    // signIn.addEventListener("click", hideModal)
+    // function hideModal() {
+    //   modal.classList.add("hidden")
+    //   modal.classList.remove("flex")
+    // }
+    // // cancelBtn.addEventListener("click", hideModal)
+    // closeBtn.addEventListener("click", hideModal)
+    // overlayTxt.textContent = "Create your farmer account to showcase your produce, connect with buyers, and grow your business."
 
 
 
-      <script src="signup.js"></script>
+
+  </script>
 </body>
-
 </html>

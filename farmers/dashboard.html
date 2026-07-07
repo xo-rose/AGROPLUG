@@ -4,193 +4,670 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your AgroPlug - Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <title>AgroPlug | Farmer Dashboard</title>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="images/Agroplug_logo.png">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
 </head>
 
-<body class="bg-gray-200">
-    <!--SIDE BAR NAVIGATION-->
-    <aside id='default-sidebar'
-        class='fixed top-0 left-0 z-50 w-44 h-screen transition-transform -translate-x-full sm:translate-x-0'
-        aria-label='Sidebar'>
-        <div class='h-full px-3 py-4 overflow-y-hidden  bg-green-700'>
-            <div class='flex gap-2 text-blue-800 items-center text-lg mb-8   animate__hinge'>
-                <svg xmlns='http://www.w3.org/2000/svg' width='21' height='21' viewBox='0 0 24 24' fill='none'
-                    stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
-                    class='lucide lucide-graduation-cap-icon lucide-graduation-cap'>
-                    <path
-                        d='M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z' />
-                    <path d='M22 10v6' />
-                    <path d='M6 12.5V16a6 3 0 0 0 12 0v-3.5' />
-                </svg>
-                <h4 class='text-sm font-bold text-black font-[nothing-writing, sana-serif]'>AgroPlug</h4>
-            </div>
-            <div class="flex flex-col items-center">
-                <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
-                    alt="..." title="Famer's_Picture" class="w-20 h-20 rounded-full object-cover mb-2">
-                <span id="greetings" class="text-white text-sm">Good Morning,</span>
-                <span class="text-white font-bold text-lg ">Sandra Kyle</span>
-                <span
-                    class="bg-emerald-600 text-white text-xs rounded-full px-[5px] py-[5px] mb-4 gap-[6px] flex items-center justify-center">
-                    <i class="fa-regular fa-circle-check shadow-lg rounded-full"></i>Verified
-                    Famrer</span>
+<body class="bg-slate-50 font-sans antialiased text-slate-800">
+
+    <!-- Sidebar Drawer (Responsive Drawer Panel) -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+
+        <div>
+            <div class="flex items-center justify-between mb-8 px-2">
+                <div class="flex flex-col">
+                    <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
+                            class="text-[#3CD670]">Plug</span></h1>
+                    <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
+                </div>
+                <!-- Close Button inside Drawer for Mobile Layouts -->
+                <button id="closeSidebarBtn" type="button"
+                    class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
-            <ul class='space-y-2 font-medium items-center'>
-                <li class='' id="dashboard_btn">
-                    <a href='#' class='flex bg-blue-100 rounded items-center p-[6px] text-blue-700 gap-1 '>
-                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
-                            stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'
-                            class='lucide lucide-house-icon lucide-house'>
-                            <path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8' />
-                            <path
-                                d='M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' />
-                        </svg> <span class='ml-1 font-[sans-serif] font-semibold '>Dashboard</span>
+            <!-- Profile Info Module Container -->
+            <div
+                class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
+                <div class="relative w-16 h-16 mb-2.5 group">
+                    <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
+                        alt="Farmer's avatar"
+                        class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
+                    <span
+                        class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
+                </div>
+                <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
+                <span id="farmerName"
+                    class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
+                    Profile...</span>
+                <span
+                    class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
+                </span>
+            </div>
+
+            <!-- Application Navigation Context Links List -->
+            <ul id="menuList" class="space-y-1 font-medium">
+                <li>
+                    <a href="#"
+                        class="flex bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                        <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-                <li class=''>
-                    <a href='#' class='flex items-center p-2 text-gray-900 gap-1  '>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-box-icon lucide-box">
-                            <path
-                                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                            <path d="m3.3 7 8.7 5 8.7-5" />
-                            <path d="M12 22V12" />
-                        </svg> <span class='ml-1'>My Listing</span>
+                <li>
+                    <a href="mylistings.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-box text-base opacity-75"></i>
+                        <span>My Listings</span>
                     </a>
                 </li>
-                <li class=''>
-                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-circle-plus-icon lucide-circle-plus">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M8 12h8" />
-                            <path d="M12 8v8" />
-                        </svg> <span class='ml-1'>Add New Produce</span>
+                <li>
+                    <a href="addProduct.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
+                        <span>Add New Produce</span>
                     </a>
                 </li>
-                <li class='mb-3'>
-                    <a href='#' class='flex items-center  text-gray-900 gap-1 '>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-shopping-bag-icon lucide-shopping-bag">
-                            <path d="M16 10a4 4 0 0 1-8 0" />
-                            <path d="M3.103 6.034h17.794" />
-                            <path
-                                d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" />
-                        </svg> <span class='ml-1'>Orders</span>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
+                        <span>Orders</span>
                     </a>
                 </li>
-                <li class=''>
-                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '><svg
-                            xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
-                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
-                            class='lucide lucide-message-circle-icon lucide-message-circle'>
-                            <path
-                                d='M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719' />
-                        </svg>C <span class='ml-1'>Messages</span></a>
-                </li>
-                <li class=''>
-                    <a href='#' class='flex items-center p-[6px] text-gray-900 gap-1 '> <span
-                            class='ml-1'>Earnings</span>
+                <li>
+                    <a href="#"
+                        class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
+                            <span>Messages</span>
+                        </div>
+                        <span
+                            class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
                     </a>
                 </li>
-                <li class=''>
-                    <a href="up" class='flex items-center p-[6px] text-gray-900 gap-1 '><svg
-                            xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
-                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
-                            class='lucide lucide-user-round-pen-icon lucide-user-round-pen'>
-                            <path d='M2 21a8 8 0 0 1 10.821-7.487' />
-                            <path
-                                d='M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z' />
-                            <circle cx='10' cy='8' r='5' />
-                        </svg> <span class='ml-1'>Profile</span> </a>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-wallet text-base opacity-75"></i>
+                        <span>Earnings</span>
+                    </a>
                 </li>
-                <li class=''>
-                    <a href='logout.php' class=' text-gray-800 p-[6px] flex items-center gap-1'>
-                        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'
-                            stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'
-                            class='lucide lucide-log-out-icon lucide-log-out'>
-                            <path d='m16 17 5-5-5-5' />
-                            <path d='M21 12H9' />
-                            <path d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4' />
-                        </svg> <span class=' text-black ml-1'>Logout</span>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-user text-base opacity-75"></i>
+                        <span>Profile</span>
                     </a>
                 </li>
             </ul>
         </div>
+
+        <div class="pt-4 border-t border-emerald-800/40">
+            <a href="#" id="logoutBtn"
+                class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
+                <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </aside>
-    <!--VERTICAL NAVIGATION-->
-    <nav class="sticky top-0 z-20 bg-transparent absolute lg:ml-43 sm:ml-44 mt-2" id="navbar">
-        <div class="flex justify-between items-center p-2">
-            <div class="flex flex-col ml-1">
-                <span class="text-slate-600 font-semibold text-2xl">Welecom Back Sandra <i
-                        class="fa-solid fa-hand-sparkles text-md"></i></span>
-                <span class="text-slate-400 font-semibold text-sm">Here's what's happening with you farm</span>
-            </div>
-            <div class="flex items-center gap-[12px] md:flex hidden">
-                <div class="flex items-center">
-                    <i class="fa-regular fa-bell text-2xl text-emerald-800"></i>
-                    <span
-                        class="bg-emerald-700 rounded-full p-2 w-6 h-6 flex justify-center items-center -mt-4 -ml-3 text-white">3</span>
+
+    <!-- Translucent Overlay Component for Mobile Side Viewport -->
+    <div id="sidebarBackdrop"
+        class="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
+
+    <!-- Application Workspace Workspace View Area -->
+    <main class="sm:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 max-w-(screen-xl) mx-auto transition-all">
+
+        <!-- Top Navigation Status Header Area Bar Layout -->
+        <nav class="mb-8" id="navbar">
+            <div class="flex justify-between items-center gap-4">
+                <div class="flex flex-col">
+                    <h2
+                        class="text-slate-900 font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-2">
+                        Welcome back 👋
+                    </h2>
+                    <span class="text-slate-500 text-xs sm:text-sm mt-0.5">Here's what's happening with your farm
+                        operations today.</span>
                 </div>
-                <button type="button"
-                    class="bg-emerald-600 px-2 py-2 rounded-lg text-white flex items-center gap-[6px]"><i
-                        class="fa-solid fa-plus shadow-lg  rounded-full "></i>Add New Product</button>
+
+                <!-- Right Side Interactive Actions Menu Block -->
+                <div class="flex items-center gap-3">
+                    <div
+                        class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition hidden sm:block">
+                        <i class="fa-regular fa-bell text-base text-slate-700"></i>
+                        <span
+                            class="absolute -top-1 -right-1 bg-emerald-600 rounded-full w-4 h-4 border-2 border-white flex justify-center items-center text-[8px] text-white font-bold">2</span>
+                    </div>
+                    <button type="button"
+                        class="bg-[#0A4D26] hover:bg-emerald-900 px-4 py-2.5 rounded-xl text-white text-xs font-bold flex items-center gap-2 transition shadow-sm hover:shadow-md active:scale-[0.98] hidden sm:flex">
+                        <i class="fa-solid fa-plus text-[10px]"></i>Add New Produce
+                    </button>
+
+                    <!-- Hamburger Icon Trigger Menu Action Component Block (Only visible on mobile) -->
+                    <button id="mobileMenuBtn" type="button"
+                        class="text-slate-700 hover:text-[#0A4D26] focus:outline-none text-2xl transition p-2 border border-slate-200 rounded-xl bg-white shadow-xs sm:hidden flex">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                </div>
             </div>
-            <button class="md:hidden flex">
-                <i class="fa-solid fa-bars"></i>
+        </nav>
+
+        <!-- Metric Scoreboard Analytical Matrix Summary Section Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-emerald-50 text-emerald-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">My Listings</span>
+                    <span id="totalListingsCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5"></span>
+                    <span class="text-emerald-600 text-[10px] font-bold mt-1 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Active
+                        items
+                    </span>
+                </div>
+            </div>
+
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-blue-50 text-blue-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Orders</span>
+                    <span id="todayOrdersCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">5</span>
+                    <span class="text-blue-600 text-[10px] font-bold mt-1">In progress dispatch</span>
+                </div>
+            </div>
+
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-amber-50 text-amber-600 rounded-xl w-12 h-12 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-naira-sign"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Earnings</span>
+                    <span id="todayEarningsCount"
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">&#8358;45,600</span>
+                    <span class="text-amber-600 text-[10px] font-bold mt-1">This current month</span>
+                </div>
+            </div>
+
+            <div
+                class="bg-white shadow-xs border border-slate-100 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
+                <div
+                    class="bg-indigo-50 text-indigo-600 rounded-xl w-12 h-12 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-regular fa-eye"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-slate-400 text-xs font-medium truncate">Profile Views</span>
+                    <span class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5"> </span>
+                    <span class="text-indigo-600 text-[10px] font-bold mt-1">30 days engagement</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shortcuts Options Component Grid Layout Context Link -->
+        <h3 class="text-slate-800 font-bold text-sm mb-4 tracking-wide uppercase">Quick Actions Shortcuts</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div
+                class="bg-emerald-50/60 border border-emerald-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-emerald-50 hover:shadow-sm transition group">
+                <div
+                    class="bg-white text-emerald-700 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                </div>
+                <div>
+                    <a href="addProduct.html" class="font-bold text-sm text-emerald-950">Add New Produce</a>
+                    <p class="text-[11px] text-slate-500 mt-0.5">List a fresh harvest crop catalog item</p>
+                </div>
+            </div>
+            <div
+                class="bg-blue-50/60 border border-blue-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-blue-50 hover:shadow-sm transition group">
+                <div
+                    class="bg-white text-blue-700 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
+                    <i class="fa-solid fa-box-open text-sm"></i>
+                </div>
+                <div>
+                    <a href="mylistings.html" class="font-bold text-sm text-blue-950">View My Listings</a>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Manage stock availability parameters</p>
+                </div>
+            </div>
+            <div
+                class="bg-amber-50/60 border border-amber-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-amber-50 hover:shadow-sm transition group">
+                <div
+                    class="bg-white text-amber-600 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
+                    <i class="fa-solid fa-basket-shopping text-sm"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-amber-950">View Orders</h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Check pending consumer request pipelines</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory and Request Splitting Row Configuration Blocks Data Grid Columns -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs flex flex-col justify-between">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                    <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">
+                        My Crop Catalog Listings
+                    </h4>
+
+                    <a href="mylistings.html" class="text-emerald-700 font-bold text-xs hover:underline">
+                        View All
+                    </a>
+                </div>
+
+                <!-- Dynamic Products -->
+                <div id="dashboardProducts" class="space-y-4">
+
+                    <div class="text-center py-4 text-slate-500">
+                        Loading products...
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="bg-white p-5 border border-slate-100 rounded-2xl shadow-xs">
+                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                    <h4 class="font-extrabold text-sm text-slate-800 tracking-wide uppercase">Recent Purchase Requests
+                    </h4>
+                    <a href="#" class="text-emerald-700 font-bold text-xs hover:underline">View All</a>
+                </div>
+                <div class="space-y-4">
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div
+                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
+                                <i class="fa-solid fa-cart-shopping text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0018</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Fresh Tomatoes (2 baskets)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;2,400</span>
+                            <span
+                                class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Delivered</span>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div
+                                class="bg-blue-50 text-blue-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
+                                <i class="fa-solid fa-cart-shopping text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0017</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Yam Tubers (3 pieces)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;7,500</span>
+                            <span
+                                class="bg-blue-100 text-blue-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Processing</span>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div
+                                class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
+                                <i class="fa-solid fa-cart-shopping text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #AGP-0016</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">Ugu Leaves (5 bundles)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <span class="font-extrabold text-xs text-slate-800">&#8358;2,500</span>
+                            <span
+                                class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Recommendations Banner Bar -->
+        <div
+            class="bg-emerald-800 text-emerald-50 p-4 rounded-2xl flex items-center gap-3 text-xs font-semibold shadow-xs border border-emerald-700/30">
+            <div class="bg-emerald-900/60 p-2 rounded-xl text-base text-[#3CD670]">
+                <i class="fa-solid fa-leaf"></i>
+            </div>
+            <span>Expert Tip: Uploading HD, well-lit photos with exact marketplace prices helps your listings convert 3x
+                faster!</span>
+        </div>
+    </main>
+    <!-- ASSISTANT-->
+    <!-- AI ASSISTANT BUTTON -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="assistantBtn"
+            class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
+            <i class="fa-solid fa-robot text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- CHAT WINDOW -->
+    <div id="assistantChat"
+        class="fixed bottom-24 right-6 w-80 max-w-[90vw] bg-white rounded-2xl shadow-2xl hidden overflow-hidden z-50 border border-slate-200">
+
+        <!-- Header -->
+        <div class="bg-emerald-600 text-white p-4 flex justify-between items-center">
+            <div>
+                <h3 class="font-bold">AgroPlug Assistant</h3>
+                <p class="text-xs opacity-80">Online</p>
+            </div>
+
+            <button id="closeAssistant">
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
+        <!-- Messages -->
+        <div id="chatMessages" class="h-80 overflow-y-auto p-4 bg-slate-50">
+            <div class="bg-emerald-100 text-slate-700 p-3 rounded-xl text-sm">
+                👋 Welcome to AgroPlug!
 
-    </nav>
+                <br><br>
 
-    <!--FIRST GRID SECTION-->
-    <div class="grid lg:grid-cols-4  lg:ml-45 sm:ml-44 -gap-10 mt-10">
-        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
-            <span><i
-                    class="fa-solid fa-shopping-bag bg-blue-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16"></i></span>
-            <div class="flex flex-col">
-                <span>Order</span>
-                <span>5</span>
-                <span>inprogress</span>
+                Try asking:
+                <ul class="list-disc ml-4 mt-2">
+                    <li>How do I add a product?</li>
+                    <li>How do I sell produce?</li>
+                    <li>Where can I see my orders?</li>
+                    <li>How do I update my profile?</li>
+                </ul>
             </div>
         </div>
 
-        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
-            <span><i
-                    class="fa-solid fa-shopping-cart bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
-            <div class="flex flex-col">
-                <span>My Listings</span>
-                <span>10</span>
-                <span>Active</span>
-            </div>
-        </div>
-        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
-            <span><i
-                    class="fa-solid fa-naira-sign bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
-            <div class="flex flex-col">
-                <span>Earnings</span>
-                <span>10</span>
-                <span>This Month</span>
-            </div>
-        </div>
-        <div class="bg-white shadow-md rounded-lg  flex items-center justify-center gap-5 mx-10 p-4">
-            <span><i
-                    class="fa-regular fa-eye bg-emerald-100 p-2 text-2xl rounded-full flex justify-center items-center w-16 h-16 "></i></span>
-            <div class="flex flex-col">
-                <span>Profile Views</span>
-                <span>10</span>
-                <span>Active</span>
-            </div>
-        </div>
+        <!-- Input -->
+        <div class="border-t border-slate-200 flex">
+            <input type="text" id="userMessage" placeholder="Type a message..." class="flex-1 p-3 outline-none text-sm">
 
+            <button id="sendMessage" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
+    <!-- JavaScript Navigation Control Pipeline Engine Scripts -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+        const sidebar = document.getElementById('sidebar'); // Fixed to map correctly to container element ID
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        // Combined Toggle Navigation Handler Logic Execution Core
+        function toggleMobileSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileSidebar);
+        closeSidebarBtn.addEventListener('click', toggleMobileSidebar);
+        sidebarBackdrop.addEventListener('click', toggleMobileSidebar);
+
+        // Core Logout Action Execution Pipeline
+        document.getElementById("logoutBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = "login.html";
+            }).catch((err) => {
+                console.error("Logout runtime system anomaly detected: ", err);
+            });
+        });
+
+        // ======================
+        // AGROPLUG ASSISTANT
+        // ======================
+
+        const assistantBtn = document.getElementById("assistantBtn");
+        const assistantChat = document.getElementById("assistantChat");
+        const closeAssistant = document.getElementById("closeAssistant");
+        const sendMessage = document.getElementById("sendMessage");
+        const userMessage = document.getElementById("userMessage");
+        const chatMessages = document.getElementById("chatMessages");
+
+        // Open chat
+        assistantBtn.addEventListener("click", () => {
+            assistantChat.classList.remove("hidden");
+        });
+
+        // Close chat
+        closeAssistant.addEventListener("click", () => {
+            assistantChat.classList.add("hidden");
+        });
+
+        // Send message
+        function sendUserMessage() {
+            const message = userMessage.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            chatMessages.innerHTML += `
+        <div class="flex justify-end mt-3">
+            <div class="bg-emerald-600 text-white px-4 py-2 rounded-xl max-w-[80%] text-sm">
+                ${message}
+            </div>
+        </div>
+    `;
+
+            let reply =
+                "I can help you navigate AgroPlug. Try asking about products, orders, listings, or your profile.";
+
+            const msg = message.toLowerCase();
+
+            if (msg.includes("add product") || msg.includes("listing")) {
+                reply =
+                    "To add a product, click the 'Add New Produce' button at the top of your dashboard.";
+            }
+
+            else if (msg.includes("sell")) {
+                reply =
+                    "You can sell on AgroPlug by creating a listing with product details, price, quantity and photos.";
+            }
+
+            else if (msg.includes("order")) {
+                reply =
+                    "You can monitor customer orders from the Orders section on your dashboard.";
+            }
+
+            else if (msg.includes("profile")) {
+                reply =
+                    "You can update your profile information from the Profile section in the sidebar.";
+            }
+
+            else if (msg.includes("earnings")) {
+                reply =
+                    "Your current earnings are displayed in the Earnings card on the dashboard.";
+            }
+
+            else if (
+                msg.includes("hello") ||
+                msg.includes("hi") ||
+                msg.includes("hey")
+            ) {
+                reply = "Hello 👋 How can I help you today?";
+            }
+
+            setTimeout(() => {
+                chatMessages.innerHTML += `
+            <div class="flex justify-start mt-3">
+                <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl max-w-[80%] text-sm">
+                    ${reply}
+                </div>
+            </div>
+        `;
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+
+            userMessage.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send button
+        sendMessage.addEventListener("click", sendUserMessage);
+
+        // Press Enter
+        userMessage.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                sendUserMessage();
+            }
+        });
+
+        //LOAD LISTING CONTENT//let currentUser = null;
+
+        auth.onAuthStateChanged((user) => {
+
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            currentUser = user;
+
+            loadDashboardProducts();
+        });
+
+        async function loadDashboardProducts() {
+
+            const container =
+                document.getElementById("dashboardProducts");
+
+            if (!container) return;
+
+            try {
+
+                const snapshot = await db
+                    .collection("listings")
+                    .where("farmerId", "==", currentUser.uid)
+                    .limit(3)
+                    .get();
+
+                container.innerHTML = "";
+
+                if (snapshot.empty) {
+
+                    container.innerHTML = `
+                <div class="text-center py-4 text-slate-500">
+                    No products uploaded yet.
+                </div>
+            `;
+
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+
+                    const item = doc.data();
+
+                    container.innerHTML += `
+            
+                <div class="flex items-center justify-between p-1.5 hover:bg-slate-50 rounded-xl transition">
+
+                    <div class="flex items-center gap-3 min-w-0">
+
+                        <img
+                            src="${item.imageUrl || 'https://via.placeholder.com/120'}"
+                            alt="${item.productName}"
+                            class="w-12 h-12 rounded-xl object-cover shrink-0"
+                        >
+
+                        <div class="min-w-0">
+
+                            <h5 class="font-bold text-xs text-slate-900 truncate">
+                                ${item.productName || 'Unnamed Product'}
+                            </h5>
+
+                            <p class="text-[11px] text-slate-500 mt-0.5">
+                                ₦${Number(item.price || 0).toLocaleString()}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">
+                        ${item.status || 'Active'}
+                    </span>
+
+                </div>
+
+            `;
+                });
+
+            } catch (error) {
+
+                console.error("Dashboard Products Error:", error);
+
+                container.innerHTML = `
+            <div class="text-red-500 text-sm">
+                Failed to load products.
+            </div>
+        `;
+            }
+        }
+    </script>
+
+    <!-- ADD PRODUCT MODAL -->
+    <div id="productModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100]">
+        <div class="bg-white w-[95%] max-w-lg rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-bold text-slate-800">Add New Produce</h2>
+                <button id="closeProductModal"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <form id="productForm" class="space-y-4">
+                <input type="text" id="productName" placeholder="Product Name" class="w-full border p-3 rounded-xl"
+                    required>
+                <input type="number" id="productPrice" placeholder="Price" class="w-full border p-3 rounded-xl"
+                    required>
+                <input type="number" id="productQuantity" placeholder="Quantity" class="w-full border p-3 rounded-xl"
+                    required>
+
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl">
+                    Add Product
+                </button>
+            </form>
+        </div>
+    </div>
+
 </body>
 
 </html>

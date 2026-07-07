@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings | AgroPlug</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-[#0A4D26] text-white shadow-lg sm:ml-77 lg:ml-64 md:ml-54">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+            <div>
+                <h1 class="text-2xl font-black">
+                    Agro<span class="text-[#3CD670]">Plug</span>
+                </h1>
+                <p class="text-xs text-emerald-200">
+                    My Uploaded Products
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4 hidden md:flex">
+
+                <span id="farmerName" class="font-medium text-sm">
+                    Loading...
+                </span>
+
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm">
+                    Logout
+                </button>
+
+            </div>
+            <!-- Hamburger Icon Trigger Menu Action Component Block (Only visible on mobile) -->
+            <button id="mobileMenuBtn" type="button"
+                class="text-slate-700 hover:text-[#0A4D26] focus:outline-none text-2xl transition p-2 border border-slate-200 rounded-xl bg-white shadow-xs sm:hidden flex">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+    </header>
+    <!-- Sidebar Drawer (Responsive Drawer Panel) -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+
+        <div>
+            <div class="flex items-center justify-between mb-8 px-2">
+                <!-- <div class="flex flex-col">
+                    <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
+                            class="text-[#3CD670]">Plug</span></h1>
+                    <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
+                </div> -->
+                <!-- Close Button inside Drawer for Mobile Layouts -->
+                <button id="closeSidebarBtn" type="button"
+                    class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Profile Info Module Container -->
+            <div
+                class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
+                <div class="relative w-16 h-16 mb-2.5 group">
+                    <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
+                        alt="Farmer's avatar"
+                        class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
+                    <span
+                        class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
+                </div>
+                <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
+                <span id="farmerName"
+                    class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
+                    Profile...</span>
+                <span
+                    class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
+                </span>
+            </div>
+
+            <!-- Application Navigation Context Links List -->
+            <ul id="menuList" class="space-y-1 font-medium">
+                <li>
+                    <a href="dashboard.html"
+                        class="flex   rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                        <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mylistings.html"
+                        class="flex items-center border border-emerald-600/30 bg-emerald-700/50  p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-box text-base opacity-75"></i>
+                        <span>My Listings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="addProduct.html"
+                        class="flex items-center  p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
+                        <span>Add New Produce</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
+                            <span>Messages</span>
+                        </div>
+                        <span
+                            class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-wallet text-base opacity-75"></i>
+                        <span>Earnings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-user text-base opacity-75"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="pt-4 border-t border-emerald-800/40">
+            <a href="#" id="logoutBtn"
+                class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
+                <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+    <div id="sidebarBackdrop"
+        class="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
+
+
+    <!-- PAGE CONTENT -->
+    <main class="max-w-7xl mx-auto px-6 py-8 lg:ml-64 sm:ml-44" id="navbar">
+
+        <div class="flex justify-between items-center mb-8">
+
+            <div>
+                <h2 class="text-3xl font-bold text-slate-800">
+                    My Listings
+                </h2>
+
+                <p class="text-slate-500">
+                    Products uploaded by you
+                </p>
+            </div>
+
+            <a href="addProduct.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl">
+                <i class="fa-solid fa-plus mr-2"></i>
+                Add Product
+            </a>
+
+        </div>
+
+        <!-- STATS -->
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-slate-500 text-sm">
+                    Total Products
+                </p>
+
+                <h3 id="totalProducts" class="text-3xl font-bold text-emerald-600">
+                    0
+                </h3>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-slate-500 text-sm">
+                    Active Listings
+                </p>
+
+                <h3 id="activeProducts" class="text-3xl font-bold text-blue-600">
+                    0
+                </h3>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow">
+                <p class="text-slate-500 text-sm">
+                    Inventory Items
+                </p>
+
+                <h3 id="inventoryCount" class="text-3xl font-bold text-orange-600">
+                    0
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- PRODUCTS -->
+        <div id="listingsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+
+    </main>
+
+    <script src="listing.js"></script>
+
+</body>
+
+</html>
