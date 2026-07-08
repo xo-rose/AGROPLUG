@@ -186,7 +186,8 @@ async function openConversation(convId) {
 
     if (threadTitle) threadTitle.textContent = otherName;
     if (threadSubtitle) threadSubtitle.textContent = "Buyer";
-    if (threadStatus) threadStatus.textContent = refreshed.lastMessageAt ? `Last active: ${formatTime(refreshed.lastMessageAt)}` : "";
+    if (threadStatus) threadStatus.textContent = refreshed.lastMessageAt ? `Last active: ${formatTime(refreshed.lastMessageAt)}` : "Select this buyer to start a conversation";
+
 
     if (messageInput) {
         messageInput.placeholder = `Message ${otherName}...`;

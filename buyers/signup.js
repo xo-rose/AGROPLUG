@@ -134,7 +134,7 @@ const closeModal = () => {
     
     // Redirect cleanly ONLY if it's the green success message state
     if (!overlayText.classList.contains("text-red-600")) {
-        window.location.href = "../farmers/login.html"; // Redirects to the login route listed in your anchor tags
+        window.location.href = "login.html"; // Redirects to the login route listed in your anchor tags
     }
 };
 

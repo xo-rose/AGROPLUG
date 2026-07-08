@@ -201,7 +201,8 @@ async function openConversation(convId) {
 
     threadTitle.textContent = otherName;
     threadSubtitle.textContent = "Farmer";
-    threadStatus.textContent = refreshed.lastMessageAt ? `Last active: ${formatTime(refreshed.lastMessageAt)}` : "";
+    threadStatus.textContent = refreshed.lastMessageAt ? `Last active: ${formatTime(refreshed.lastMessageAt)}` : "Select this farmer to start a conversation";
+
 
     // Update input placeholder
     if (messageInput) {
