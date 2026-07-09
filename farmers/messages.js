@@ -1,461 +1,381 @@
-/**
- * Farmer Messages (1:1 with buyers) - Firestore real-time chat
- * Uses Firebase compat globals from farmers/firebase-config.js:
- *   - firebase (namespace)
- *   - auth
- *   - db
- *
- * UI element ids must match farmers/messages.html
- */
+const ROLE = "farmer";
+
+// Deterministic conversation id for buyer<->farmer pairs
+function getConversationId(buyerId, farmerId) {
+    const a = String(buyerId || "");
+    const b = String(farmerId || "");
+    return [a, b].sort().join("_");
+}
 function escapeHtml(value) {
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-function formatTime(ts) {
-    try {
-        if (!ts) return "";
-        const d = typeof ts.toDate === "function" ? ts.toDate() : new Date(ts);
-        if (Number.isNaN(d.getTime())) return "";
-        return new Intl.DateTimeFormat("en-NG", { hour: "2-digit", minute: "2-digit" }).format(d);
-    } catch {
-        return "";
-    }
+function getTimestampValue(value) {
+    if (!value) return 0;
+    if (typeof value.toMillis === "function") return value.toMillis();
+    if (typeof value.toDate === "function") return value.toDate().getTime();
+    return new Date(value).getTime() || 0;
 }
 
-function conversationIdForBuyerFarmer(buyerUid, farmerUid) {
-    // Keep the same convention used in buyers/messages.js
-    return `${buyerUid}_${farmerUid}`;
+function formatDate(value) {
+    const millis = getTimestampValue(value);
+    if (!millis) return "";
+    return new Intl.DateTimeFormat("en-NG", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+    }).format(new Date(millis));
 }
 
 let currentUser = null;
-let activeConversationId = null;
-let messagesUnsub = null;
-let conversationsUnsub = null;
+let currentConversationId = null;
+let unsubscribeMessages = null;
 
-// DOM
-const conversationList = document.getElementById("conversationList");
-const threadTitle = document.getElementById("threadTitle");
-const threadSubtitle = document.getElementById("threadSubtitle");
-const threadStatus = document.getElementById("threadStatus");
-const messagesArea = document.getElementById("messagesArea");
-const messageForm = document.getElementById("messageForm");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const refreshBtn = document.getElementById("refreshBtn");
+const conversationsListEl = document.getElementById("conversationsList");
+const conversationHintEl = document.getElementById("conversationHint");
+const activeChatTitleEl = document.getElementById("activeChatTitle");
+const activeChatSubtitleEl = document.getElementById("activeChatSubtitle");
+const messagesPaneEl = document.getElementById("messagesPane");
 
-// Manual start new chat UI (added to farmers/messages.html)
-const newChatBuyerSelect = document.getElementById("newChatBuyerSelect");
-const startNewChatBtn = document.getElementById("startNewChatBtn");
+const sendFormEl = document.getElementById("sendForm");
+const messageInputEl = document.getElementById("messageInput");
+const sendBtnEl = document.getElementById("sendBtn");
+const sendStatusEl = document.getElementById("sendStatus");
 
-async function loadUserDisplayName(uid) {
-    try {
-        const snap = await db.collection("users").doc(uid).get();
-        const data = snap.data() || {};
-        return data.fullname || data.displayName || (data.email ? data.email.split("@")[0] : "User");
-    } catch (e) {
-        console.error("loadUserDisplayName error:", e);
-        return "User";
-    }
+function setSendDisabled(disabled, statusText = "") {
+    if (sendBtnEl) sendBtnEl.disabled = !!disabled;
+    if (sendStatusEl) sendStatusEl.textContent = statusText || "";
 }
 
-function renderMessages(messages) {
-    if (!messages.length) {
-        messagesArea.innerHTML = `<div class="text-sm text-slate-500">No messages yet.</div>`;
-        return;
+async function ensureConversation(buyerId, farmerId, buyerName = "") {
+    if (!buyerId || !farmerId) {
+        throw new Error("Missing buyer or farmer id for this conversation.");
     }
 
-    const html = messages.map((m) => {
-        const mine = m.senderId === currentUser.uid;
-        const bubbleClass = mine
-            ? "bg-emerald-600 text-white mr-auto rounded-2xl"
-            : "bg-white border border-slate-200 text-slate-800 rounded-2xl";
+    const conversationId = getConversationId(buyerId, farmerId);
+    const ref = db.collection("conversations").doc(conversationId);
+    const snap = await ref.get();
+    const existing = snap.exists ? snap.data() : {};
+    const farmerName =
+        existing.farmerName ||
+        currentUser?.displayName ||
+        (currentUser?.email ? currentUser.email.split("@")[0] : "Farmer");
 
-        const align = mine ? "flex justify-start" : "flex justify-end";
-
-        return `
-            <div class="${align} mb-3">
-                <div class="max-w-[75%] px-4 py-3 ${bubbleClass}">
-                    <div class="whitespace-pre-wrap text-sm leading-relaxed">${escapeHtml(m.text)}</div>
-                    <div class="mt-1 text-[10px] opacity-70 text-right">${escapeHtml(m._timeLabel)}</div>
-                </div>
-            </div>
-        `;
-    }).join("");
-
-    messagesArea.innerHTML = html;
-    messagesArea.scrollTop = messagesArea.scrollHeight;
-}
-
-function startListeningForMessages(convId) {
-    if (messagesUnsub) messagesUnsub();
-
-    activeConversationId = convId;
-
-    if (messageInput) messageInput.disabled = false;
-    if (sendBtn) sendBtn.disabled = false;
-
-    messagesUnsub = db
-        .collection("conversations")
-        .doc(convId)
-        .collection("messages")
-        .orderBy("createdAt", "asc")
-        .onSnapshot(
-            (snapshot) => {
-                const msgs = snapshot.docs.map((d) => {
-                    const data = d.data() || {};
-                    return {
-                        id: d.id,
-                        senderId: data.senderId,
-                        senderRole: data.senderRole,
-                        text: data.text || "",
-                        createdAt: data.createdAt || null,
-                        _timeLabel: formatTime(data.createdAt),
-                    };
-                });
-                renderMessages(msgs);
-            },
-            (error) => {
-                console.error("Messages listener failed:", error);
-                messagesArea.innerHTML = `<div class="text-sm text-red-600">Unable to load messages.</div>`;
-            }
-        );
-}
-
-function renderConversations(conversations) {
-    if (!conversations.length) {
-        conversationList.innerHTML = `<div class="p-4 text-sm text-slate-500">No conversations yet.</div>`;
-        return;
-    }
-
-    conversationList.innerHTML = conversations
-        .map((c) => {
-            const isActive = c.id === activeConversationId;
-            const otherName = c.otherName || "Buyer";
-
-            return `
-                <button
-                    type="button"
-                    data-conv-id="${escapeHtml(c.id)}"
-                    class="w-full text-left p-4 border-b border-slate-100 hover:bg-slate-50 transition ${isActive ? "bg-slate-50" : ""
-                }"
-                >
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="min-w-0">
-                            <div class="font-bold text-slate-800 truncate">${escapeHtml(otherName)}</div>
-                            <div class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(
-                    c.lastMessageText || "Say hi 👋"
-                )}</div>
-                        </div>
-                        <div class="text-[11px] text-slate-400 shrink-0">${escapeHtml(c.lastTimeLabel || "")}</div>
-                    </div>
-                </button>
-            `;
-        })
-        .join("");
-
-    const buttons = conversationList.querySelectorAll("button[data-conv-id]");
-    buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            openConversation(btn.getAttribute("data-conv-id"));
-        });
-    });
-}
-
-async function openConversation(convId) {
-    const convSnap = await db.collection("conversations").doc(convId).get();
-    const conv = convSnap.data();
-    if (!conv) return;
-
-    activeConversationId = convId;
-
-    // Best-effort repair so farmer always has buyerId populated
-    if (currentUser && (!conv.buyerId || !conv.farmerId)) {
-        await repairConversationParticipants(convId, currentUser.uid);
-    }
-
-    const refreshedSnap = await db.collection("conversations").doc(convId).get();
-    const refreshed = refreshedSnap.data() || {};
-
-    const otherUid = refreshed.buyerId || (Array.isArray(refreshed.participants) ? refreshed.participants.find((uid) => uid !== currentUser.uid) : null);
-    const otherName = otherUid ? await loadUserDisplayName(otherUid) : "Buyer";
-
-    if (threadTitle) threadTitle.textContent = otherName;
-    if (threadSubtitle) threadSubtitle.textContent = "Buyer";
-    if (threadStatus) threadStatus.textContent = refreshed.lastMessageAt ? `Last active: ${formatTime(refreshed.lastMessageAt)}` : "Select this buyer to start a conversation";
-
-
-    if (messageInput) {
-        messageInput.placeholder = `Message ${otherName}...`;
-        messageInput.disabled = false;
-    }
-    if (sendBtn) sendBtn.disabled = false;
-
-    startListeningForMessages(convId);
-}
-
-
-async function repairConversationParticipants(convId, farmerId) {
-    try {
-        const convSnap = await db.collection("conversations").doc(convId).get();
-        const conv = convSnap.data();
-        if (!conv) return;
-
-        const participants = Array.isArray(conv.participants) ? conv.participants : [];
-        const buyerFromParticipants = participants.find((uid) => uid !== farmerId) || conv.buyerId || null;
-
-        const updates = {
-            buyerId: buyerFromParticipants,
-            farmerId,
-            participants: buyerFromParticipants ? [buyerFromParticipants, farmerId] : participants,
-        };
-
-        await db.collection("conversations").doc(convId).set(updates, { merge: true });
-    } catch (e) {
-        console.warn("repairConversationParticipants failed:", e);
-    }
-}
-
-function loadConversationsForFarmer(farmerId) {
-    if (conversationsUnsub) conversationsUnsub();
-
-    // Use participants for robustness (older docs may have missing/wrong farmerId field)
-    conversationsUnsub = db
-        .collection("conversations")
-        .where("participants", "array-contains", farmerId)
-        .orderBy("lastMessageAt", "desc")
-        .onSnapshot(
-            async (snapshot) => {
-                const list = [];
-
-                snapshot.forEach((doc) => {
-                    const data = doc.data() || {};
-                    const lastAt = data.lastMessageAt || null;
-                    const participants = Array.isArray(data.participants) ? data.participants : [];
-                    const buyerId = data.buyerId || participants.find((uid) => uid !== farmerId) || null;
-
-                    list.push({
-                        id: doc.id,
-                        buyerId,
-                        otherName: null,
-                        lastMessageText: data.lastMessageText || "",
-                        lastMessageAt: lastAt,
-                        lastTimeLabel: formatTime(lastAt),
-                    });
-                });
-
-                for (const item of list) {
-                    if (!item.buyerId) {
-                        await repairConversationParticipants(item.id, farmerId);
-                        const repaired = await db.collection("conversations").doc(item.id).get();
-                        const repairedData = repaired.data() || {};
-                        const participants = Array.isArray(repairedData.participants) ? repairedData.participants : [];
-                        item.buyerId = repairedData.buyerId || participants.find((uid) => uid !== farmerId) || null;
-                    }
-                    item.otherName = item.buyerId ? await loadUserDisplayName(item.buyerId) : "Buyer";
-                }
-
-                renderConversations(list);
-            },
-            (error) => {
-                console.error("Conversations listener failed:", error);
-                conversationList.innerHTML = `<div class="p-4 text-sm text-red-600">Unable to load conversations.</div>`;
-            }
-        );
-}
-
-async function ensureConversation(farmerId, buyerId) {
-    const convId = conversationIdForBuyerFarmer(buyerId, farmerId);
-    const convRef = db.collection("conversations").doc(convId);
-
-    const existing = await convRef.get();
-
-    // Always merge/re-assert fields so older docs remain consistent.
-    await convRef.set(
+    await ref.set(
         {
             buyerId,
             farmerId,
+            buyerName: buyerName || existing.buyerName || "Buyer",
+            farmerName,
             participants: [buyerId, farmerId],
-            lastMessageText: existing.exists ? (existing.data().lastMessageText || "") : "",
-            lastMessageAt: existing.exists ? (existing.data().lastMessageAt || null) : null,
+            createdAt: existing.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
+            lastMessageAt: existing.lastMessageAt || null,
+            lastMessagePreview: existing.lastMessagePreview || "",
         },
         { merge: true }
     );
 
-    return convId;
+    return conversationId;
 }
 
-
-// Manual start: load all buyers (option 1)
-async function loadBuyersForFarmer(farmerId) {
-    if (!newChatBuyerSelect) return;
-
-    newChatBuyerSelect.disabled = true;
-    try {
-        newChatBuyerSelect.innerHTML = `<option value="">Loading...</option>`;
-
-        const buyersSnap = await db
-            .collection("users")
-            .where("role", "==", "buyer")
-            .get();
-
-        const buyerIds = [];
-        buyersSnap.forEach((doc) => {
-            const data = doc.data() || {};
-            if (data.role === "buyer") buyerIds.push(doc.id);
-        });
-
-        if (buyerIds.length === 0) {
-            newChatBuyerSelect.innerHTML = `<option value="">No buyers found</option>`;
-            return;
-        }
-
-        const buyerOptions = [];
-        for (const bid of buyerIds) {
-            const name = await loadUserDisplayName(bid);
-            buyerOptions.push({ bid, name });
-        }
-
-        buyerOptions.sort((a, b) => a.name.localeCompare(b.name));
-
-        newChatBuyerSelect.innerHTML = `
-            <option value="">Select a buyer</option>
-            ${buyerOptions.map((o) => `<option value="${escapeHtml(o.bid)}">${escapeHtml(o.name)}</option>`).join("")}
-        `;
-    } catch (e) {
-        console.error("loadBuyersForFarmer error:", e);
-        newChatBuyerSelect.innerHTML = `<option value="">Unable to load buyers</option>`;
-    } finally {
-        newChatBuyerSelect.disabled = false;
-    }
+function renderEmptyMessages() {
+    if (!messagesPaneEl) return;
+    messagesPaneEl.innerHTML =
+        '<div class="text-sm text-slate-500">Select a conversation to view messages.</div>';
 }
 
-async function startNewChat() {
-    if (!currentUser) return;
-    if (!newChatBuyerSelect) return;
-    if (!startNewChatBtn) return;
+function renderMessages(messages) {
+    if (!messagesPaneEl) return;
 
-    const selectedBuyerId = newChatBuyerSelect.value;
-    if (!selectedBuyerId) {
-        if (threadStatus) threadStatus.textContent = "Select a buyer to start the chat.";
+    if (!messages.length) {
+        messagesPaneEl.innerHTML = `
+      <div class="text-sm text-slate-500">
+        No messages yet. Send the first message to start the conversation.
+      </div>
+    `;
         return;
     }
 
-    const convId = await ensureConversation(currentUser.uid, selectedBuyerId);
-    await openConversation(convId);
+    let html = "";
+    for (const msg of messages) {
+        const isMine = msg.senderId === currentUser.uid;
+        const fallbackRole = isMine ? ROLE : "buyer";
+        const senderRole = String(msg.senderRole || fallbackRole).toLowerCase();
+        const isBuyerMessage = senderRole === "buyer";
+        const bubbleClass = isBuyerMessage
+            ? "bg-blue-600 text-white"
+            : "bg-emerald-600 text-white";
+        const metaClass = isBuyerMessage ? "text-blue-100" : "text-emerald-100";
+        const roleLabel = isBuyerMessage ? "Buyer" : "Farmer";
+        const alignClass = isMine ? "justify-end" : "justify-start";
+
+        html += `
+      <div class="flex ${alignClass} mt-3">
+        <div class="px-4 py-2 rounded-xl max-w-[80%] text-sm ${bubbleClass}">
+          <div class="text-[10px] font-semibold uppercase tracking-wide opacity-80 mb-1">
+            ${roleLabel}
+          </div>
+          ${escapeHtml(msg.text)}
+          <div class="text-[10px] opacity-80 mt-1 ${metaClass}">
+            ${escapeHtml(formatDate(msg.createdAt))}
+          </div>
+        </div>
+      </div>
+    `;
+    }
+
+    messagesPaneEl.innerHTML = html;
+    messagesPaneEl.scrollTop = messagesPaneEl.scrollHeight;
+}
+
+function selectConversation(conversation) {
+    const { conversationId, buyerId, buyerName } = conversation;
+
+    currentConversationId = conversationId;
+
+    if (activeChatTitleEl) activeChatTitleEl.textContent = buyerName || "Buyer";
+    if (activeChatSubtitleEl)
+        activeChatSubtitleEl.textContent = `Conversation with ${buyerName || "Buyer"} • ${buyerId}`;
+
+    setSendDisabled(false, "");
+
+    if (unsubscribeMessages) {
+        unsubscribeMessages();
+        unsubscribeMessages = null;
+    }
+
+    unsubscribeMessages = db
+        .collection("conversations")
+        .doc(conversationId)
+        .collection("messages")
+        .orderBy("createdAt", "asc")
+        .limit(200)
+        .onSnapshot(
+            (snapshot) => {
+                const messages = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+                renderMessages(messages);
+            },
+            (error) => {
+                console.error("Messages load failed:", error);
+                renderEmptyMessages();
+            }
+        );
 }
 
 async function sendMessage() {
     if (!currentUser) return;
 
-    const text = (messageInput && messageInput.value ? messageInput.value : "").trim();
+    const text = (messageInputEl?.value || "").trim();
     if (!text) return;
 
-    if (!activeConversationId) {
-        if (threadStatus) threadStatus.textContent = "Select a conversation from the list first.";
+    if (!currentConversationId) {
+        setSendDisabled(true, "Select a conversation first.");
         return;
     }
 
-    const convSnap = await db.collection("conversations").doc(activeConversationId).get();
-    const conv = convSnap.data();
-    if (!conv) return;
+    setSendDisabled(true, "Sending…");
 
-    // Ensure buyerId exists
-    if (!conv.buyerId || !conv.farmerId) {
-        await repairConversationParticipants(activeConversationId, currentUser.uid);
+    const conversationDoc = db.collection("conversations").doc(currentConversationId);
+    const convSnap = await conversationDoc.get();
+    const data = convSnap.exists ? convSnap.data() : {};
+
+    const buyerId = data?.buyerId || "";
+    const farmerId = data?.farmerId || currentUser.uid;
+
+    const message = {
+        senderId: currentUser.uid,
+        senderRole: ROLE,
+        buyerId,
+        farmerId,
+        text,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    try {
+        await conversationDoc.collection("messages").add(message);
+
+        await conversationDoc.set(
+            {
+                lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMessagePreview: text,
+            },
+            { merge: true }
+        );
+
+        try {
+            await db.collection("notifications").add({
+                type: "message",
+                title: "New farmer message",
+                recipientId: buyerId,
+                senderId: currentUser.uid,
+                senderName: data?.farmerName || currentUser.displayName || (currentUser.email ? currentUser.email.split("@")[0] : "Farmer"),
+                buyerId,
+                farmerId,
+                conversationId: currentConversationId,
+                message: text.length > 120 ? `${text.slice(0, 117)}...` : text,
+                read: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        } catch (notificationError) {
+            console.warn("Message notification skipped:", notificationError);
+        }
+
+        if (messageInputEl) messageInputEl.value = "";
+        setSendDisabled(false, "");
+    } catch (error) {
+        console.error("Send message failed:", error);
+        setSendDisabled(false, "Failed to send message. Try again.");
     }
+}
 
-    const refreshedSnap = await db.collection("conversations").doc(activeConversationId).get();
-    const refreshed = refreshedSnap.data() || {};
-    const buyerId = refreshed.buyerId || (Array.isArray(refreshed.participants) ? refreshed.participants.find((uid) => uid !== currentUser.uid) : null);
-    if (!buyerId) return;
+function subscribeConversations() {
+    if (!conversationsListEl) return;
 
-    const convId = await ensureConversation(currentUser.uid, buyerId);
+    if (conversationHintEl) conversationHintEl.textContent = "Loading conversations…";
 
-    await db
+    return db
         .collection("conversations")
-        .doc(convId)
-        .collection("messages")
-        .add({
-            senderId: currentUser.uid,
-            senderRole: "farmer",
-            text,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+        .where("participants", "array-contains", currentUser.uid)
+        .limit(50)
+        .onSnapshot(
+            (snapshot) => {
+                const conversations = snapshot.docs
+                    .map((d) => ({ id: d.id, ...d.data() }))
+                    .sort((a, b) => getTimestampValue(b.lastMessageAt || b.createdAt) - getTimestampValue(a.lastMessageAt || a.createdAt));
 
-    await db.collection("conversations").doc(convId).set(
-        {
-            buyerId,
-            farmerId: currentUser.uid,
-            participants: [buyerId, currentUser.uid],
-            lastMessageText: text,
-            lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-    );
+                if (!conversations.length) {
+                    if (conversationHintEl) conversationHintEl.textContent = "No conversations yet.";
+                    conversationsListEl.innerHTML = `
+            <div class="p-4 text-sm text-slate-500">
+              When buyers chat with you, conversations will appear here.
+            </div>
+          `;
+                    renderEmptyMessages();
+                    return;
+                }
 
-    if (messageInput) messageInput.value = "";
+                if (conversationHintEl)
+                    conversationHintEl.textContent = `${conversations.length} conversation${conversations.length === 1 ? "" : "s"
+                        }`;
+
+                conversationsListEl.innerHTML = conversations
+                    .map((c) => {
+                        const buyerName = c.buyerName || "Buyer";
+                        const isSelected = c.id === currentConversationId;
+                        const lastPreview = c.lastMessagePreview || "No messages yet";
+
+                        return `
+              <button
+                type="button"
+                data-conv-id="${escapeHtml(c.id)}"
+                class="w-full text-left p-4 hover:bg-slate-50 transition border-b border-slate-100 ${isSelected ? "bg-emerald-50/80" : "bg-white"
+                            }">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="font-bold text-sm text-slate-900 truncate">${escapeHtml(buyerName)}</div>
+                    <div class="text-xs text-slate-500 truncate mt-1">${escapeHtml(lastPreview)}</div>
+                  </div>
+                  <div class="text-[10px] text-slate-400 shrink-0">${escapeHtml(formatDate(c.lastMessageAt))}</div>
+                </div>
+              </button>
+            `;
+                    })
+                    .join("");
+
+                conversationsListEl.querySelectorAll("button[data-conv-id]").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const conversationId = btn.getAttribute("data-conv-id");
+                        const conv = conversations.find((x) => x.id === conversationId);
+                        if (!conv) return;
+
+                        selectConversation({
+                            conversationId: conv.id,
+                            buyerId: conv.buyerId,
+                            buyerName: conv.buyerName,
+                        });
+                    });
+                });
+
+                if (!currentConversationId) {
+                    const first = conversations[0];
+                    selectConversation({
+                        conversationId: first.id,
+                        buyerId: first.buyerId,
+                        buyerName: first.buyerName,
+                    });
+                    currentConversationId = first.id;
+                }
+            },
+            (error) => {
+                console.error("Conversations load failed:", error);
+                if (conversationHintEl) conversationHintEl.textContent = "Unable to load conversations.";
+                conversationsListEl.innerHTML = `
+          <div class="p-4 text-sm text-red-600">
+            Unable to load conversations right now.
+          </div>
+        `;
+            }
+        );
 }
 
-
-function wireEvents() {
-    if (messageForm) {
-        messageForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            await sendMessage();
-        });
-    }
-
-    if (startNewChatBtn && newChatBuyerSelect) {
-        startNewChatBtn.addEventListener("click", async () => {
-            startNewChatBtn.disabled = true;
-            try {
-                await startNewChat();
-            } catch (e) {
-                console.error("startNewChat error:", e);
-            } finally {
-                startNewChatBtn.disabled = false;
-            }
-        });
-    }
-
-    if (refreshBtn) {
-        refreshBtn.addEventListener("click", () => {
-            if (currentUser) loadConversationsForFarmer(currentUser.uid);
-        });
-    }
+function bindSendForm() {
+    if (!sendFormEl) return;
+    sendFormEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sendMessage();
+    });
 }
 
-firebase.auth().onAuthStateChanged((user) => {
-    currentUser = user || null;
+function init() {
+    if (!conversationsListEl || !activeChatTitleEl || !messagesPaneEl) return;
 
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
+    bindSendForm();
+    renderEmptyMessages();
 
-    // Role guard: farmer only
-    db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((snap) => {
-            const data = snap.data() || {};
-            if (data.role !== "farmer") {
-                window.location.href = "login.html";
-                return;
-            }
-            loadConversationsForFarmer(user.uid);
-            // Manual start new chat dropdown
-        })
-        .catch((e) => {
-            console.error("Role check failed:", e);
+    // Optional deep link
+    const params = new URLSearchParams(window.location.search);
+    const buyerId = params.get("buyerId");
+    const buyerName = params.get("buyerName") || "";
+
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
             window.location.href = "login.html";
-        });
-});
+            return;
+        }
 
-wireEvents();
+        currentUser = user;
+
+        subscribeConversations();
+
+        if (buyerId) {
+            ensureConversation(buyerId, currentUser.uid, buyerName)
+                .then((conversationId) => {
+                    selectConversation({ conversationId, buyerId, buyerName });
+                })
+                .catch((error) => {
+                    console.error("Unable to start chat:", error);
+                    setSendDisabled(true, "Unable to start chat. Check Firestore conversation permissions.");
+                });
+        }
+    });
+}
+
+init();
+
+// Expose for future wiring
+window.__openFarmerChat = async function (buyerId, buyerName = "") {
+    if (!currentUser) return;
+    try {
+        const conversationId = await ensureConversation(buyerId, currentUser.uid, buyerName);
+        selectConversation({ conversationId, buyerId, buyerName });
+    } catch (error) {
+        console.error("Unable to start chat:", error);
+        setSendDisabled(true, "Unable to start chat. Check Firestore conversation permissions.");
+    }
+};

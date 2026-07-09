@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Orders || AgroPlug Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link class="rounded-md" rel="icon" href="images/Agroplug_logo.png">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                // Redirect to the login form if unauthenticated
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased">
+
+    <!-- Sidebar Navigation -->
+    <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-emerald-800 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
+        id="sidebar">
+        <div class="flex items-center justify-between md:mb-8">
+            <div class="flex items-center gap-3">
+                <img src="/images/Agroplug_logo.png" alt="Logo"
+                    class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 fallback-hide"
+                    onerror="this.style.display='none'">
+                <div>
+                    <p class="text-xl font-bold tracking-tight">Agro<span class="text-white/90">Plug</span></p>
+                    <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">Farmer
+                        Console</p>
+                </div>
+            </div>
+
+            <button class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
+                id="menuToggle">
+                <i class="fa-solid fa-bars" id="toggleIcon"></i>
+            </button>
+        </div>
+
+        <div id="menuList" class="hidden md:flex flex-col justify-between flex-1 mt-4 md:mt-0">
+            <ul class="space-y-1.5 text-sm font-medium">
+                <li>
+                    <a href="dashboard.html"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-solid fa-house-chimney w-5 text-center text-base"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mylistings.html"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-solid fa-box w-5 text-center text-base"></i>
+                        <span>My Listings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="addProduct.html"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-solid fa-circle-plus w-5 text-center text-base"></i>
+                        <span>Add New Produce</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="order.html"
+                        class="flex items-center gap-3 bg-white text-emerald-700 px-4 py-3 rounded-xl transition duration-200 shadow-md shadow-emerald-900/10">
+                        <i class="fa-solid fa-basket-shopping w-5 text-center text-base"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="messages.html"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-regular fa-comment-dots w-5 text-center text-base"></i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-solid fa-wallet w-5 text-center text-base"></i>
+                        <span>Earnings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                        <i class="fa-solid fa-gear w-5 text-center text-base"></i>
+                        <span>Account Settings</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="pt-4 border-t border-emerald-800/40">
+                <a id="logoutBtn"
+                    class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20 cursor-pointer">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Workspace Viewport -->
+    <div class="flex-1 md:pl-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
+        <main class="p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+            <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                <div>
+                    <h1 class="font-bold text-2xl md:text-3xl text-slate-900 tracking-tight">Incoming Orders</h1>
+                    <p class="text-sm text-slate-500 mt-1">View recent and older orders placed for your produce.</p>
+                </div>
+
+                <div class="text-xs text-slate-500">
+                    Recent window: <span id="recentDaysLabel" class="font-semibold text-slate-700">30 days</span>
+                </div>
+            </header>
+
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-5 border-b border-slate-100">
+                        <h2 class="text-base font-bold text-slate-900 tracking-tight">Recent Orders</h2>
+                        <span class="text-xs font-semibold text-emerald-600">Last <span id="recentOrdersDaysLabel">30</span> days</span>
+                    </div>
+                    <div id="recentOrdersContainer" class="divide-y divide-slate-100">
+                        <div class="p-5 text-sm text-slate-500">Loading your recent orders...</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+                    <div class="flex justify-between items-center p-5 border-b border-slate-100">
+                        <h2 class="text-base font-bold text-slate-900 tracking-tight">Old Orders</h2>
+                        <span class="text-xs font-semibold text-amber-600">Earlier</span>
+                    </div>
+                    <div id="oldOrdersContainer" class="divide-y divide-slate-100">
+                        <div class="p-5 text-sm text-slate-500">Loading your old orders...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="order.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
+</body>
+
+</html>

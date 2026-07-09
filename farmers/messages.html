@@ -2,225 +2,171 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgroPlug | Messages</title>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>AgroPlug | Messages</title>
+    <link class="rounded-md" rel="icon" href="images/Agroplug_logo.png">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script src="firebase-config.js"></script>
+
+    <script>
+        auth.onAuthStateChanged(user => {
+            if (!user) window.location.href = "login.html";
+        });
+    </script>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-800 antialiased font-[Poppins]">
-
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased">
     <div class="flex flex-col md:flex-row">
-
         <!-- Sidebar Navigation -->
-        <aside id="sidebar"
-            class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
-
-            <div>
-                <div class="flex items-center justify-between mb-8 px-2">
-                    <div class="flex flex-col">
-                        <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
-                                class="text-[#3CD670]">Plug</span></h1>
-                        <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
+        <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-[#0A4D26] text-white p-5 flex flex-col z-50 transition-all duration-300"
+            id="sidebar">
+            <div class="flex items-center justify-between md:mb-8">
+                <div class="flex items-center gap-3">
+                    <img src="/images/Agroplug_logo.png" alt="Logo"
+                        class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 fallback-hide"
+                        onerror="this.style.display='none'">
+                    <div>
+                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-[#3CD670]">Plug</span></p>
+                        <p class="text-[10px] text-emerald-200/70 font-light tracking-wide uppercase hidden md:block">
+                            Farmer Console</p>
                     </div>
-                    <!-- Close Button inside Drawer for Mobile Layouts -->
-                    <button id="closeSidebarBtn" type="button"
-                        class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
                 </div>
 
-                <!-- Profile Info Module Container -->
-                <div
-                    class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
-                    <div class="relative w-16 h-16 mb-2.5 group">
-                        <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
-                            alt="Farmer's avatar"
-                            class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
-                        <span
-                            class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
-                    </div>
-                    <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
-                    <span id="farmerName"
-                        class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
-                        Profile...</span>
-                    <span
-                        class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
-                        <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
-                    </span>
-                </div>
+                <button
+                    class="md:hidden text-xl p-2 rounded-xl bg-emerald-900/40 text-emerald-200 hover:text-white transition"
+                    id="menuToggle">
+                    <i class="fa-solid fa-bars" id="toggleIcon"></i>
+                </button>
+            </div>
 
-                <!-- Application Navigation Context Links List -->
-                <ul id="menuList" class="space-y-1 font-medium">
+            <div id="menuList" class="hidden md:flex flex-col justify-between flex-1 mt-4 md:mt-0">
+                <ul class="space-y-1.5 text-sm font-medium">
                     <li>
-                        <a href="#"
-                            class="flex  items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                        <a href="dashboard.html"
+                            class="flex items-center gap-3 bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white transition text-sm font-semibold">
                             <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="mylistings.html"
-                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            class="flex items-center gap-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm p-3 transition">
                             <i class="fa-solid fa-box text-base opacity-75"></i>
                             <span>My Listings</span>
                         </a>
                     </li>
                     <li>
                         <a href="addProduct.html"
-                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            class="flex items-center gap-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm p-3 transition">
                             <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
                             <span>Add New Produce</span>
                         </a>
                     </li>
                     <li>
                         <a href="#"
-                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            class="flex items-center gap-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm p-3 transition">
                             <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
                             <span>Orders</span>
                         </a>
                     </li>
                     <li>
                         <a href="messages.html"
-                            class="flex justify-between bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
+                            class="flex justify-between items-center gap-3 bg-emerald-700/60 border border-emerald-600/30 rounded-xl p-3 text-white text-sm transition">
                             <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
+                                <i class="fa-solid fa-comment-dots text-base opacity-90"></i>
                                 <span>Messages</span>
                             </div>
-                            <span
-                                class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
                         </a>
                     </li>
                     <li>
                         <a href="#"
-                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            class="flex items-center gap-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm p-3 transition">
                             <i class="fa-solid fa-wallet text-base opacity-75"></i>
                             <span>Earnings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                            <i class="fa-solid fa-user text-base opacity-75"></i>
-                            <span>Profile</span>
-                        </a>
-                    </li>
                 </ul>
+
+                <div class="pt-4 border-t border-emerald-800/40">
+                    <a href="#" id="logoutBtn"
+                        class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
             </div>
+        </nav>
 
-            <div class="pt-4 border-t border-emerald-800/40">
-                <a href="#" id="logoutBtn"
-                    class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
-                    <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
-        </aside>
-
-
-        <!-- Main Workspace -->
-        <div class="flex-1 md:pl-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
-            <main class="p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6 flex-1">
-
-                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <div class="flex-1 md:ml-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
+            <main class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6 flex-1">
+                <header class="flex items-start justify-between gap-4">
                     <div>
-                        <h1 class="font-bold text-2xl md:text-3xl text-slate-900 tracking-tight">Messages</h1>
-                        <p class="text-sm text-slate-500 mt-0.5">Chat with buyers in real-time.</p>
+                        <h1 class="font-bold text-2xl sm:text-3xl text-slate-900 tracking-tight">Messages</h1>
+                        <p class="text-sm text-slate-500 mt-0.5">Chat with buyers about orders and deliveries.</p>
+                    </div>
+
+                    <div>
+                        <button id="newChatHelpBtn"
+                            class="hidden sm:inline-flex px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm hover:bg-slate-50">
+                            <i class="fa-solid fa-circle-info text-emerald-700 mr-2"></i>Tip
+                        </button>
                     </div>
                 </header>
 
-                <section class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-3">
-                        <aside class="border-b lg:border-b-0 lg:border-r border-slate-200/60">
-                            <div class="p-4 border-b border-slate-100">
-                                <div class="flex items-center justify-between">
-                                    <h2 class="font-bold text-slate-800">Conversations</h2>
-                                    <button id="refreshBtn"
-                                        class="text-xs px-3 py-1 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition">
-                                        Refresh
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div id="conversationList" class="max-h-[540px] overflow-y-auto">
-                                <div class="p-4 text-sm text-slate-500">Loading...</div>
-                            </div>
-                        </aside>
-
-                        <div class="lg:col-span-2">
-                            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-                                <div>
-                                    <h3 id="threadTitle" class="font-bold text-slate-800">Select a conversation</h3>
-                                    <p id="threadSubtitle" class="text-xs text-slate-500 mt-0.5">Your chat will appear
-                                        here.</p>
-                                </div>
-                                <div class="text-xs text-slate-500">
-                                    <span id="threadStatus"></span>
-                                </div>
-                            </div>
-
-                            <div id="messagesArea" class="h-[460px] overflow-y-auto p-4 bg-slate-50">
-                                <div class="text-sm text-slate-500">No conversation selected.</div>
-                            </div>
-
-                            <div class="p-4 border-t border-slate-200 bg-white">
-                                <!-- Start new chat (manual) -->
-                                <div class="flex flex-col sm:flex-row gap-3 sm:items-center mb-3">
-                                    <div class="flex-1">
-                                        <label for="newChatBuyerSelect"
-                                            class="block text-sm font-semibold text-slate-800 mb-2">
-                                            Start new chat with
-                                        </label>
-                                        <select id="newChatBuyerSelect"
-                                            class="w-full border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
-                                            disabled>
-                                            <option value="">Loading...</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" id="startNewChatBtn"
-                                        class="self-start sm:self-end px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled>
-                                        Start
-                                    </button>
-                                </div>
-
-                                <form id="messageForm" class="flex gap-3">
-                                    <input id="messageInput" type="text" placeholder="Type a message..."
-                                        class="flex-1 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
-                                        autocomplete="off" disabled />
-                                    <button type="submit" id="sendBtn"
-                                        class="px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled>
-                                        <i class="fa-solid fa-paper-plane"></i>
-                                        <span class="ml-2">Send</span>
-                                    </button>
-                                </form>
-                                <p class="text-[11px] text-slate-400 mt-2">Conversations are created when you start a
-                                    chat
-                                    or send your first message.</p>
-                            </div>
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
+                    <!-- Conversations -->
+                    <aside
+                        class="lg:col-span-1 bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+                        <div class="p-4 border-b border-slate-100">
+                            <h2 class="font-bold text-slate-900">Conversations</h2>
+                            <p class="text-xs text-slate-500 mt-0.5" id="conversationHint">Loading…</p>
                         </div>
+                        <div id="conversationsList" class="divide-y divide-slate-100 max-h-[70vh] overflow-y-auto">
+                        </div>
+                    </aside>
+
+                    <!-- Chat Pane -->
+                    <div
+                        class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-4 border-b border-slate-100">
+                            <h2 id="activeChatTitle" class="font-bold text-slate-900">Select a conversation</h2>
+                            <p id="activeChatSubtitle" class="text-xs text-slate-500 mt-0.5"></p>
+                        </div>
+
+                        <div id="messagesPane" class="flex-1 p-4 bg-slate-50 overflow-y-auto max-h-[60vh]">
+                            <div class="text-sm text-slate-500">Pick a buyer conversation to view messages.</div>
+                        </div>
+
+                        <form id="sendForm" class="p-3 border-t border-slate-200 bg-white">
+                            <div class="flex items-end gap-3">
+                                <textarea id="messageInput" rows="1" placeholder="Type a message..."
+                                    class="flex-1 resize-none border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm"></textarea>
+                                <button id="sendBtn" type="submit"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
+                                    <i class="fa-solid fa-paper-plane mr-2"></i>Send
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-2" id="sendStatus"></p>
+                        </form>
                     </div>
                 </section>
-
             </main>
         </div>
     </div>
 
     <script src="messages.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
 </body>
 
 </html>

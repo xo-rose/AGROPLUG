@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -38,7 +39,7 @@
 
     <div class="flex flex-col md:flex-row">
         <!-- Sidebar Navigation -->
-        <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-slate-900 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
+          <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-emerald-800 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
             id="sidebar">
             <div class="flex items-center justify-between md:mb-8">
                 <div class="flex items-center gap-3">
@@ -46,13 +47,13 @@
                         class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 fallback-hide"
                         onerror="this.style.display='none'">
                     <div>
-                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-emerald-500">Plug</span></p>
-                        <p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase hidden md:block">Buyer
+                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-white/90">Plug</span></p>
+                        <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">Buyer
                             Console</p>
                     </div>
                 </div>
 
-                <button class="md:hidden text-xl p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition"
+                <button class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
                     id="menuToggle">
                     <i class="fa-solid fa-bars" id="toggleIcon"></i>
                 </button>
@@ -62,49 +63,49 @@
                 <ul class="space-y-1.5 text-sm font-medium">
                     <li>
                         <a href="marketplace.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="browseProducts.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-shop w-5 text-center text-base"></i>
                             <span>Browse Produce</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                        <a href="order.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-basket-shopping w-5 text-center text-base"></i>
                             <span>My Orders</span>
                         </a>
                     </li>
                     <li>
                         <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-heart w-5 text-center text-base"></i>
                             <span>Saved Farms</span>
                         </a>
                     </li>
                     <li>
                         <a href="messages.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-regular fa-comment-dots w-5 text-center text-base"></i>
                             <span>Messages</span>
                         </a>
                     </li>
                     <li>
                         <a href="wallet.html"
-                            class="flex items-center gap-3 bg-emerald-600 text-white px-4 py-3 rounded-xl transition duration-200 shadow-md shadow-emerald-600/10">
+                            class="flex items-center bg-white text-emerald-700 px-4 py-3 rounded-xl gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-wallet w-5 text-center text-base"></i>
                             <span>Wallet / Payments</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                        <a href="settings.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-gear w-5 text-center text-base"></i>
                             <span>Account Settings</span>
                         </a>
@@ -121,6 +122,7 @@
             </div>
         </nav>
 
+
         <div class="flex-1 md:pl-64 min-h-screen pt-[72px] md:pt-0">
             <main class="p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
                 <!-- first card -->
@@ -132,17 +134,20 @@
                                 <i class="fa-solid fa-wallet text-emerald-600 text-xl"></i>
                             </div>
                             <div class="min-w-0">
-                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Wallet Account</p>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Wallet Account
+                                </p>
                                 <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mt-1">
                                     Hello, <span id="buyerName"></span>
                                 </h1>
-                                <p class="text-sm text-slate-500 mt-1">Manage wallet balance, payments, and escrow activity.</p>
+                                <p class="text-sm text-slate-500 mt-1">Manage wallet balance, payments, and escrow
+                                    activity.</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:min-w-[420px]">
                             <div class="rounded-xl bg-slate-50 border border-slate-100 p-4">
-                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Available Balance</p>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Available
+                                    Balance</p>
                                 <p id="walletBalance" class="text-2xl font-bold text-slate-900 mt-1">₦0</p>
                             </div>
                             <button id="fundWalletBtn" type="button"
@@ -174,7 +179,8 @@
             <form id="fundWalletForm" class="p-5 space-y-4">
                 <div>
                     <label for="fundAmount" class="text-sm font-semibold text-slate-700">Amount</label>
-                    <div class="mt-2 flex items-center rounded-xl border border-slate-200 bg-slate-50 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
+                    <div
+                        class="mt-2 flex items-center rounded-xl border border-slate-200 bg-slate-50 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
                         <span class="px-4 text-sm font-bold text-slate-500">₦</span>
                         <input id="fundAmount" type="number" min="100" step="100" inputmode="numeric"
                             class="w-full bg-transparent py-3 pr-4 text-slate-900 outline-none placeholder:text-slate-400"
@@ -200,5 +206,7 @@
     </div>
 
     <script src="wallet.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
 </body>
+
 </html>

@@ -89,12 +89,12 @@ if (loginForm) {
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
 
-                // 3. Split Routing Logic based on account role attribute
+                // 3. Split routing based on account role.
                 if (userData.role === "farmer") {
-                    window.location.href = "dashboard.html"
+                    window.location.href = "dashboard.html";
                 // } else if (userData.role === "buyer") {
-                //     window.location.href = "/buyers/marketplace.html"
-                // } else {
+                //     window.location.href = "../buyers/marketplace.html";
+                } else {
                     showPopup("Account access role unrecognized.", false);
                 }
             } else {

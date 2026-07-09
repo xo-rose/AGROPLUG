@@ -342,6 +342,18 @@ if (fundWalletBtn) {
     fundWalletBtn.addEventListener("click", openFundWalletModal);
 }
 
+if (new URLSearchParams(window.location.search).get("fund") === "1") {
+    const openFundingFromDashboard = () => {
+        openFundWalletModal();
+    };
+
+    if (document.readyState === "complete") {
+        openFundingFromDashboard();
+    } else {
+        window.addEventListener("load", openFundingFromDashboard);
+    }
+}
+
 if (closeFundWalletModal) {
     closeFundWalletModal.addEventListener("click", closeFundingModal);
 }

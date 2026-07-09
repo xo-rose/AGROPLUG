@@ -40,7 +40,7 @@
     <div class=" flex flex-col md:flex-row">
 
         <!-- Sidebar Navigation -->
-        <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-slate-900 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
+        <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-emerald-800 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
             id="sidebar">
             <div class="flex items-center justify-between md:mb-8">
                 <div class="flex items-center gap-3">
@@ -48,13 +48,15 @@
                         class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 fallback-hide"
                         onerror="this.style.display='none'">
                     <div>
-                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-emerald-500">Plug</span></p>
-                        <p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase hidden md:block">Buyer
+                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-white/90">Plug</span></p>
+                        <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">
+                            Buyer
                             Console</p>
                     </div>
                 </div>
 
-                <button class="md:hidden text-xl p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition"
+                <button
+                    class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
                     id="menuToggle">
                     <i class="fa-solid fa-bars" id="toggleIcon"></i>
                 </button>
@@ -64,49 +66,49 @@
                 <ul class="space-y-1.5 text-sm font-medium">
                     <li>
                         <a href="marketplace.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center  gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="browseProducts.html"
-                            class="flex items-center gap-3  bg-emerald-600 text-white px-4 py-3 rounded-xl transition duration-200 shadow-md shadow-emerald-600/10">
+                            class="flex items-center bg-white text-emerald-700 px-4 py-3 rounded-xl gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-shop w-5 text-center text-base"></i>
                             <span>Browse Produce</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                        <a href="order.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-basket-shopping w-5 text-center text-base"></i>
                             <span>My Orders</span>
                         </a>
                     </li>
                     <li>
                         <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-heart w-5 text-center text-base"></i>
                             <span>Saved Farms</span>
                         </a>
                     </li>
                     <li>
                         <a href="messages.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-regular fa-comment-dots w-5 text-center text-base"></i>
                             <span>Messages</span>
                         </a>
                     </li>
                     <li>
                         <a href="wallet.html"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-wallet w-5 text-center text-base"></i>
                             <span>Wallet / Payments</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800 px-4 py-3 rounded-xl transition duration-200">
+                        <a href="settings.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
                             <i class="fa-solid fa-gear w-5 text-center text-base"></i>
                             <span>Account Settings</span>
                         </a>
@@ -122,71 +124,84 @@
                 </div>
             </div>
         </nav>
+
     </div>
 
-        <!--PRODUCT REVIEW-->
+    <!--PRODUCT REVIEW-->
 
-        <div class="flex-1 md:pl-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-4 gap-2" id="productsContainer">
+    <div class="flex-1 md:pl-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-4 gap-2" id="productsContainer">
 
+        </div>
+    </div>
+
+    <!--modal-->
+    <div id="checkoutModal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 transition-all duration-300">
+        <div
+            class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 p-6 flex flex-col gap-4">
+
+            <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+                <h3 class="text-xl font-bold text-slate-950" id="modalProductName">Checkout Item</h3>
+                <button onclick="closeCheckoutModal()"
+                    class="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 my-2 text-sm text-slate-600">
+                <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span class="font-medium">Estimated Delivery Date</span>
+                    <span id="modalDeliveryDate"
+                        class="font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md"></span>
+                </div>
+
+                <div>
+                    <label for="modalQuantity" class="block font-medium text-slate-700 mb-1">Quantity to
+                        Purchase</label>
+                    <input type="number" id="modalQuantity" value="1" min="1"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-base font-medium">
+                    <p id="modalStockWarning" class="text-xs text-red-500 mt-1 hidden"></p>
+                </div>
+
+                <div class="border-t pt-3 mt-4 space-y-1.5 text-slate-500">
+                    <div class="flex justify-between text-xs">
+                        <span>Unit Price:</span>
+                        <span id="modalUnitPrice">₦0</span>
+                    </div>
+                    <div class="flex justify-between text-base font-bold text-slate-900">
+                        <span>Total Amount:</span>
+                        <span id="modalTotalAmount">₦0</span>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <label for="modalPaymentMethod" class="block font-medium text-slate-700 mb-1">Payment Method</label>
+                    <select id="modalPaymentMethod"
+                        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm font-medium bg-white">
+                        <option value="wallet">Wallet funds</option>
+                        <option value="bank">Bank card / transfer</option>
+                    </select>
+                    <p id="modalPaymentStatus" class="text-xs text-slate-500 mt-2">Wallet checkout uses your AgroPlug
+                        wallet balance.</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-2">
+                <button onclick="closeCheckoutModal()"
+                    class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition">
+                    Cancel
+                </button>
+                <button id="modalPayBtn"
+                    class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-emerald-600/20">
+                    Proceed to Pay
+                </button>
             </div>
         </div>
+    </div>
 
-        <!--modal-->
-        <div id="checkoutModal"
-            class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 transition-all duration-300">
-            <div
-                class="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 p-6 flex flex-col gap-4">
-
-                <div class="flex items-center justify-between border-b pb-3 border-slate-100">
-                    <h3 class="text-xl font-bold text-slate-950" id="modalProductName">Checkout Item</h3>
-                    <button onclick="closeCheckoutModal()"
-                        class="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 transition">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-
-                <div class="space-y-3 my-2 text-sm text-slate-600">
-                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                        <span class="font-medium">Estimated Delivery Date</span>
-                        <span id="modalDeliveryDate"
-                            class="font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md"></span>
-                    </div>
-
-                    <div>
-                        <label for="modalQuantity" class="block font-medium text-slate-700 mb-1">Quantity to
-                            Purchase</label>
-                        <input type="number" id="modalQuantity" value="1" min="1"
-                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-base font-medium">
-                        <p id="modalStockWarning" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div class="border-t pt-3 mt-4 space-y-1.5 text-slate-500">
-                        <div class="flex justify-between text-xs">
-                            <span>Unit Price:</span>
-                            <span id="modalUnitPrice">₦0</span>
-                        </div>
-                        <div class="flex justify-between text-base font-bold text-slate-900">
-                            <span>Total Amount:</span>
-                            <span id="modalTotalAmount">₦0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-3 mt-2">
-                    <button onclick="closeCheckoutModal()"
-                        class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition">
-                        Cancel
-                    </button>
-                    <button id="modalPayBtn"
-                        class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-emerald-600/20">
-                        Proceed to Pay
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <script src="browseProducts.js"></script>
+    <script src="browseProducts.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
 
 
 

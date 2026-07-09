@@ -1,262 +1,262 @@
-        <!DOCTYPE html>
-        <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>My Listings</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-            <link rel="icon" href="images/Agroplug_logo.png">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="images/Agroplug_logo.png">
 
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-            <script src="firebase-config.js"></script>
+    <script src="firebase-config.js"></script>
 
-            <script>
-                // Authentication Route Guard Verification
-                auth.onAuthStateChanged(user => {
-                    if (!user) {
-                        window.location.href = "login.html";
-                    }
-                });
-            </script>
-        </head>
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</head>
 
-        <body class="bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWdyaWN1bHR1cmV8ZW58MHx8MHx8fDA%3D')] font-sans antialiased text-slate-800 bg-cover object-cover">
-            <div class="bg-black/40 inset-0 absolute ">
-            
-            <!-- Sidebar Drawer (Responsive Drawer Panel) -->
-            <aside id="sidebar"
-                class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+<body
+    class="bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWdyaWN1bHR1cmV8ZW58MHx8MHx8fDA%3D')] font-sans antialiased text-slate-800 bg-cover object-cover">
+    <div class="bg-black/40 inset-0 absolute ">
 
-                <div>
-                    <div class="flex items-center justify-between mb-8 px-2">
-                        <div class="flex flex-col">
-                            <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
-                                    class="text-[#3CD670]">Plug</span></h1>
-                            <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
-                        </div>
-                        <!-- Close Button inside Drawer for Mobile Layouts -->
-                        <button id="closeSidebarBtn" type="button"
-                            class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
+        <!-- Sidebar Drawer (Responsive Drawer Panel) -->
+        <aside id="sidebar"
+            class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+
+            <div>
+                <div class="flex items-center justify-between mb-8 px-2">
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
+                                class="text-[#3CD670]">Plug</span></h1>
+                        <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
                     </div>
-
-                    <!-- Profile Info Module Container -->
-                    <div
-                        class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
-                        <div class="relative w-16 h-16 mb-2.5 group">
-                            <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
-                                alt="Farmer's avatar"
-                                class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
-                            <span
-                                class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
-                        </div>
-                        <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
-                        <span id="farmerName"
-                            class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
-                            Profile...</span>
-                        <span
-                            class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
-                            <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
-                        </span>
-                    </div>
-
-                    <!-- Application Navigation Context Links List -->
-                    <ul id="menuList" class="space-y-1 font-medium">
-                        <li>
-                            <a href="dashboard.html"
-                                class="flex   rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
-                                <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="mylistings.html"
-                                class="flex items-center  p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                                <i class="fa-solid fa-box text-base opacity-75"></i>
-                                <span>My Listings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="addProduct.html"
-                                class="flex items-center border border-emerald-600/30 bg-emerald-700/50 p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                                <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
-                                <span>Add New Produce</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                                <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
-                                <span>Orders</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
-                                    <span>Messages</span>
-                                </div>
-                                <span
-                                    class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                                <i class="fa-solid fa-wallet text-base opacity-75"></i>
-                                <span>Earnings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
-                                <i class="fa-solid fa-user text-base opacity-75"></i>
-                                <span>Profile</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="pt-4 border-t border-emerald-800/40">
-                    <a href="#" id="logoutBtn"
-                        class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
-                        <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
-                        <span>Logout</span>
-                    </a>
-                </div>
-            </aside>
-            <!--LISTING-->
-
-            <div class="flex justify-center items-center min-h-screen">
-                <div class="bg-white p-6 rounded-2xl shadow mb-8 lg:ml-64 sm:ml-43 inline-flex">
-            <form id="listingForm" class="grid md:grid-cols-2 gap-4">
-                <input id="productName" class="border p-3 rounded-xl" placeholder="Product Name" required>
-                <input id="price" type="number" class="border p-3 rounded-xl" placeholder="Price" required>
-                <input id="quantity" type="number" class="border p-3 rounded-xl" placeholder="Quantity" required>
-                <input id="location" class="border p-3 rounded-xl" placeholder="Location" required>
-                <input id="category" class="border p-3 rounded-xl" placeholder="Category" required>
-
-                <div class="md:col-span-2">
-                    <input type="file" id="productImage" accept="image/*"
-                        class="border p-3 rounded-xl w-full" required>
-
-                    <div class="w-full bg-slate-200 rounded-full h-2 mt-3">
-                        <div id="uploadProgress"
-                            class="bg-emerald-600 h-2 rounded-full"
-                            style="width:0%"></div>
-                    </div>
-                </div>
-
-                <textarea id="description" rows="4"
-                        class="border p-3 rounded-xl md:col-span-2"
-                        placeholder="Description"></textarea>
-
-                <button class="bg-emerald-600 text-white rounded-xl py-3 md:col-span-2">
-                    Save Listing
-                </button>
-            </form>
-        </div>
-
-        <div id="listingsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
-
-            </div>
-
-
-
-
-
-
-            <!-- ASSISTANT-->
-            <!-- AI ASSISTANT BUTTON -->
-            <div class="fixed bottom-6 right-6 z-50">
-                <button id="assistantBtn"
-                    class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
-                    <i class="fa-solid fa-robot text-2xl"></i>
-                </button>
-            </div>
-
-            <!-- CHAT WINDOW -->
-            <div id="assistantChat"
-                class="fixed bottom-24 right-6 w-80 max-w-[90vw] bg-white rounded-2xl shadow-2xl hidden overflow-hidden z-50 border border-slate-200">
-
-                <!-- Header -->
-                <div class="bg-emerald-600 text-white p-4 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold">AgroPlug Assistant</h3>
-                        <p class="text-xs opacity-80">Online</p>
-                    </div>
-
-                    <button id="closeAssistant">
+                    <!-- Close Button inside Drawer for Mobile Layouts -->
+                    <button id="closeSidebarBtn" type="button"
+                        class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <!-- Messages -->
-                <div id="chatMessages" class="h-80 overflow-y-auto p-4 bg-slate-50">
-                    <div class="bg-emerald-100 text-slate-700 p-3 rounded-xl text-sm">
-                        👋 Welcome to AgroPlug!
-
-                        <br><br>
-
-                        Try asking:
-                        <ul class="list-disc ml-4 mt-2">
-                            <li>How do I add a product?</li>
-                            <li>How do I sell produce?</li>
-                            <li>Where can I see my orders?</li>
-                            <li>How do I update my profile?</li>
-                        </ul>
+                <!-- Profile Info Module Container -->
+                <div
+                    class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
+                    <div class="relative w-16 h-16 mb-2.5 group">
+                        <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
+                            alt="Farmer's avatar"
+                            class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
+                        <span
+                            class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
                     </div>
+                    <span class="text-[11px] text-emerald-200/80 font-light">Good morning,</span>
+                    <span id="farmerName"
+                        class="font-semibold text-sm tracking-wide truncate w-full px-1 text-white">Loading
+                        Profile...</span>
+                    <span
+                        class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
+                        <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
+                    </span>
                 </div>
 
-                <!-- Input -->
-                <div class="border-t border-slate-200 flex">
-                    <input type="text" id="userMessage" placeholder="Type a message..." class="flex-1 p-3 outline-none text-sm">
+                <!-- Application Navigation Context Links List -->
+                <ul id="menuList" class="space-y-1 font-medium">
+                    <li>
+                        <a href="dashboard.html"
+                            class="flex   rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                            <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mylistings.html"
+                            class="flex items-center  p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            <i class="fa-solid fa-box text-base opacity-75"></i>
+                            <span>My Listings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="addProduct.html"
+                            class="flex items-center border border-emerald-600/30 bg-emerald-700/50 p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
+                            <span>Add New Produce</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="orders.html"
+                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="messages.html"
+                            class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
+                                <span>Messages</span>
+                            </div>
+                            <span
+                                class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            <i class="fa-solid fa-wallet text-base opacity-75"></i>
+                            <span>Earnings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                            <i class="fa-solid fa-user text-base opacity-75"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-                    <button id="sendMessage" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4">
-                        <i class="fa-solid fa-paper-plane"></i>
+            <div class="pt-4 border-t border-emerald-800/40">
+                <a href="#" id="logoutBtn"
+                    class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <!--LISTING-->
+
+        <div class="flex justify-center items-center min-h-screen">
+            <div class="bg-white p-6 rounded-2xl shadow mb-8 lg:ml-64 sm:ml-43 inline-flex">
+                <form id="listingForm" class="grid md:grid-cols-2 gap-4">
+                    <input id="productName" class="border p-3 rounded-xl" placeholder="Product Name" required>
+                    <input id="price" type="number" class="border p-3 rounded-xl" placeholder="Price" required>
+                    <input id="quantity" type="number" class="border p-3 rounded-xl" placeholder="Quantity" required>
+                    <input id="location" class="border p-3 rounded-xl" placeholder="Location" required>
+                    <input id="category" class="border p-3 rounded-xl" placeholder="Category" required>
+
+                    <div class="md:col-span-2">
+                        <input type="file" id="productImage" accept="image/*" class="border p-3 rounded-xl w-full"
+                            required>
+
+                        <div class="w-full bg-slate-200 rounded-full h-2 mt-3">
+                            <div id="uploadProgress" class="bg-emerald-600 h-2 rounded-full" style="width:0%"></div>
+                        </div>
+                        <p id="uploadStatus" class="text-xs text-slate-500 mt-2"></p>
+                    </div>
+
+                    <textarea id="description" rows="4" class="border p-3 rounded-xl md:col-span-2"
+                        placeholder="Description"></textarea>
+
+                    <button class="bg-emerald-600 text-white rounded-xl py-3 md:col-span-2">
+                        Save Listing
                     </button>
+                </form>
+            </div>
+
+            <div id="listingsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+
+        </div>
+
+
+
+
+
+
+        <!-- ASSISTANT-->
+        <!-- AI ASSISTANT BUTTON -->
+        <div class="fixed bottom-6 right-6 z-50">
+            <button id="assistantBtn"
+                class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
+                <i class="fa-solid fa-robot text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- CHAT WINDOW -->
+        <div id="assistantChat"
+            class="fixed bottom-24 right-6 w-80 max-w-[90vw] bg-white rounded-2xl shadow-2xl hidden overflow-hidden z-50 border border-slate-200">
+
+            <!-- Header -->
+            <div class="bg-emerald-600 text-white p-4 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold">AgroPlug Assistant</h3>
+                    <p class="text-xs opacity-80">Online</p>
+                </div>
+
+                <button id="closeAssistant">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Messages -->
+            <div id="chatMessages" class="h-80 overflow-y-auto p-4 bg-slate-50">
+                <div class="bg-emerald-100 text-slate-700 p-3 rounded-xl text-sm">
+                    👋 Welcome to AgroPlug!
+
+                    <br><br>
+
+                    Try asking:
+                    <ul class="list-disc ml-4 mt-2">
+                        <li>How do I add a product?</li>
+                        <li>How do I sell produce?</li>
+                        <li>Where can I see my orders?</li>
+                        <li>How do I update my profile?</li>
+                    </ul>
                 </div>
             </div>
 
+            <!-- Input -->
+            <div class="border-t border-slate-200 flex">
+                <input type="text" id="userMessage" placeholder="Type a message..."
+                    class="flex-1 p-3 outline-none text-sm">
 
-            <script>
-                // ======================
-                // AGROPLUG ASSISTANT
-                // ======================
+                <button id="sendMessage" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
 
-                const assistantBtn = document.getElementById("assistantBtn");
-                const assistantChat = document.getElementById("assistantChat");
-                const closeAssistant = document.getElementById("closeAssistant");
-                const sendMessage = document.getElementById("sendMessage");
-                const userMessage = document.getElementById("userMessage");
-                const chatMessages = document.getElementById("chatMessages");
 
-                // Open chat
-                assistantBtn.addEventListener("click", () => {
-                    assistantChat.classList.remove("hidden");
-                });
+        <script>
+            // ======================
+            // AGROPLUG ASSISTANT
+            // ======================
 
-                // Close chat
-                closeAssistant.addEventListener("click", () => {
-                    assistantChat.classList.add("hidden");
-                });
+            const assistantBtn = document.getElementById("assistantBtn");
+            const assistantChat = document.getElementById("assistantChat");
+            const closeAssistant = document.getElementById("closeAssistant");
+            const sendMessage = document.getElementById("sendMessage");
+            const userMessage = document.getElementById("userMessage");
+            const chatMessages = document.getElementById("chatMessages");
 
-                // Send message
-                function sendUserMessage() {
-                    const message = userMessage.value.trim();
+            // Open chat
+            assistantBtn.addEventListener("click", () => {
+                assistantChat.classList.remove("hidden");
+            });
 
-                    if (!message) return;
+            // Close chat
+            closeAssistant.addEventListener("click", () => {
+                assistantChat.classList.add("hidden");
+            });
 
-                    // Add user message
-                    chatMessages.innerHTML += `
+            // Send message
+            function sendUserMessage() {
+                const message = userMessage.value.trim();
+
+                if (!message) return;
+
+                // Add user message
+                chatMessages.innerHTML += `
                 <div class="flex justify-end mt-3">
                     <div class="bg-emerald-600 text-white px-4 py-2 rounded-xl max-w-[80%] text-sm">
                         ${message}
@@ -264,46 +264,46 @@
                 </div>
             `;
 
-                    let reply =
-                        "I can help you navigate AgroPlug. Try asking about products, orders, listings, or your profile.";
+                let reply =
+                    "I can help you navigate AgroPlug. Try asking about products, orders, listings, or your profile.";
 
-                    const msg = message.toLowerCase();
+                const msg = message.toLowerCase();
 
-                    if (msg.includes("add product") || msg.includes("listing")) {
-                        reply =
-                            "To add a product, click the 'Add New Produce' button at the top of your dashboard.";
-                    }
+                if (msg.includes("add product") || msg.includes("listing")) {
+                    reply =
+                        "To add a product, click the 'Add New Produce' button at the top of your dashboard.";
+                }
 
-                    else if (msg.includes("sell")) {
-                        reply =
-                            "You can sell on AgroPlug by creating a listing with product details, price, quantity and photos.";
-                    }
+                else if (msg.includes("sell")) {
+                    reply =
+                        "You can sell on AgroPlug by creating a listing with product details, price, quantity and photos.";
+                }
 
-                    else if (msg.includes("order")) {
-                        reply =
-                            "You can monitor customer orders from the Orders section on your dashboard.";
-                    }
+                else if (msg.includes("order")) {
+                    reply =
+                        "You can monitor customer orders from the Orders section on your dashboard.";
+                }
 
-                    else if (msg.includes("profile")) {
-                        reply =
-                            "You can update your profile information from the Profile section in the sidebar.";
-                    }
+                else if (msg.includes("profile")) {
+                    reply =
+                        "You can update your profile information from the Profile section in the sidebar.";
+                }
 
-                    else if (msg.includes("earnings")) {
-                        reply =
-                            "Your current earnings are displayed in the Earnings card on the dashboard.";
-                    }
+                else if (msg.includes("earnings")) {
+                    reply =
+                        "Your current earnings are displayed in the Earnings card on the dashboard.";
+                }
 
-                    else if (
-                        msg.includes("hello") ||
-                        msg.includes("hi") ||
-                        msg.includes("hey")
-                    ) {
-                        reply = "Hello 👋 How can I help you today?";
-                    }
+                else if (
+                    msg.includes("hello") ||
+                    msg.includes("hi") ||
+                    msg.includes("hey")
+                ) {
+                    reply = "Hello 👋 How can I help you today?";
+                }
 
-                    setTimeout(() => {
-                        chatMessages.innerHTML += `
+                setTimeout(() => {
+                    chatMessages.innerHTML += `
                     <div class="flex justify-start mt-3">
                         <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl max-w-[80%] text-sm">
                             ${reply}
@@ -311,154 +311,255 @@
                     </div>
                 `;
 
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }, 500);
-
-                    userMessage.value = "";
                     chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 500);
+
+                userMessage.value = "";
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Send button
+            sendMessage.addEventListener("click", sendUserMessage);
+
+            // Press Enter
+            userMessage.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    sendUserMessage();
+                }
+            });
+
+            let currentUser = null;
+
+            // ==============================
+            // IMGBB API KEY
+            // ==============================
+            const IMGBB_API_KEY = "e04d8f002c165fc91a0299f6acf3f938";
+
+            // ==============================
+            // AUTH
+            // ==============================
+            auth.onAuthStateChanged((user) => {
+
+                if (!user) {
+                    window.location.href = "login.html";
+                    return;
                 }
 
-                // Send button
-                sendMessage.addEventListener("click", sendUserMessage);
+                currentUser = user;
+            });
 
-                // Press Enter
-                userMessage.addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        sendUserMessage();
+            // ==============================
+            // IMAGE UPLOAD
+            // ==============================
+            function validateImageUrl(url) {
+                return /^https?:\/\/.+/i.test(String(url || "").trim());
+            }
+
+            function getImageUploadMessage(error) {
+                const message = String(error?.message || "").trim();
+
+                if (/api\s*v?1\s*key|invalid.*key|key.*invalid/i.test(message)) {
+                    return "The ImgBB API key is invalid. Update IMGBB_API_KEY in addProduct.html.";
+                }
+
+                return message || "Image upload failed.";
+            }
+
+            function loadImageElement(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onerror = () => reject(new Error("Unable to read the selected image."));
+                    reader.onload = () => {
+                        const image = new Image();
+                        image.onerror = () => reject(new Error("Unable to process the selected image."));
+                        image.onload = () => resolve(image);
+                        image.src = String(reader.result || "");
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async function createCompressedImageDataUrl(file) {
+                const image = await loadImageElement(file);
+                const maxSize = 900;
+                const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+                const canvas = document.createElement("canvas");
+                canvas.width = Math.max(1, Math.round(image.width * scale));
+                canvas.height = Math.max(1, Math.round(image.height * scale));
+
+                const context = canvas.getContext("2d");
+                if (!context) {
+                    throw new Error("This browser could not prepare the image.");
+                }
+
+                context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.72);
+                if (dataUrl.length > 900000) {
+                    throw new Error("Image is too large to save locally. Use a smaller image or fix the ImgBB API key.");
+                }
+
+                return dataUrl;
+            }
+
+            async function uploadToImgBB(file) {
+                if (!file || !file.type.startsWith("image/")) {
+                    throw new Error("Please select a valid image file.");
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    throw new Error("Product image is too large. Max 5MB.");
+                }
+
+                const formData = new FormData();
+                formData.append("image", file);
+
+                const response = await fetch(
+                    `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const data = await response.json().catch(() => ({}));
+                const imageUrl = data?.data?.display_url || data?.data?.url;
+
+                if (!response.ok || !data.success || !validateImageUrl(imageUrl)) {
+                    throw new Error(data?.error?.message || "Image upload failed.");
+                }
+
+                return imageUrl;
+            }
+
+            async function prepareProductImage(file) {
+                try {
+                    return {
+                        imageUrl: await uploadToImgBB(file),
+                        imageProvider: "imgbb"
+                    };
+                } catch (error) {
+                    console.error("ImgBB upload failed:", error);
+
+                    const status = document.getElementById("uploadStatus");
+                    if (status) {
+                        status.textContent = `${getImageUploadMessage(error)} Saving a compressed local image instead.`;
+                        status.className = "text-xs text-amber-700 mt-2";
+                    }
+
+                    return {
+                        imageUrl: await createCompressedImageDataUrl(file),
+                        imageProvider: "local-compressed"
+                    };
+                }
+            }
+
+            // ==============================
+            // SAVE LISTING
+            // ==============================
+            document
+                .getElementById("listingForm")
+                .addEventListener("submit", async (e) => {
+
+                    e.preventDefault();
+
+                    try {
+
+                        if (!currentUser) {
+                            alert("Please login again.");
+                            return;
+                        }
+
+                        const imageFile =
+                            document.getElementById("productImage").files[0];
+
+                        if (!imageFile) {
+                            alert("Please select an image.");
+                            return;
+                        }
+
+                        const progress =
+                            document.getElementById("uploadProgress");
+                        const uploadStatus =
+                            document.getElementById("uploadStatus");
+
+                        progress.style.width = "20%";
+                        if (uploadStatus) {
+                            uploadStatus.textContent = "Uploading product image...";
+                            uploadStatus.className = "text-xs text-slate-500 mt-2";
+                        }
+
+                        // Upload image, with a compressed local fallback if ImgBB is unavailable.
+                        const imageResult =
+                            await prepareProductImage(imageFile);
+
+                        progress.style.width = "70%";
+
+                        // Save product
+                        await db.collection("listings").add({
+
+                            farmerId: currentUser.uid,
+
+                            farmerName:
+                                currentUser.displayName ||
+                                currentUser.email,
+
+                            productName:
+                                document.getElementById("productName").value.trim(),
+
+                            category:
+                                document.getElementById("category").value.trim(),
+
+                            price:
+                                Number(document.getElementById("price").value),
+
+                            quantity:
+                                Number(document.getElementById("quantity").value),
+
+                            location:
+                                document.getElementById("location").value.trim(),
+
+                            description:
+                                document.getElementById("description").value.trim(),
+
+                            imageUrl: imageResult.imageUrl,
+                            imageProvider: imageResult.imageProvider,
+                            imageUploadedAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+
+                            status: "active",
+
+                            updatedAt:
+                                firebase.firestore.FieldValue.serverTimestamp(),
+
+                            createdAt:
+                                firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        progress.style.width = "100%";
+
+                        // Success message
+                        alert(imageResult.imageProvider === "imgbb"
+                            ? "Product uploaded successfully!"
+                            : "Product saved with a compressed local image. Update the ImgBB API key for hosted image uploads.");
+
+                        // Redirect to listings page
+                        window.location.href = "mylistings.html";
+
+                    } catch (error) {
+
+                        console.error(error);
+                        const uploadStatus = document.getElementById("uploadStatus");
+                        if (uploadStatus) {
+                            uploadStatus.textContent = error.message || "Image upload failed.";
+                            uploadStatus.className = "text-xs text-red-600 mt-2";
+                        }
+
+                        alert(error.message);
                     }
                 });
+        </script>
+        <script src="/assets/agroplug-chatbot.js"></script>
+</body>
 
-             let currentUser = null;
-
-// ==============================
-// IMGBB API KEY
-// ==============================
-const IMGBB_API_KEY = "9b7a00b76fd40bd377ba247caafd4c2f";
-
-// ==============================
-// AUTH
-// ==============================
-auth.onAuthStateChanged((user) => {
-
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    currentUser = user;
-});
-
-// ==============================
-// IMAGE UPLOAD
-// ==============================
-async function uploadToImgBB(file) {
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-        {
-            method: "POST",
-            body: formData
-        }
-    );
-
-    const data = await response.json();
-
-    if (!data.success) {
-        throw new Error("Image upload failed");
-    }
-
-    return data.data.url;
-}
-
-// ==============================
-// SAVE LISTING
-// ==============================
-document
-.getElementById("listingForm")
-.addEventListener("submit", async (e) => {
-
-    e.preventDefault();
-
-    try {
-
-        if (!currentUser) {
-            alert("Please login again.");
-            return;
-        }
-
-        const imageFile =
-            document.getElementById("productImage").files[0];
-
-        if (!imageFile) {
-            alert("Please select an image.");
-            return;
-        }
-
-        const progress =
-            document.getElementById("uploadProgress");
-
-        progress.style.width = "20%";
-
-        // Upload image
-        const imageUrl =
-            await uploadToImgBB(imageFile);
-
-        progress.style.width = "70%";
-
-        // Save product
-        await db.collection("listings").add({
-
-            farmerId: currentUser.uid,
-
-            farmerName:
-                currentUser.displayName ||
-                currentUser.email,
-
-            productName:
-                document.getElementById("productName").value.trim(),
-
-            category:
-                document.getElementById("category").value.trim(),
-
-            price:
-                Number(document.getElementById("price").value),
-
-            quantity:
-                Number(document.getElementById("quantity").value),
-
-            location:
-                document.getElementById("location").value.trim(),
-
-            description:
-                document.getElementById("description").value.trim(),
-
-            imageUrl: imageUrl,
-
-            status: "active",
-
-            createdAt:
-                firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        progress.style.width = "100%";
-
-        // Success message
-        alert("Product uploaded successfully!");
-
-        // Redirect to listings page
-        window.location.href = "mylistings.html";
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(error.message);
-    }
-});
-            </script>
-        </body>
-
-        </html>
+</html>
