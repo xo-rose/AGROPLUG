@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroPlug | Merchant Profile Settings</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen lg:flex">
+
+    <!-- MOBILE TOP NAVIGATION BAR -->
+    <div class="lg:hidden w-full bg-[#0a421a] text-white px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-2 text-2xl font-black tracking-tight">
+            <span>Agro<span class="text-[#4ade80]">Plug</span></span>
+        </div>
+        <button id="menu-toggle" class="p-2 text-slate-200 hover:text-white focus:outline-none rounded-lg">
+            <i class="fa-solid fa-bars h-6 w-6 text-2xl flex items-center justify-center"></i>
+        </button>
+    </div>
+
+        <!-- Sidebar Drawer (Responsive Drawer Panel) -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 Carver z-50 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#0A4D26] text-white flex flex-col justify-between py-6 px-4 shadow-xl">
+
+        <div>
+            <div class="flex items-center justify-between mb-8 px-2">
+                <div class="flex flex-col">
+                    <h1 class="text-2xl font-black tracking-tight text-white">Agro<span
+                            class="text-[#3CD670]">Plug</span></h1>
+                    <p class="text-[10px] text-emerald-200/70 font-light mt-0.5">Plug in. Sell more. Grow more.</p>
+                </div>
+                <!-- Close Button inside Drawer for Mobile Layouts -->
+                <button id="closeSidebarBtn" type="button"
+                    class="sm:hidden text-emerald-200 hover:text-white text-xl p-1 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Profile Info Module Container -->
+            <div
+                class="flex flex-col items-center text-center bg-emerald-950/40 rounded-2xl p-4 mb-6 border border-emerald-800/30">
+                <div class="relative w-16 h-16 mb-2.5 group">
+                    <img src="https://media.istockphoto.com/id/1199905534/photo/mother-nature-spoils-those-who-treat-her-well.jpg?s=612x612&w=0&k=20&c=Zinq4K6qJx00vgA13Q8Q2HNFlgqaLmKmWOg9_WV-0HI="
+                        alt="Farmer's avatar"
+                        class="w-full h-full rounded-full object-cover ring-2 ring-emerald-500 ring-offset-2 ring-offset-[#0A4D26]">
+                    <span
+                        class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A4D26] rounded-full"></span>
+                </div>
+
+                <span
+                    class="bg-emerald-500/20 text-[#3CD670] border border-[#3CD670]/20 text-[10px] font-medium rounded-full px-2.5 py-0.5 mt-2 flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-circle-check text-[9px]"></i> Verified Farmer
+                </span>
+            </div>
+
+            <!-- Application Navigation Context Links List -->
+            <ul id="menuList" class="space-y-1 font-medium">
+                <li>
+                    <a href="dashboard.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mylistings.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-box text-base opacity-75"></i>
+                        <span>My Listings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="addProduct.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-circle-plus text-base opacity-75"></i>
+                        <span>Add New Produce</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-basket-shopping text-base opacity-75"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="messages.html"
+                        class="flex justify-between items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-comment-dots text-base opacity-75"></i>
+                            <span>Messages</span>
+                        </div>
+                        <span
+                            class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-wallet text-base opacity-75"></i>
+                        <span>Earnings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html"
+                        class="flex bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                        <i class="fa-solid fa-user text-base opacity-75"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="pt-4 border-t border-emerald-800/40">
+            <a href="#" id="logoutBtn"
+                class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20">
+                <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- BACKDROP BLUR OVERLAY FOR MOBILE ENVIRONMENT -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+
+    <!-- MAIN INTERFACE CONTEXT WINDOW -->
+    <div class="flex-1 lg:pl-64">
+        <main class="p-6 sm:p-8 lg:p-10 max-w-[1600px] mx-auto space-y-8">
+            
+            <!-- HIERARCHICAL BREADCRUMB -->
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                <span>Merchant Panel</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-slate-800">Profile Settings</span>
+            </div>
+
+            <!-- CONTEXT SUMMARY HEADER -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Merchant Profile Settings</h1>
+                    <p class="text-slate-500 text-base mt-1">Manage your agricultural hub presence, crop details, and buyer contact credentials.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- LEFT COLUMN: AVATAR & CREDENTIALS CARD -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Farmer Profile Large" class="w-full h-full object-cover rounded-full border-2 border-[#0a421a]">
+                            <button class="absolute bottom-1 right-1 bg-[#0a421a] text-white p-2.5 rounded-full hover:bg-[#155e2f] transition shadow-md">
+                                <i class="fa-solid fa-camera text-sm"></i>
+                            </button>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-900 " id="farmerName">Loading...</h2>
+                        <p class="text-slate-500 text-sm mt-0.5">Premium Produce Supplier</p>
+                        
+                        <div class="mt-4 inline-flex items-center bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
+                            <i class="fa-solid fa-shield-check mr-1.5 text-base"></i> Identity Verified
+                        </div>
+
+                        <hr class="my-6 border-slate-100">
+
+                        <div class="text-left space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Merchant Rating</span>
+                                <div class="flex items-center gap-1 mt-1 text-amber-500">
+                                    <i class="fa-solid fa-star text-base"></i>
+                                    <i class="fa-solid fa-star text-base"></i>
+                                    <i class="fa-solid fa-star text-base"></i>
+                                    <i class="fa-solid fa-star text-base"></i>
+                                    <i class="fa-solid fa-star-half-stroke text-base"></i>
+                                    <span class="text-slate-800 text-sm font-bold ml-1.5">4.8 (32 orders)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Primary Supply Hub</span>
+                                <span class="text-base font-semibold text-slate-800 block mt-0.5"><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> Ubani Market / Ikwuano</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: FORM DATA ENTRY WINDOW -->
+                <div class="lg:col-span-2">
+                    <form class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden" onsubmit="event.preventDefault();">
+                        <div class="p-6 sm:p-8 space-y-6">
+                            <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">Personal & Logistics Credentials</h3>
+                            
+                            <!-- Form Inputs Row 1 -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Full Legal Name</label>
+                                    <input type="text" value="Chinedu John" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">WhatsApp Routing Number</label>
+                                    <input type="tel" value="+234 800 000 0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium">
+                                </div>
+                            </div>
+
+                            <!-- Form Inputs Row 2 -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                                    <input type="email" value="chinedu.john@agroplug.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Primary Farm Location / Axis</label>
+                                    <input type="text" value="Ubani Market Axis, Umuahia" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium">
+                                </div>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 pt-4">Farm Profile & Main Crops</h3>
+
+                            <!-- Form Inputs Row 3 -->
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Farm Business Description</label>
+                                <textarea rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium leading-relaxed">Specialized in organic tubers and fresh green vegetables distributed straight from the Ikwuano hub regions to retail buyers.</textarea>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Primary Crops Offered</label>
+                                <input type="text" value="Yam Tubers, Fresh Tomatoes, Ugu Leaves, Cassava" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-800 focus:bg-white focus:border-[#0a421a] focus:ring-1 focus:ring-[#0a421a] outline-none transition font-medium">
+                            </div>
+
+                        </div>
+
+                        <!-- Form Actions Banner -->
+                        <div class="bg-slate-50 border-t border-slate-100 px-6 sm:px-8 py-4 flex items-center justify-end gap-3">
+                            <button type="button" class="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 text-base font-bold rounded-xl transition shadow-sm hover:bg-slate-100">
+                                Discard
+                            </button>
+                            <button type="submit" class="bg-[#0a421a] hover:bg-[#155e2f] text-white px-6 py-2.5 text-base font-bold rounded-xl transition shadow-sm">
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- RESPONSIVE SIDEBAR ACTIONS JAVASCRIPT -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        menuClose.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+
+        
+
+    </script>
+
+    <!-- <script src="profile.js"></script> -->
+
+</body>
+</html>
