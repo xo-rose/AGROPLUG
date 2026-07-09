@@ -1,5 +1,16 @@
    let currentUser = null;
 
+        function getDisplayCategory(category) {
+            const value = String(category || "").trim();
+            const normalized = value.toLowerCase();
+
+            if (normalized.includes("friut") || normalized.includes("fruit")) {
+                return "Fruits & Vegetables";
+            }
+
+            return value || "N/A";
+        }
+
         // ===============================
         // AUTH CHECK
         // ===============================
@@ -19,22 +30,9 @@
         });
 
         // ===============================
-        // LOGOUT
-        // ===============================
-        document.querySelectorAll(".logoutBtn")
-            .addEventListener("click", async () => {
-
-                try {
-                    await auth.signOut();
-                    window.location.href = "login.html";
-                } catch (error) {
-                    console.error(error);
-                }
-            });
-
-        // ===============================
         // LOAD PRODUCTS
         // ===============================
+
         function loadListings() {
 
             const container =
@@ -123,7 +121,7 @@
 
                                 <p>
                                     <i class="fa-solid fa-layer-group mr-2"></i>
-                                    ${item.category || 'N/A'}
+                                    ${getDisplayCategory(item.category)}
                                 </p>
 
                                 <p>

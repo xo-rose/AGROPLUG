@@ -6,6 +6,37 @@ const MY_SUBACCOUNT_ID = "ACCT_gdl5amv3xl03utv";
 const ENABLE_PAYSTACK_SUBACCOUNTS = false;
 let currentActiveProduct = null; 
 let latestWalletBalance = 0;
+let buyerPremiumActive = false;
+let latestListingDocs = [];
+let activeProductFilter = "all";
+
+const productFilterGroups = [
+    {
+        id: "livestock",
+        title: "Live Stock",
+        aliases: ["livestock", "live stock", "animal", "animals", "poultry", "fishery", "fish"]
+    },
+    {
+        id: "fruits-vegetables",
+        title: "Fruits & Vegetables",
+        aliases: ["fruit", "fruits", "friut", "friuts", "vegetable", "vegetables", "fruits & vegetables", "fruit and vegetables", "veggies"]
+    },
+    {
+        id: "grains-cereals",
+        title: "Grains & Cereals",
+        aliases: ["grain", "grains", "cereal", "cereals", "grains & cereals", "grain and cereals", "rice", "maize", "corn", "beans"]
+    },
+    {
+        id: "dairy-products",
+        title: "Dairy Products",
+        aliases: ["dairy", "dairy products", "milk", "cheese", "yoghurt", "yogurt"]
+    },
+    {
+        id: "tubers-frozen-meats",
+        title: "Tubers & Frozen Meats",
+        aliases: ["tuber", "tubers", "yam", "cassava", "potato", "potatoes", "frozen meat", "frozen meats", "frozen", "meats"]
+    }
+];
 
 const menuToggle = document.getElementById("menuToggle");
 const menuList = document.getElementById("menuList");
@@ -20,6 +51,17 @@ if (menuToggle && menuList && toggleIcon) {
     });
 }
 
+const filterButtons = document.querySelectorAll(".filter-btn");
+filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        activeProductFilter = button.dataset.filter || "all";
+        updateFilterButtonStyles();
+        renderListings();
+    });
+});
+
+updateFilterButtonStyles();
+
 // ==========================================
 // AUTH CHECK + STATE INITIALIZATION
 // ==========================================
@@ -29,6 +71,7 @@ auth.onAuthStateChanged((user) => {
         return;
     }
     listenForWalletBalance(user.uid);
+    listenForBuyerPremiumStatus(user.uid);
     loadListings();
 });
 
@@ -50,6 +93,7 @@ function loadListings() {
             container.innerHTML = "";
 
             if (snapshot.empty) {
+                latestListingDocs = [];
                 container.innerHTML = `
                     <div class="col-span-full bg-white p-8 rounded-2xl shadow text-center">
                         <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-4"></i>
@@ -60,48 +104,11 @@ function loadListings() {
                 return;
             }
 
-            const docs = snapshot.docs
+            latestListingDocs = snapshot.docs
                 .slice()
                 .sort((a, b) => getTimestampValue(b.data().createdAt) - getTimestampValue(a.data().createdAt));
 
-            docs.forEach((doc) => {
-                const item = doc.data();
-                const quantity = Number(item.quantity || 0);
-                const isAvailable = String(item.status || "active").toLowerCase() === "active" && quantity > 0;
-                const farmerName = item.farmerName || "Unknown Farmer";
-                const farmerId = item.farmerId || "";
-                const chatControl = farmerId
-                    ? `<a href="messages.html?farmerId=${encodeURIComponent(farmerId)}&farmerName=${encodeURIComponent(farmerName)}" class="w-full border border-emerald-200 text-emerald-700 hover:bg-emerald-50 py-2 rounded-lg transition text-center font-medium">Chat</a>`
-                    : `<button type="button" disabled class="w-full border border-slate-200 text-slate-400 py-2 rounded-lg cursor-not-allowed">No Chat</button>`;
-
-                container.innerHTML += `
-                    <div class="bg-white rounded-2xl overflow-hidden shadow hover:shadow-lg hover:-translate-y-2 transition duration-300">
-                        <img src="${escapeHtml(item.imageUrl || 'https://via.placeholder.com/400x250')}" class="w-full h-52 object-cover" alt="${escapeHtml(item.productName || 'Product')}">
-                        <div class="p-5">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-bold text-lg">${escapeHtml(item.productName || 'Unnamed Product')}</h3>
-                                <span class="${isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded-full text-xs">${isAvailable ? 'Available' : 'Unavailable'}</span>
-                            </div>
-                            <p class="text-emerald-600 font-bold text-xl mt-2">
-                                ₦${Number(item.price || 0).toLocaleString()}
-                            </p>
-                            <div class="mt-3 text-sm text-slate-600 space-y-1">
-                                <p><i class="fa-solid fa-user mr-2"></i> ${escapeHtml(farmerName)}</p>
-                                <p><i class="fa-solid fa-layer-group mr-2"></i> ${escapeHtml(item.category || 'N/A')}</p>
-                                <p><i class="fa-solid fa-location-dot mr-2"></i> ${escapeHtml(item.location || 'N/A')}</p>
-                                <p><i class="fa-solid fa-cubes mr-2"></i> Quantity: ${quantity.toLocaleString()} ${escapeHtml(item.unit || '')}</p>
-                            </div>
-                            <p class="mt-3 text-sm text-gray-500">${escapeHtml(item.description || '')}</p>
-                            <div class="mt-5 grid grid-cols-2 gap-3">
-                                <button onclick="buyProduct('${doc.id}')" ${isAvailable ? '' : 'disabled'} class="w-full ${isAvailable ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-300 cursor-not-allowed'} text-white py-2 rounded-lg transition">
-                                    Buy Now
-                                </button>
-                                ${chatControl}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+            renderListings();
         }, (error) => {
             console.error("Error loading products:", error);
             container.innerHTML = `
@@ -110,6 +117,144 @@ function loadListings() {
                 </div>
             `;
         });
+}
+
+function updateFilterButtonStyles() {
+    filterButtons.forEach((button) => {
+        const isActive = (button.dataset.filter || "all") === activeProductFilter;
+        button.classList.toggle("bg-emerald-600", isActive);
+        button.classList.toggle("text-white", isActive);
+        button.classList.toggle("bg-white", !isActive);
+        button.classList.toggle("text-emerald-700", !isActive);
+        button.classList.toggle("border", !isActive);
+        button.classList.toggle("border-emerald-200", !isActive);
+    });
+}
+
+function renderListings() {
+    const container = document.getElementById("productsContainer");
+    if (!container) return;
+
+    const selectedDocs = activeProductFilter === "all"
+        ? latestListingDocs
+        : latestListingDocs.filter((doc) => getProductGroupId(doc.data()) === activeProductFilter);
+
+    if (!selectedDocs.length) {
+        const selectedGroup = productFilterGroups.find((group) => group.id === activeProductFilter);
+        container.innerHTML = `
+            <div class="col-span-full bg-white p-8 rounded-2xl shadow text-center">
+                <i class="fa-solid fa-filter-circle-xmark text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-bold">No ${escapeHtml(selectedGroup?.title || "Products")} Available</h3>
+                <p class="text-gray-500 mt-2">Try another produce section.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const groupsToRender = activeProductFilter === "all"
+        ? productFilterGroups
+        : productFilterGroups.filter((group) => group.id === activeProductFilter);
+
+    const groupedMarkup = groupsToRender
+        .map((group) => {
+            const groupDocs = selectedDocs.filter((doc) => getProductGroupId(doc.data()) === group.id);
+            if (!groupDocs.length) return "";
+
+            return `
+                <section class="col-span-full">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-slate-900">${group.title}</h2>
+                        <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">${groupDocs.length} item${groupDocs.length === 1 ? "" : "s"}</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        ${groupDocs.map(renderProductCard).join("")}
+                    </div>
+                </section>
+            `;
+        })
+        .join("");
+
+    const otherDocs = activeProductFilter === "all"
+        ? selectedDocs.filter((doc) => getProductGroupId(doc.data()) === "other")
+        : [];
+
+    const otherMarkup = otherDocs.length
+        ? `
+            <section class="col-span-full">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold text-slate-900">Other Produce</h2>
+                    <span class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">${otherDocs.length} item${otherDocs.length === 1 ? "" : "s"}</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    ${otherDocs.map(renderProductCard).join("")}
+                </div>
+            </section>
+        `
+        : "";
+
+    container.innerHTML = groupedMarkup + otherMarkup;
+}
+
+function renderProductCard(doc) {
+    const item = doc.data();
+    const quantity = Number(item.quantity || 0);
+    const isAvailable = String(item.status || "active").toLowerCase() === "active" && quantity > 0;
+    const farmerName = item.farmerName || "Unknown Farmer";
+    const farmerId = item.farmerId || "";
+    const chatControl = farmerId
+        ? `<a href="messages.html?farmerId=${encodeURIComponent(farmerId)}&farmerName=${encodeURIComponent(farmerName)}" class="w-full border border-emerald-200 text-emerald-700 hover:bg-emerald-50 py-2 rounded-lg transition text-center font-medium">Chat</a>`
+        : `<button type="button" disabled class="w-full border border-slate-200 text-slate-400 py-2 rounded-lg cursor-not-allowed">No Chat</button>`;
+
+    return `
+        <div class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg hover:-translate-y-1 transition duration-300">
+            <img src="${escapeHtml(item.imageUrl || 'https://via.placeholder.com/400x250')}" class="w-full h-36 object-cover" alt="${escapeHtml(item.productName || 'Product')}">
+            <div class="p-4">
+                <div class="flex justify-between items-start gap-3">
+                    <h3 class="font-bold text-base leading-snug">${escapeHtml(item.productName || 'Unnamed Product')}</h3>
+                    <span class="${isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded-full text-xs whitespace-nowrap">${isAvailable ? 'Available' : 'Unavailable'}</span>
+                </div>
+                <p class="text-emerald-600 font-bold text-lg mt-1.5">
+                    ₦${Number(item.price || 0).toLocaleString()}
+                </p>
+                <div class="mt-2 text-xs text-slate-600 space-y-1">
+                    <p><i class="fa-solid fa-user mr-2"></i> ${escapeHtml(farmerName)}</p>
+                    <p><i class="fa-solid fa-layer-group mr-2"></i> ${escapeHtml(getDisplayCategory(item.category || 'N/A'))}</p>
+                    <p><i class="fa-solid fa-location-dot mr-2"></i> ${escapeHtml(item.location || 'N/A')}</p>
+                    <p><i class="fa-solid fa-cubes mr-2"></i> Quantity: ${quantity.toLocaleString()} ${escapeHtml(item.unit || '')}</p>
+                </div>
+                <p class="mt-2 text-xs text-gray-500 line-clamp-2">${escapeHtml(item.description || '')}</p>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                    <button onclick="buyProduct('${doc.id}')" ${isAvailable ? '' : 'disabled'} class="w-full ${isAvailable ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-300 cursor-not-allowed'} text-white py-2 rounded-lg transition font-medium">
+                        Buy Now
+                    </button>
+                    ${chatControl}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function getProductGroupId(item) {
+    const category = String(item.category || item.productCategory || "").toLowerCase().trim();
+    const name = String(item.productName || item.name || "").toLowerCase().trim();
+    const combined = `${category} ${name}`;
+
+    const matchedGroup = productFilterGroups.find((group) => (
+        group.aliases.some((alias) => combined.includes(alias))
+    ));
+
+    return matchedGroup ? matchedGroup.id : "other";
+}
+
+function getDisplayCategory(category) {
+    const value = String(category || "").trim();
+    const normalized = value.toLowerCase();
+
+    if (normalized.includes("friut") || normalized.includes("fruit")) {
+        return "Fruits & Vegetables";
+    }
+
+    return value || "N/A";
 }
 
 // ==========================================
@@ -185,6 +330,18 @@ function listenForWalletBalance(userId) {
     });
 }
 
+function listenForBuyerPremiumStatus(userId) {
+    db.collection("users").doc(userId).onSnapshot((doc) => {
+        const data = doc.exists ? doc.data() : {};
+        buyerPremiumActive = Boolean(data.premiumActive || data.isPremium || data.subscription === "premium");
+        updateFulfillmentStatus();
+    }, (error) => {
+        console.warn("Buyer premium status load failed:", error);
+        buyerPremiumActive = false;
+        updateFulfillmentStatus();
+    });
+}
+
 function updatePaymentStatus() {
     const paymentStatus = document.getElementById("modalPaymentStatus");
     const paymentMethod = document.getElementById("modalPaymentMethod");
@@ -200,6 +357,67 @@ function updatePaymentStatus() {
         paymentStatus.textContent = "Bank checkout opens Paystack for card, transfer, or other bank payment options.";
         paymentStatus.className = "text-xs text-slate-500 mt-2";
     }
+}
+
+function updateFulfillmentStatus() {
+    const fulfillmentMethod = document.getElementById("modalFulfillmentMethod");
+    const fulfillmentStatus = document.getElementById("modalFulfillmentStatus");
+    const pickupWrap = document.getElementById("pickupLocationWrap");
+    const doorstepWrap = document.getElementById("doorstepAddressWrap");
+
+    if (!fulfillmentMethod) return;
+
+    const isDoorstep = fulfillmentMethod.value === "doorstep";
+
+    if (pickupWrap) pickupWrap.classList.toggle("hidden", isDoorstep);
+    if (doorstepWrap) doorstepWrap.classList.toggle("hidden", !isDoorstep);
+
+    if (!fulfillmentStatus) return;
+
+    if (isDoorstep && !buyerPremiumActive) {
+        fulfillmentStatus.textContent = "Doorstep delivery requires an AgroPlug Premium subscription.";
+        fulfillmentStatus.className = "text-xs text-amber-600 mt-2";
+    } else if (isDoorstep) {
+        fulfillmentStatus.textContent = "Premium doorstep delivery will use your delivery address.";
+        fulfillmentStatus.className = "text-xs text-emerald-600 mt-2";
+    } else {
+        fulfillmentStatus.textContent = "Choose where you will pick up this order.";
+        fulfillmentStatus.className = "text-xs text-slate-500 mt-2";
+    }
+}
+
+function getFulfillmentDetails() {
+    const fulfillmentMethod = document.getElementById("modalFulfillmentMethod")?.value || "pickup";
+    const pickupLocation = String(document.getElementById("modalPickupLocation")?.value || "").trim();
+    const doorstepAddress = String(document.getElementById("modalDoorstepAddress")?.value || "").trim();
+
+    if (fulfillmentMethod === "doorstep") {
+        if (!buyerPremiumActive) {
+            throw new Error("Doorstep delivery is a Premium feature. Subscribe to Premium before choosing doorstep delivery.");
+        }
+
+        if (doorstepAddress.length < 10) {
+            throw new Error("Please enter a complete doorstep delivery address.");
+        }
+
+        return {
+            fulfillmentMethod,
+            pickupLocation: "",
+            deliveryAddress: doorstepAddress,
+            premiumRequired: true
+        };
+    }
+
+    if (pickupLocation.length < 3) {
+        throw new Error("Please enter the pickup location for this order.");
+    }
+
+    return {
+        fulfillmentMethod: "pickup",
+        pickupLocation,
+        deliveryAddress: "",
+        premiumRequired: false
+    };
 }
 
 // ==========================================
@@ -239,6 +457,16 @@ async function buyProduct(productId) {
             paymentMethod.value = latestWalletBalance >= unitPrice ? "wallet" : "bank";
             paymentMethod.onchange = updatePaymentStatus;
         }
+        const fulfillmentMethod = document.getElementById("modalFulfillmentMethod");
+        const pickupLocationInput = document.getElementById("modalPickupLocation");
+        const doorstepAddressInput = document.getElementById("modalDoorstepAddress");
+        if (fulfillmentMethod) {
+            fulfillmentMethod.value = "pickup";
+            fulfillmentMethod.onchange = updateFulfillmentStatus;
+        }
+        if (pickupLocationInput) pickupLocationInput.value = "";
+        if (doorstepAddressInput) doorstepAddressInput.value = "";
+        updateFulfillmentStatus();
         updatePaymentStatus();
 
         qtyInput.oninput = () => {
@@ -264,15 +492,23 @@ async function buyProduct(productId) {
                 alert("Please select a valid quantity.");
                 return;
             }
+            let fulfillmentDetails;
+            try {
+                fulfillmentDetails = getFulfillmentDetails();
+            } catch (error) {
+                alert(error.message);
+                return;
+            }
             console.log("Proceed to Pay clicked", {
                 quantity: finalQty,
-                product: currentActiveProduct
+                product: currentActiveProduct,
+                fulfillmentDetails
             });
             const selectedPaymentMethod = document.getElementById("modalPaymentMethod")?.value || "wallet";
             if (selectedPaymentMethod === "wallet") {
-                executeWalletTransaction(finalQty, expectedDelivery);
+                executeWalletTransaction(finalQty, expectedDelivery, fulfillmentDetails);
             } else {
-                executePaystackTransaction(finalQty, expectedDelivery);
+                executePaystackTransaction(finalQty, expectedDelivery, fulfillmentDetails);
             }
         };
 
@@ -312,7 +548,7 @@ async function ensureOrderConversation(product, user) {
     }, { merge: true });
 }
 
-async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, paymentData) {
+async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, paymentData, fulfillmentDetails) {
     const productRef = db.collection("listings").doc(product.id);
     const orderRef = db.collection("orders").doc();
     const walletRef = db.collection("wallets").doc(user.uid);
@@ -380,6 +616,10 @@ async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, a
             unitPrice,
             totalPrice,
             deliveryDate: assignedDeliveryDate,
+            fulfillmentMethod: fulfillmentDetails.fulfillmentMethod,
+            pickupLocation: fulfillmentDetails.pickupLocation,
+            deliveryAddress: fulfillmentDetails.deliveryAddress,
+            premiumDeliveryRequired: fulfillmentDetails.premiumRequired,
             paymentReference,
             paymentMethod,
             paymentStatus: "paid",
@@ -474,12 +714,12 @@ async function recordOptionalOrderSideEffects(details) {
     }
 }
 
-async function savePaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, response) {
+async function savePaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, response, fulfillmentDetails) {
     try {
         await createPaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, {
             reference: response.reference,
             paymentMethod: "bank"
-        });
+        }, fulfillmentDetails);
         currentActiveProduct = null;
         alert("Payment Successful!\nReference: " + response.reference);
     } catch (error) {
@@ -488,7 +728,7 @@ async function savePaidOrder(product, user, quantity, unitPrice, totalPrice, ass
     }
 }
 
-async function executeWalletTransaction(quantity, assignedDeliveryDate) {
+async function executeWalletTransaction(quantity, assignedDeliveryDate, fulfillmentDetails) {
     const user = auth.currentUser;
     const finalQuantity = Number.parseInt(quantity, 10);
 
@@ -528,7 +768,7 @@ async function executeWalletTransaction(quantity, assignedDeliveryDate) {
         await createPaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, {
             reference,
             paymentMethod: "wallet"
-        });
+        }, fulfillmentDetails);
 
         closeCheckoutModal();
         currentActiveProduct = null;
@@ -549,7 +789,7 @@ async function executeWalletTransaction(quantity, assignedDeliveryDate) {
     }
 }
 
-function executePaystackTransaction(quantity, assignedDeliveryDate) {
+function executePaystackTransaction(quantity, assignedDeliveryDate, fulfillmentDetails) {
     const user = auth.currentUser;
     const finalQuantity = Number.parseInt(quantity, 10);
 
@@ -617,10 +857,13 @@ function executePaystackTransaction(quantity, assignedDeliveryDate) {
                 productId: product.id,
                 productName: product.productName,
                 quantity: finalQuantity,
-                deliveryDate: assignedDeliveryDate
+                deliveryDate: assignedDeliveryDate,
+                fulfillmentMethod: fulfillmentDetails.fulfillmentMethod,
+                pickupLocation: fulfillmentDetails.pickupLocation,
+                premiumDeliveryRequired: fulfillmentDetails.premiumRequired
             },
             callback: function (response) {
-                savePaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, response);
+                savePaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, response, fulfillmentDetails);
             },
             onClose: function () {
                 currentActiveProduct = null;

@@ -37,6 +37,21 @@ let currentUser = null;
 let currentConversationId = null;
 let unsubscribeMessages = null;
 
+const msgBadgeEl = document.getElementById("msgBadge");
+
+function updateMsgBadge(totalUnread) {
+    if (!msgBadgeEl) return;
+    if (totalUnread > 0) {
+        msgBadgeEl.textContent = totalUnread > 99 ? "99+" : String(totalUnread);
+        msgBadgeEl.classList.remove("hidden");
+        msgBadgeEl.classList.add("flex");
+    } else {
+        msgBadgeEl.textContent = "";
+        msgBadgeEl.classList.add("hidden");
+        msgBadgeEl.classList.remove("flex");
+    }
+}
+
 const conversationsListEl = document.getElementById("conversationsList");
 const conversationHintEl = document.getElementById("conversationHint");
 const activeChatTitleEl = document.getElementById("activeChatTitle");
@@ -145,6 +160,12 @@ function selectConversation(conversation) {
 
     setSendDisabled(false, "");
 
+    // Mark this conversation as read (reset unreadCount for farmer)
+    db.collection("conversations").doc(conversationId).set(
+        { unreadCountFarmer: 0 },
+        { merge: true }
+    ).catch(() => {});
+
     if (unsubscribeMessages) {
         unsubscribeMessages();
         unsubscribeMessages = null;
@@ -204,6 +225,9 @@ async function sendMessage() {
             {
                 lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
                 lastMessagePreview: text,
+                lastSenderId: currentUser.uid,
+                // Increment unread count for the buyer
+                unreadCountBuyer: firebase.firestore.FieldValue.increment(1),
             },
             { merge: true }
         );
@@ -264,11 +288,16 @@ function subscribeConversations() {
                     conversationHintEl.textContent = `${conversations.length} conversation${conversations.length === 1 ? "" : "s"
                         }`;
 
+                // Tally unread for farmer across all conversations
+                const totalUnread = conversations.reduce((sum, c) => sum + (c.unreadCountFarmer || 0), 0);
+                updateMsgBadge(totalUnread);
+
                 conversationsListEl.innerHTML = conversations
                     .map((c) => {
                         const buyerName = c.buyerName || "Buyer";
                         const isSelected = c.id === currentConversationId;
                         const lastPreview = c.lastMessagePreview || "No messages yet";
+                        const unread = c.unreadCountFarmer || 0;
 
                         return `
               <button
@@ -277,11 +306,14 @@ function subscribeConversations() {
                 class="w-full text-left p-4 hover:bg-slate-50 transition border-b border-slate-100 ${isSelected ? "bg-emerald-50/80" : "bg-white"
                             }">
                 <div class="flex items-start justify-between gap-3">
-                  <div class="min-w-0">
+                  <div class="min-w-0 flex-1">
                     <div class="font-bold text-sm text-slate-900 truncate">${escapeHtml(buyerName)}</div>
-                    <div class="text-xs text-slate-500 truncate mt-1">${escapeHtml(lastPreview)}</div>
+                    <div class="text-xs ${unread > 0 ? 'text-emerald-700 font-semibold' : 'text-slate-500'} truncate mt-1">${escapeHtml(lastPreview)}</div>
                   </div>
-                  <div class="text-[10px] text-slate-400 shrink-0">${escapeHtml(formatDate(c.lastMessageAt))}</div>
+                  <div class="flex flex-col items-end gap-1 shrink-0">
+                    <div class="text-[10px] text-slate-400">${escapeHtml(formatDate(c.lastMessageAt))}</div>
+                    ${unread > 0 ? `<span class="bg-[#3CD670] text-[#0A4D26] text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">${unread > 99 ? '99+' : unread}</span>` : ''}
+                  </div>
                 </div>
               </button>
             `;
@@ -379,3 +411,15 @@ window.__openFarmerChat = async function (buyerId, buyerName = "") {
         setSendDisabled(true, "Unable to start chat. Check Firestore conversation permissions.");
     }
 };
+
+// Logout
+(function setupLogout() {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (!logoutBtn) return;
+    logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        auth.signOut()
+            .then(() => { window.location.href = "login.html"; })
+            .catch((err) => { console.error("Logout failed:", err); });
+    });
+})();

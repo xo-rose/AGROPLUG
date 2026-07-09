@@ -92,11 +92,11 @@
         </nav>
         <!-- MODAL SECTION-->
         <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-md p-4">
-            <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease]">
+            <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-[fadeIn_.3s_ease] text-center">
                 <div class="flex items-center justify-between">
-                    <h2 class="">
-                       <span class="text-lg font-bold text-slate-800"> WELCOME SIR / MA. </span><br>
-                        <span class="text-red-500 text-md font-semibold"> Are you a Farmer / Buyer. ?</span>
+                    <h2 class="text-left">
+                       <span class="text-lg font-bold text-slate-800">Get AgroPlug App</span><br>
+                        <span class="text-emerald-600 text-sm font-semibold">Scan the QR code to view the app preview.</span>
                     </h2>
 
                     <button class=""
@@ -104,26 +104,27 @@
                         <i class="fa-solid fa-xmark rounded-full object-cover text-white font-extrabold p-3 bg-emerald-500 justify-center w-10 h-10"></i>
                     </button>
                 </div>
-                <!--MODAL INPUT SUBMIT-->
-                <form action="" id="modalSub">
-                    <input id="overlay" type="text"
-                        class="p-4 rounded-lg w-full border rounded-xl mt-4 focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500">
-
-                    <span class="text-red-500 font-semibold " id="error"></span>
-                    <div class="mt-6 flex gap-4">
-                        <button id="cancelBtn"
-                            class="flex-1 font-extrabold rounded-xl border text-white bg-slate-700 py-3 font-mediumhover:bg-slate-50">
-                            Cancel
-                        </button>
-
+                <div class="mt-6 flex flex-col items-center">
+                    <a id="appQrLink" href="./assets/preview.png" target="_blank" rel="noopener"
+                        class="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-inner">
+                        <img id="appQrCode"
+                            src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=./assets/preview.png"
+                            alt="AgroPlug app preview QR code" class="h-56 w-56 object-contain">
+                    </a>
+                    <h3 class="mt-5 text-2xl font-black tracking-tight text-slate-900">DOWNLOAD APP</h3>
+                    <div class="mt-5 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
                         <button type="button"
-                            class="flex-1 font-extrabold rounded-xl bg-emerald-600 py-3 font-medium text-white hover:bg-emerald-600"
-                            id="okBtn">
-                            Ok
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white cursor-default">
+                            <i class="fa-brands fa-google-play"></i>
+                            GOOGLE PLAY STORE
                         </button>
-
+                        <button type="button"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-bold text-white cursor-default">
+                            <i class="fa-brands fa-apple"></i>
+                            APPLE STORE
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         <!-- HERO_TEXT -->
@@ -200,10 +201,9 @@
                         <div class="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-2xl mb-6">
                             <i class="fa-solid fa-message"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Claim on WhatsApp</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed">Hit "Claim" to instantly message the farmer.
-                            Deal
-                            closed, no complex online payments needed.</p>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Claim on AgroChat</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Hit <q>Chat</q> to instantly message the farmer.
+                            When transcation is successfull.</p>
                     </div>
                 </div>
             </div>
@@ -404,7 +404,7 @@
                                 <div class="p-4">
                                     Those platforms deal with massive commercial supply chains and
                                     long-distance shipping. AgroPlug is for the local hustle. We
-                                    connect you directlyp to nearby farms so you can score fresh
+                                    connect you directly to nearby farms so you can score fresh
                                     harvests on the same day without corporate middle-men or long wait
                                     times.
                                 </div>
@@ -420,11 +420,8 @@
                             </button>
                             <div
                                 class="dropdown-content max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out bg-white text-gray-600 border-t border-gray-100">
-                                Nope. Zero fees. AgroPlug is completely free to use. We don't trap your money in online
-                                digital
-                                wallets or take a percentage cut from the farmer's profit.
+                                Yeah. AgroPlug takes 5% from every transaction ranging form #20000 and above from the farmer's profit. This is to ensure that the platform is sustainable and can continue to provide value to both farmers and buyers.
                             </div>
-                        </div>
                         <div class="dropdown border border-gray-200 rounded-lg overflow-hidden p-2">
                             <button
                                 class="dropdown-btn w-full bg-gray-100 hover:bg-gray-200 text-left px-4 py-3 font-medium text-gray-700 flex justify-between items-center transition-colors">

@@ -206,58 +206,57 @@ function displayItems(menuItems) {
 // document.getElementById("demo").addEventListener("click", () => {
 // })
 
-// FARMER AND BUYER MODAL SECTION //
+// APP DOWNLOAD MODAL SECTION //
 const modal = document.getElementById("modal");
-const openBtn = document.querySelector(".modalBtn");
+const openBtns = document.querySelectorAll(".modalBtn");
 const closeBtn = document.getElementById("closeBtn");
-const cancelBtn = document.getElementById("cancelBtn");
-// const signIn = document.getElementById("signIn");
-const overlayInput = document.getElementById("overlay");
-const errorTxt = document.getElementById("error");
-const modalForm = document.getElementById("modalSub");
+const appQrLink = document.getElementById("appQrLink");
+const appQrCode = document.getElementById("appQrCode");
+
+const appPreviewUrl = new URL("./assets/preview.png", window.location.href).href;
+if (appQrLink && appQrCode) {
+    appQrLink.href = appPreviewUrl;
+    appQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(appPreviewUrl)}`;
+}
 
 // OPEN MODAL
-openBtn.addEventListener("click", () => {
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
+openBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+        modalBtn();
+    });
 });
 
-function showModal() {
+function modalBtn() {
+    if (!modal) return;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
 }
-// function modalBtn() {
-//     modal.classList.remove("hidden");
-//     modal.classList.add("flex")
-// }
-function Modal() {
+
+function closeAppModal() {
+    if (!modal) return;
     modal.classList.add("hidden");
     modal.classList.remove("flex");
 }
 
 // CLOSE MODAL
-closeBtn.addEventListener("click", Modal);
-cancelBtn.addEventListener("click", Modal);
+if (closeBtn) {
+    closeBtn.addEventListener("click", closeAppModal);
+}
 
 // CLOSE WHEN CLICKING OUTSIDE
-modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-        hideModal();
-    }
-});
+if (modal) {
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            closeAppModal();
+        }
+    });
+}
 
-// HANDLE FORM SUBMISSION
-const okBtn = document.getElementById("okBtn");
-
-okBtn.addEventListener("click", () => {
-    const userType = overlayInput.value.trim().toLowerCase();
-
-    if (userType === "farmer") {
-        window.location.href = "./farmers/SignUp.html";
-    } else if (userType === "buyer") {
-        window.location.href = "./buyers/SignUp.html";
-    } else {
-        errorTxt.textContent = "Please enter Farmer or Buyer";
+document.addEventListener("click", (e) => {
+    const getPluggedButton = e.target.closest(".get-plugged-btn");
+    if (getPluggedButton) {
+        e.preventDefault();
+        modalBtn();
     }
 });
 

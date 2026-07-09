@@ -38,6 +38,21 @@ let currentUser = null;
 let currentConversationId = null;
 let unsubscribeMessages = null;
 
+const msgBadgeEl = document.getElementById("msgBadge");
+
+function updateMsgBadge(totalUnread) {
+  if (!msgBadgeEl) return;
+  if (totalUnread > 0) {
+    msgBadgeEl.textContent = totalUnread > 99 ? "99+" : String(totalUnread);
+    msgBadgeEl.classList.remove("hidden");
+    msgBadgeEl.classList.add("flex");
+  } else {
+    msgBadgeEl.textContent = "";
+    msgBadgeEl.classList.add("hidden");
+    msgBadgeEl.classList.remove("flex");
+  }
+}
+
 const conversationsListEl = document.getElementById("conversationsList");
 const conversationHintEl = document.getElementById("conversationHint");
 const activeChatTitleEl = document.getElementById("activeChatTitle");
@@ -146,6 +161,12 @@ function selectConversation(conversation) {
     activeChatSubtitleEl.textContent = `Conversation with ${farmerName || "Farmer"} • ${farmerId}`;
   setSendDisabled(false, "");
 
+  // Mark this conversation as read (reset unreadCount for buyer)
+  db.collection("conversations").doc(conversationId).set(
+    { unreadCountBuyer: 0 },
+    { merge: true }
+  ).catch(() => {});
+
   if (unsubscribeMessages) {
     unsubscribeMessages();
     unsubscribeMessages = null;
@@ -204,7 +225,10 @@ async function sendMessage() {
 
     await conversationDoc.set({
       lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMessagePreview: text
+      lastMessagePreview: text,
+      lastSenderId: currentUser.uid,
+      // Increment unread count for the farmer
+      unreadCountFarmer: firebase.firestore.FieldValue.increment(1),
     }, { merge: true });
 
     try {
@@ -260,10 +284,15 @@ function subscribeConversations() {
 
         conversationHintEl.textContent = `${conversations.length} conversation${conversations.length === 1 ? "" : "s"}`;
 
+        // Tally unread for buyer across all conversations
+        const totalUnread = conversations.reduce((sum, c) => sum + (c.unreadCountBuyer || 0), 0);
+        updateMsgBadge(totalUnread);
+
         conversationsListEl.innerHTML = conversations.map(c => {
           const farmerName = c.farmerName || "Farmer";
           const farmerId = c.farmerId || "";
           const isSelected = c.id === currentConversationId;
+          const unread = c.unreadCountBuyer || 0;
 
           return `
             <button
@@ -271,14 +300,15 @@ function subscribeConversations() {
               data-conv-id="${escapeHtml(c.id)}"
               class="w-full text-left p-4 hover:bg-slate-50 transition border-b border-slate-100 ${isSelected ? "bg-emerald-50/80" : "bg-white"}">
               <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0">
+                <div class="min-w-0 flex-1">
                   <div class="font-bold text-sm text-slate-900 truncate">${escapeHtml(farmerName)}</div>
-                  <div class="text-xs text-slate-500 truncate mt-1">
+                  <div class="text-xs ${unread > 0 ? 'text-emerald-700 font-semibold' : 'text-slate-500'} truncate mt-1">
                     ${escapeHtml(c.lastMessagePreview || "No messages yet")}
                   </div>
                 </div>
-                <div class="text-[10px] text-slate-400 shrink-0">
-                  ${escapeHtml(formatDate(c.lastMessageAt))}
+                <div class="flex flex-col items-end gap-1 shrink-0">
+                  <div class="text-[10px] text-slate-400">${escapeHtml(formatDate(c.lastMessageAt))}</div>
+                  ${unread > 0 ? `<span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 min-w-4 h-4 flex items-center justify-center rounded-full">${unread > 99 ? '99+' : unread}</span>` : ''}
                 </div>
               </div>
             </button>
@@ -394,7 +424,6 @@ function init() {
       window.location.href = "login.html";
       return;
     }
-
     currentUser = user;
 
     subscribeConversations();
@@ -407,5 +436,18 @@ function init() {
 
 init();
 
+
 // Expose for browseProducts.js inline buttons (if used)
 window.__openBuyerChat = openChatWithFarmer;
+
+// Logout
+(function setupLogout() {
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (!logoutBtn) return;
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    auth.signOut()
+      .then(() => { window.location.href = "login.html"; })
+      .catch((err) => { console.error("Logout failed:", err); });
+  });
+})();
