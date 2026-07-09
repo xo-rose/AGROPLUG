@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Web app's Firebase configuration
@@ -25,6 +25,7 @@ const modal = document.getElementById("modal");
 const overlayText = document.getElementById("overlay");
 const signInBtn = document.getElementById("signIn");
 const closeBtn = document.getElementById("closeBtn");
+let successRedirectUrl = "login.html";
 
 // Dynamic Popup State Manager
 function showPopup(message, isSuccess = true) {
@@ -63,11 +64,13 @@ if (signupForm) {
         const emailEl = document.getElementById("email");
         const phoneEl = document.getElementById("phoneNumber") || document.getElementById("phone");
         const passwordEl = document.getElementById("password");
+        const roleEl = document.getElementById("role");
 
         const fullName = fullNameEl ? fullNameEl.value.trim() : "User";
         const email = emailEl ? emailEl.value.trim() : "";
         const phone = phoneEl ? phoneEl.value.trim() : "";
         const password = passwordEl ? passwordEl.value : "";
+        const role = roleEl?.value === "buyer" ? "buyer" : "farmer";
 
         let user = null;
 
@@ -80,6 +83,7 @@ if (signupForm) {
             // Step 1: Create account in Auth system
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             user = userCredential.user;
+            await updateProfile(user, { displayName: fullName });
 
             console.log("Auth Account created successfully:", user.uid);
 
@@ -116,7 +120,7 @@ if (signupForm) {
                 fullname: fullName,
                 email: email,
                 phone: phone,
-                role: "farmer", 
+                role: "farmer",
                 createdAt: new Date().toISOString()
             });
             
@@ -126,7 +130,8 @@ if (signupForm) {
         }
 
         // 🛠️ ALWAYS fires green success layout now because user authentication succeeded!
-        showPopup(`Hello ${fullName}, your registration was successful!`, true);
+        successRedirectUrl = role === "buyer" ? "../buyers/login.html" : "login.html";
+        showPopup(`Hello ${fullName}, your ${role} registration was successful!`, true);
         
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -141,7 +146,7 @@ const closeModal = () => {
     modal.classList.add("hidden");
     
     if (!overlayText.classList.contains("text-red-600")) {
-        window.location.href = "login.html"; 
+        window.location.href = successRedirectUrl;
     }
 };
 

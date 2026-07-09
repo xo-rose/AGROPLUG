@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isConversationParticipant() {
+      return signedIn() && request.auth.uid in resource.data.participants;
+    }
+
+    function isNewConversationParticipant() {
+      return signedIn() && request.auth.uid in request.resource.data.participants;
+    }
+
+    match /users/{userId} {
+      allow read, create, update: if isOwner(userId);
+    }
+
+    match /wallets/{userId} {
+      allow read, create, update: if isOwner(userId);
+
+      match /transactions/{transactionId} {
+        allow read, create: if isOwner(userId);
+      }
+    }
+
+    match /walletTransactions/{transactionId} {
+      allow read, create: if signedIn() && request.resource.data.buyerId == request.auth.uid;
+    }
+
+    match /listings/{listingId} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.farmerId == request.auth.uid;
+      allow update, delete: if signedIn() && resource.data.farmerId == request.auth.uid;
+    }
+
+    match /orders/{orderId} {
+      allow create: if signedIn() && request.resource.data.buyerId == request.auth.uid;
+      allow read: if signedIn()
+        && (resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
+      allow update: if signedIn()
+        && (resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
+    }
+
+    match /notifications/{notificationId} {
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid;
+      allow read, update: if signedIn() && resource.data.recipientId == request.auth.uid;
+    }
+
+    match /savedFarms/{savedFarmId} {
+      allow read, create, update, delete: if signedIn()
+        && (resource.data.buyerId == request.auth.uid || request.resource.data.buyerId == request.auth.uid);
+    }
+
+    match /conversations/{conversationId} {
+      allow create: if isNewConversationParticipant();
+      allow read, update, delete: if isConversationParticipant();
+
+      match /messages/{messageId} {
+        allow read: if signedIn()
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+        allow create: if signedIn()
+          && request.resource.data.senderId == request.auth.uid
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+      }
+    }
+  }
+}

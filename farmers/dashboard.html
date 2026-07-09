@@ -154,11 +154,13 @@
 
                 <!-- Right Side Interactive Actions Menu Block -->
                 <div class="flex items-center gap-3">
-                    <div
-                        class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition hidden sm:block">
-                        <i class="fa-regular fa-bell text-base text-slate-700"></i>
-                        <span
-                            class="absolute -top-1 -right-1 bg-emerald-600 rounded-full w-4 h-4 border-2 border-white flex justify-center items-center text-[8px] text-white font-bold">2</span>
+                    <div class="relative hidden sm:block">
+                        <button id="notificationButton" type="button" aria-label="Notifications"
+                            class="relative bg-white p-3 rounded-xl border border-slate-200 shadow-xs cursor-pointer hover:bg-slate-50 transition">
+                            <i class="fa-regular fa-bell text-base text-slate-700"></i>
+                            <span id="notificationBadge"
+                                class="hidden absolute -top-1 -right-1 bg-emerald-600 rounded-full min-w-5 h-5 px-1 border-2 border-white flex justify-center items-center text-[10px] text-white font-bold">0</span>
+                        </button>
                     </div>
                     <button type="button"
                         class="bg-[#0A4D26] hover:bg-emerald-900 px-4 py-2.5 rounded-xl text-white text-xs font-bold flex items-center gap-2 transition shadow-sm hover:shadow-md active:scale-[0.98] hidden sm:flex">
@@ -202,7 +204,7 @@
                 <div class="flex flex-col min-w-0">
                     <span class="text-slate-400 text-xs font-medium truncate">Orders</span>
                     <span id="todayOrdersCount"
-                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">5</span>
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">0</span>
                     <span class="text-blue-600 text-[10px] font-bold mt-1">In progress dispatch</span>
                 </div>
             </div>
@@ -216,7 +218,7 @@
                 <div class="flex flex-col min-w-0">
                     <span class="text-slate-400 text-xs font-medium truncate">Earnings</span>
                     <span id="todayEarningsCount"
-                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">&#8358;45,600</span>
+                        class="text-slate-800 font-extrabold text-2xl leading-tight mt-0.5">&#8358;0</span>
                     <span class="text-amber-600 text-[10px] font-bold mt-1">This current month</span>
                 </div>
             </div>
@@ -267,19 +269,9 @@
                         <p class="text-[11px] text-slate-500 mt-0.5">Manage stock availability parameters</p>
                     </div>
                 </div>
-            </a>
-
-            <!-- ORDERS -->
-            <a href="orders.html">
-                <div class="bg-amber-50/60 border border-amber-100/60 p-5 rounded-2xl flex items-center gap-4 cursor-pointer hover:bg-amber-50 hover:shadow-sm transition group">
-                    <div
-                        class="bg-white text-amber-600 w-12 h-12 rounded-xl border border-slate-100 flex items-center justify-center text-xl shadow-xs group-hover:scale-110 transition">
-                        <i class="fa-solid fa-basket-shopping text-sm"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-amber-950">View Orders</h4>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Check pending consumer request pipelines</p>
-                    </div>
+                <div>
+                    <a href="order.html" class="font-bold text-sm text-amber-950">View Orders</a>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Check pending consumer request pipelines</p>
                 </div>
             </a>
         </div>
@@ -315,7 +307,7 @@
                     </h4>
                     <a href="#" class="text-emerald-700 font-bold text-xs hover:underline">View All</a>
                 </div>
-                <div class="space-y-4">
+                <div id="dashboardOrders" class="space-y-4">
                     <div
                         class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
                         <div class="flex items-center gap-3 min-w-0">
@@ -574,7 +566,132 @@
             currentUser = user;
 
             loadDashboardProducts();
+            loadDashboardOrders();
         });
+
+        function formatNaira(amount) {
+            return `₦${Number(amount || 0).toLocaleString()}`;
+        }
+
+        function getTimestampValue(value) {
+            if (!value) return 0;
+            if (typeof value.toMillis === "function") return value.toMillis();
+            if (typeof value.toDate === "function") return value.toDate().getTime();
+            return new Date(value).getTime() || 0;
+        }
+
+        function normalizeStatus(status) {
+            return String(status || "pending").toLowerCase().replace(/\s+/g, "_");
+        }
+
+        function statusLabel(status) {
+            return normalizeStatus(status).replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+        }
+
+        function statusBadgeClass(status) {
+            const normalized = normalizeStatus(status);
+
+            if (["delivered", "completed", "paid"].includes(normalized)) {
+                return "bg-emerald-100 text-emerald-800";
+            }
+
+            if (["processing", "in_transit", "shipped"].includes(normalized)) {
+                return "bg-blue-100 text-blue-800";
+            }
+
+            if (["cancelled", "failed"].includes(normalized)) {
+                return "bg-red-100 text-red-800";
+            }
+
+            return "bg-amber-100 text-amber-800";
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function renderDashboardOrders(orders) {
+            const container = document.getElementById("dashboardOrders");
+            const ordersCount = document.getElementById("todayOrdersCount");
+            const earningsCount = document.getElementById("todayEarningsCount");
+
+            if (ordersCount) ordersCount.textContent = orders.length;
+            if (earningsCount) {
+                const totalPaid = orders
+                    .filter((order) => normalizeStatus(order.paymentStatus) === "paid")
+                    .reduce((sum, order) => sum + Number(order.totalPrice || 0), 0);
+                earningsCount.textContent = formatNaira(totalPaid);
+            }
+
+            if (!container) return;
+
+            if (!orders.length) {
+                container.innerHTML = `
+                    <div class="text-center py-4 text-slate-500">
+                        No buyer orders yet.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.slice(0, 5).map((order) => {
+                const shortId = String(order.id || "").slice(0, 6).toUpperCase();
+                const status = order.orderStatus || order.paymentStatus || "pending";
+                const unit = order.unit || "unit";
+
+                return `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="bg-emerald-50 text-emerald-700 w-11 h-11 rounded-xl flex items-center justify-center text-base shrink-0">
+                                <i class="fa-solid fa-cart-shopping text-xs"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h5 class="font-bold text-xs text-slate-900 truncate">Order #${escapeHtml(shortId)}</h5>
+                                <p class="text-[11px] text-slate-400 truncate mt-0.5">
+                                    ${escapeHtml(order.productName || "Produce")} (${Number(order.quantity || 0).toLocaleString()} ${escapeHtml(unit)})
+                                </p>
+                                <p class="text-[10px] text-slate-400 truncate mt-0.5">
+                                    Buyer: ${escapeHtml(order.buyerName || order.buyerEmail || "Buyer")}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between sm:justify-end gap-4 pl-14 sm:pl-0">
+                            <a href="messages.html?buyerId=${encodeURIComponent(order.buyerId || "")}&buyerName=${encodeURIComponent(order.buyerName || "Buyer")}"
+                                class="text-[10px] font-bold text-emerald-700 hover:underline">Chat</a>
+                            <span class="font-extrabold text-xs text-slate-800">${formatNaira(order.totalPrice)}</span>
+                            <span class="${statusBadgeClass(status)} text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">${escapeHtml(statusLabel(status))}</span>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function loadDashboardOrders() {
+            const container = document.getElementById("dashboardOrders");
+            if (!container || !currentUser) return;
+
+            db.collection("orders")
+                .where("farmerId", "==", currentUser.uid)
+                .onSnapshot((snapshot) => {
+                    const orders = snapshot.docs
+                        .map((doc) => ({ id: doc.id, ...doc.data() }))
+                        .sort((a, b) => getTimestampValue(b.createdAt) - getTimestampValue(a.createdAt));
+
+                    renderDashboardOrders(orders);
+                }, (error) => {
+                    console.error("Dashboard Orders Error:", error);
+                    container.innerHTML = `
+                        <div class="text-red-500 text-sm">
+                            Failed to load buyer orders.
+                        </div>
+                    `;
+                });
+        }
 
         async function loadDashboardProducts() {
 
@@ -679,6 +796,8 @@
         </div>
     </div>
 
+    <script src="/assets/agroplug-notifications.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
 </body>
 
 </html>

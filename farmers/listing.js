@@ -21,7 +21,7 @@
         // ===============================
         // LOGOUT
         // ===============================
-        document.getElementById("logoutBtn")
+        document.querySelectorAll(".logoutBtn")
             .addEventListener("click", async () => {
 
                 try {

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AgroPlug | Buyer Wallet</title>
+    <link class="rounded-md" rel="icon" href="images/Agroplug_logo.png">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        // Authentication Route Guard Verification
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                // Redirect to the login form if unauthenticated
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+</head>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased">
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar Navigation -->
+          <nav class="w-full md:w-64 fixed md:inset-y-0 left-0 bg-emerald-800 text-slate-100 p-5 flex flex-col z-50 transition-all duration-300"
+            id="sidebar">
+            <div class="flex items-center justify-between md:mb-8">
+                <div class="flex items-center gap-3">
+                    <img src="/images/Agroplug_logo.png" alt="Logo"
+                        class="h-10 w-10 object-contain rounded-xl bg-white/10 p-1 fallback-hide"
+                        onerror="this.style.display='none'">
+                    <div>
+                        <p class="text-xl font-bold tracking-tight">Agro<span class="text-white/90">Plug</span></p>
+                        <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">Buyer
+                            Console</p>
+                    </div>
+                </div>
+
+                <button class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
+                    id="menuToggle">
+                    <i class="fa-solid fa-bars" id="toggleIcon"></i>
+                </button>
+            </div>
+
+            <div id="menuList" class="hidden md:flex flex-col justify-between flex-1 mt-4 md:mt-0">
+                <ul class="space-y-1.5 text-sm font-medium">
+                    <li>
+                        <a href="marketplace.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="browseProducts.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-shop w-5 text-center text-base"></i>
+                            <span>Browse Produce</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="order.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-basket-shopping w-5 text-center text-base"></i>
+                            <span>My Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-heart w-5 text-center text-base"></i>
+                            <span>Saved Farms</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="messages.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-regular fa-comment-dots w-5 text-center text-base"></i>
+                            <span>Messages</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="wallet.html"
+                            class="flex items-center bg-white text-emerald-700 px-4 py-3 rounded-xl gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-wallet w-5 text-center text-base"></i>
+                            <span>Wallet / Payments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings.html"
+                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
+                            <i class="fa-solid fa-gear w-5 text-center text-base"></i>
+                            <span>Account Settings</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="pt-4 border-t border-emerald-800/40">
+                    <a id="logoutBtn"
+                        class="text-emerald-200/80 hover:text-red-400 p-3 flex items-center text-sm gap-3 rounded-xl transition font-medium hover:bg-red-950/20 cursor-pointer">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-base"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="flex-1 md:pl-64 min-h-screen pt-[72px] md:pt-0">
+            <main class="p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+                <!-- first card -->
+                <section class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-5 md:p-6">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div class="flex items-center gap-4 min-w-0">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-wallet text-emerald-600 text-xl"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Wallet Account
+                                </p>
+                                <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mt-1">
+                                    Hello, <span id="buyerName"></span>
+                                </h1>
+                                <p class="text-sm text-slate-500 mt-1">Manage wallet balance, payments, and escrow
+                                    activity.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:min-w-[420px]">
+                            <div class="rounded-xl bg-slate-50 border border-slate-100 p-4">
+                                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Available
+                                    Balance</p>
+                                <p id="walletBalance" class="text-2xl font-bold text-slate-900 mt-1">₦0</p>
+                            </div>
+                            <button id="fundWalletBtn" type="button"
+                                class="rounded-xl bg-emerald-600 text-white px-4 py-3 font-semibold text-sm hover:bg-emerald-700 transition flex items-center justify-center gap-2 shadow-sm shadow-emerald-600/20">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                                <span>Fund Wallet</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p id="walletStatus" class="text-xs text-slate-500 mt-4"></p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="fundWalletModal" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/60 p-4">
+        <div class="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="flex items-center justify-between border-b border-slate-100 p-5">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Wallet Funding</p>
+                    <h2 class="text-lg font-bold text-slate-900 mt-1">Fund your wallet</h2>
+                </div>
+                <button id="closeFundWalletModal" type="button"
+                    class="h-10 w-10 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="fundWalletForm" class="p-5 space-y-4">
+                <div>
+                    <label for="fundAmount" class="text-sm font-semibold text-slate-700">Amount</label>
+                    <div
+                        class="mt-2 flex items-center rounded-xl border border-slate-200 bg-slate-50 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
+                        <span class="px-4 text-sm font-bold text-slate-500">₦</span>
+                        <input id="fundAmount" type="number" min="100" step="100" inputmode="numeric"
+                            class="w-full bg-transparent py-3 pr-4 text-slate-900 outline-none placeholder:text-slate-400"
+                            placeholder="Enter amount" required>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Minimum funding amount is ₦100.</p>
+                </div>
+
+                <div id="fundModalMessage" class="hidden rounded-xl border px-4 py-3 text-sm"></div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button id="cancelFundWallet" type="button"
+                        class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition">
+                        Cancel
+                    </button>
+                    <button id="submitFundWallet" type="submit"
+                        class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-sm shadow-emerald-600/20">
+                        Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="wallet.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
+</body>
+
+</html>

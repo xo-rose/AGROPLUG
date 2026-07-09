@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Web app's Firebase configuration
@@ -25,6 +25,7 @@ const modal = document.getElementById("modal");
 const overlayText = document.getElementById("overlay");
 const signInBtn = document.getElementById("signIn");
 const closeBtn = document.getElementById("closeBtn");
+let successRedirectUrl = "login.html";
 
 // Helper function to handle the blur modal popup display states
 function showPopup(message, isSuccess = true) {
@@ -63,6 +64,7 @@ if (signupForm) {
         const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phoneNumber").value.trim();
         const password = document.getElementById("password").value;
+        const role = document.getElementById("role")?.value === "farmer" ? "farmer" : "buyer";
 
         let user = null;
 
@@ -76,6 +78,7 @@ if (signupForm) {
             // Step 1: Create the User account inside Auth records
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             user = userCredential.user;
+            await updateProfile(user, { displayName: fullName });
 
         } catch (authError) {
             console.error("Authentication Core Fault:", authError);
@@ -104,13 +107,13 @@ if (signupForm) {
             return; // Exit execution thread
         }
 
-        // Step 2: Store complementary data (Labeling role explicitly as "buyer")
+        // Step 2: Store complementary data with the selected account role.
         try {
             await setDoc(doc(db, "users", user.uid), {
                 fullname: fullName,
                 email: email,
                 phone: phone,
-                role: "buyer", // 👈 Crucial tag differentiating buyers from farmers
+                role: "buyer",
                 createdAt: new Date().toISOString()
             });
         } catch (firestoreError) {
@@ -118,7 +121,8 @@ if (signupForm) {
         }
 
         // Step 3: Trigger the clean success popup screen views directly
-        showPopup(`Hello ${fullName}, your Buyer account registration was successful!`, true);
+        successRedirectUrl = role === "farmer" ? "../farmers/login.html" : "login.html";
+        showPopup(`Hello ${fullName}, your ${role} account registration was successful!`, true);
         
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -134,7 +138,7 @@ const closeModal = () => {
     
     // Redirect cleanly ONLY if it's the green success message state
     if (!overlayText.classList.contains("text-red-600")) {
-        window.location.href = "../farmers/login.html"; // Redirects to the login route listed in your anchor tags
+        window.location.href = successRedirectUrl;
     }
 };
 
