@@ -33,7 +33,9 @@ auth.onAuthStateChanged(async (user) => {
             "dashboard.html",
             "listing.html",
             "profile.html",
+            "settings.html",
             "orders.html",
+            "order.html",
             "earnings.html"
         ];
 
@@ -51,28 +53,29 @@ auth.onAuthStateChanged(async (user) => {
 
         const uid = user.uid;
 
-        // ===============================
-        // FARMER NAME
-        // ===============================
+        const userProfileSnapshot = await db.collection("users").doc(uid).get();
+        const userProfile = userProfileSnapshot.exists ? userProfileSnapshot.data() : {};
+        const displayName =
+            userProfile.fullname ||
+            user.displayName ||
+            (user.email ? user.email.split("@")[0] : "Farmer");
 
         const farmerName =
             document.getElementById("farmerName");
 
         if (farmerName) {
+            farmerName.textContent = displayName;
+        }
 
-            if (user.displayName) {
-                farmerName.textContent =
-                    user.displayName;
-            } else {
+        const sidebarProfileImage =
+            document.getElementById("sidebarProfileImage");
 
-                const emailName =
-                    user.email
-                        ? user.email.split("@")[0]
-                        : "Farmer";
-
-                farmerName.textContent =
-                    emailName;
+        if (sidebarProfileImage) {
+            const profilePicUrl = userProfile.profilePicUrl || user.photoURL || "";
+            if (profilePicUrl) {
+                sidebarProfileImage.src = profilePicUrl;
             }
+            sidebarProfileImage.alt = displayName + " profile photo";
         }
 
         // ===============================

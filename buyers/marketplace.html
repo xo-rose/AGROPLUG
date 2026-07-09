@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>AgroPlug | Buyer Dashboard</title>
     <link class="rounded-md" rel="icon" href="images/Agroplug_logo.png">
 
@@ -49,12 +49,14 @@
                         onerror="this.style.display='none'">
                     <div>
                         <p class="text-xl font-bold tracking-tight">Agro<span class="text-white/90">Plug</span></p>
-                        <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">Buyer
+                        <p class="text-[10px] text-emerald-50/70 font-medium tracking-wide uppercase hidden md:block">
+                            Buyer
                             Console</p>
                     </div>
                 </div>
 
-                <button class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
+                <button
+                    class="md:hidden text-xl p-2 rounded-xl bg-emerald-700 text-emerald-50 hover:text-white transition"
                     id="menuToggle">
                     <i class="fa-solid fa-bars" id="toggleIcon"></i>
                 </button>
@@ -83,13 +85,7 @@
                             <span>My Orders</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
-                            <i class="fa-solid fa-heart w-5 text-center text-base"></i>
-                            <span>Saved Farms</span>
-                        </a>
-                    </li>
+
                     <li>
                         <a href="messages.html"
                             class="flex items-center gap-3 text-emerald-50/80 hover:text-white hover:bg-emerald-700/80 px-4 py-3 rounded-xl transition duration-200">
@@ -131,7 +127,8 @@
                 <!-- Header Welcome Status Layout -->
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
                     <div>
-                        <h1 class="font-bold text-2xl md:text-3xl text-slate-900 tracking-tight">Welcome back, <span id="buyerName">Buyer</span>!
+                        <h1 class="font-bold text-2xl md:text-3xl text-slate-900 tracking-tight">Welcome back, <span
+                                id="buyerName">Buyer</span>!
                         </h1>
                         <p class="text-sm text-slate-500 mt-0.5">Source fresh farm yields, track shipments, and manage
                             procurement.</p>
@@ -143,12 +140,12 @@
                             <span>Find Produce</span>
                         </button>
                         <div class="relative">
-                        <button id="notificationButton" type="button" aria-label="Notifications"
-                            class="p-3 bg-white text-slate-600 rounded-xl border border-slate-200/80 hover:bg-slate-50 shadow-sm transition relative">
-                            <i class="fa-regular fa-bell text-sm"></i>
-                            <span id="notificationBadge"
-                                class="hidden absolute -top-1 -right-1 bg-rose-500 rounded-full min-w-5 h-5 px-1 border-2 border-white flex justify-center items-center text-[10px] text-white font-bold">0</span>
-                        </button>
+                            <button id="notificationButton" type="button" aria-label="Notifications"
+                                class="p-3 bg-white text-slate-600 rounded-xl border border-slate-200/80 hover:bg-slate-50 shadow-sm transition relative">
+                                <i class="fa-regular fa-bell text-sm"></i>
+                                <span id="notificationBadge"
+                                    class="hidden absolute -top-1 -right-1 bg-rose-500 rounded-full min-w-5 h-5 px-1 border-2 border-white flex justify-center items-center text-[10px] text-white font-bold">0</span>
+                            </button>
                         </div>
                     </div>
                 </header>
@@ -163,7 +160,8 @@
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Orders</p>
                             <h2 id="activeOrdersCount" class="text-2xl font-bold text-slate-900 mt-0.5">0 Shipments</h2>
-                            <p id="activeOrdersNote" class="text-[11px] text-emerald-600 font-medium mt-0.5">No active shipments yet</p>
+                            <p id="activeOrdersNote" class="text-[11px] text-emerald-600 font-medium mt-0.5">No active
+                                shipments yet</p>
                         </div>
                     </div>
 
@@ -175,7 +173,8 @@
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Procured</p>
                             <h2 id="totalProcuredCount" class="text-2xl font-bold text-slate-900 mt-0.5">0 Batches</h2>
-                            <p id="totalProcuredNote" class="text-[11px] text-blue-600 font-medium mt-0.5">Successful orders</p>
+                            <p id="totalProcuredNote" class="text-[11px] text-blue-600 font-medium mt-0.5">Successful
+                                orders</p>
                         </div>
                     </div>
 
@@ -187,21 +186,12 @@
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Wallet Balance</p>
                             <h2 id="walletBalance" class="text-2xl font-bold text-slate-900 mt-0.5">₦0</h2>
-                            <p id="walletBalanceNote" class="text-[11px] text-amber-600 font-medium mt-0.5">Ready for fast checkout</p>
+                            <p id="walletBalanceNote" class="text-[11px] text-amber-600 font-medium mt-0.5">Ready for
+                                fast checkout</p>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl p-5 flex items-center gap-4 border border-slate-200/60 shadow-sm">
-                        <div
-                            class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-heart text-purple-600 text-lg"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Saved Farms</p>
-                            <h2 id="savedFarmsCount" class="text-2xl font-bold text-slate-900 mt-0.5">0 Growers</h2>
-                            <p class="text-[11px] text-purple-500 font-medium mt-0.5">Vetted high-quality suppliers</p>
-                        </div>
-                    </div>
+
                 </section>
 
                 <!-- Buyer Central Actions Section -->
@@ -493,8 +483,8 @@
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 shrink-0 overflow-hidden flex items-center justify-center text-slate-400">
                                 ${item.imageUrl
-                                    ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.productName || "Produce")}" class="w-full h-full object-cover">`
-                                    : '<i class="fa-solid fa-seedling text-emerald-600 text-lg"></i>'}
+                        ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.productName || "Produce")}" class="w-full h-full object-cover">`
+                        : '<i class="fa-solid fa-seedling text-emerald-600 text-lg"></i>'}
                             </div>
                             <div class="min-w-0">
                                 <h3 class="font-semibold text-sm text-slate-900 truncate">${escapeHtml(item.productName || "Unnamed Product")}</h3>
