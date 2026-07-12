@@ -32,32 +32,44 @@
     </style>
 </head>
 
-<body class="bg-gradient-to-tr from-[#06231D] to-[#096250]">
+<body class="bg-[url('AgroTech.jpg')] bg-cover bg-center bg-no-repeat relative">
+    <div class="absolute inset-0 bg-black/40"></div>
 
     <div class="flex justify-center items-center h-screen p-4">
 
-        <form id="loginForm" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-[340px]">
+        <form id="loginForm" class="bg-white/90 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-[340px]">
+            <div class=" font-bold text-emerald-600 mb-5 text-center flex justify-start items-center mr-3">
+                <img src="../images/Agroplug_logo.png" alt="" class="w-20" id="logo">
+                <div class="flex flex-col">
+                    <span class="text-2xl">Welcome Back</span>
+                    <span class="text-[9px] text-slate-700">Please login to your account, Thank you !!!</span>
 
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-slate-800">
-                Welcome Back
-                <i class="fa-regular fa-face-smile text-green-600" id="smile"></i>
-            </h2>
+                </div>
+            </div>
+            <!-- <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-slate-800">
+                Login
+                 <i class="fa-regular fa-face-smile text-green-600" id="smile"></i> 
+            </h2> -->
 
             <input type="email" id="email" placeholder="Email"
-                class="border border-slate-300 p-2 w-full mb-3 rounded focus:outline-none focus:border-green-600"
+                class="border border-slate-300 p-3 w-full mb-3 rounded-full focus:outline-none focus:border-green-600"
                 required>
 
             <input type="password" id="password" placeholder="Password"
-                class="border border-slate-300 p-2 w-full mb-3 rounded focus:outline-none focus:border-green-600"
+                class="border border-slate-300 p-3 w-full mb-3 rounded-full focus:outline-none focus:border-green-600"
                 required>
 
             <button type="submit"
-                class="bg-emerald-600 text-white w-full p-2 rounded font-semibold hover:bg-emerald-500 transition active:scale-[0.98]">
+                class="bg-emerald-600 text-white w-full p-2 rounded-full font-semibold hover:bg-emerald-500 transition active:scale-[0.98]">
                 Login
             </button>
 
             <p id="errorMsg" class="text-red-500 mt-2 text-sm font-medium min-h-[20px]"></p>
 
+            <div class="text-center flex justify-center items-center gap-2">
+                <span class="text-xs font-bold text-slate-600">You don't have an account?</span>
+                <span class="text-xs font-semibold text-emerald-600"><a href="SignUp.html">Sign Up</a></span>
+            </div>
         </form>
 
     </div>
@@ -70,6 +82,12 @@
             smile.classList.add("wiggle");
             setTimeout(() => smile.classList.remove("wiggle"), 500);
         }, 2000);
+
+        const logo = document.getElementById("logo")
+        setInterval(() => {
+            logo.classList.add("spin");
+            setTimeout(() => logo.classList.remove("spin"), 500)
+        }, 2000)
     </script>
 
     <script src="/assets/agroplug-chatbot.js"></script>
