@@ -84,6 +84,10 @@ const phoneInput = document.getElementById("phone");
 const currentPasswordInput = document.getElementById("currentPassword");
 const newPasswordInput = document.getElementById("newPassword");
 const confirmPasswordInput = document.getElementById("confirmPassword");
+const accountNameInput = document.getElementById("accountName");
+const bankNameInput = document.getElementById("bankName");
+const bankCodeInput = document.getElementById("bankCode");
+const accountNumberInput = document.getElementById("accountNumber");
 
 const profilePicInput = document.getElementById("profilePicInput");
 const profilePicPreview = document.getElementById("profilePicPreview");
@@ -146,6 +150,12 @@ async function loadProfile(uid) {
     if (fullNameInput) fullNameInput.value = fullName;
     if (phoneInput) phoneInput.value = phone;
     if (emailInput) emailInput.value = email;
+
+    const payoutAccount = data.payoutAccount || {};
+    if (accountNameInput) accountNameInput.value = payoutAccount.accountName || "";
+    if (bankNameInput) bankNameInput.value = payoutAccount.bankName || "";
+    if (bankCodeInput) bankCodeInput.value = payoutAccount.bankCode || "";
+    if (accountNumberInput) accountNumberInput.value = payoutAccount.accountNumber || "";
 
     if (signedInAsEl) signedInAsEl.textContent = escapeHtml(getFarmerDisplayName(currentUser));
 
@@ -289,6 +299,12 @@ function init() {
             const currentPassword = String(currentPasswordInput?.value || "");
             const newPassword = String(newPasswordInput?.value || "");
             const confirmPassword = String(confirmPasswordInput?.value || "");
+            const payoutAccount = {
+                accountName: String(accountNameInput?.value || "").trim(),
+                bankName: String(bankNameInput?.value || "").trim(),
+                bankCode: String(bankCodeInput?.value || "").trim(),
+                accountNumber: String(accountNumberInput?.value || "").replace(/\s/g, "")
+            };
             const emailChanged = email && email !== user.email;
             const passwordChanged = Boolean(newPassword || confirmPassword);
 
@@ -307,6 +323,14 @@ function init() {
             if (!validatePhone(phone)) {
                 showMessage(settingsMessageEl, "Please enter a valid phone number (10-15 digits).", "error");
                 phoneInput?.focus();
+                return;
+            }
+
+            const hasAnyAccountDetail = Object.values(payoutAccount).some(Boolean);
+            const hasCompleteAccountDetail = payoutAccount.accountName && payoutAccount.bankName && payoutAccount.bankCode && /^\d{10}$/.test(payoutAccount.accountNumber);
+            if (hasAnyAccountDetail && !hasCompleteAccountDetail) {
+                showMessage(settingsMessageEl, "Enter an account name, bank name, Paystack bank code, and a valid 10-digit account number.", "error");
+                accountNameInput?.focus();
                 return;
             }
 
@@ -372,6 +396,7 @@ function init() {
                     email,
                     phone,
                     role: "farmer",
+                    ...(hasCompleteAccountDetail ? { payoutAccount } : {}),
                     profilePicUrl,
                     profilePicProvider: profilePicUrl ? "imgbb" : "",
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()

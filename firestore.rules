@@ -18,8 +18,33 @@ service cloud.firestore {
       return signedIn() && request.auth.uid in request.resource.data.participants;
     }
 
+    function hasAdminRole() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function hasVerifiedKyc() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/kycSubmissions/$(request.auth.uid))
+        && get(/databases/$(database)/documents/kycSubmissions/$(request.auth.uid)).data.status == 'verified';
+    }
+
     match /users/{userId} {
-      allow read, create, update: if isOwner(userId);
+      allow read: if isOwner(userId) || isAdmin();
+      // Public signup may create only normal marketplace roles. A role cannot
+      // be changed by the user after signup; promote admins in Firebase
+      // Console or through a trusted server.
+      allow create: if isOwner(userId)
+        && request.resource.data.role in ['buyer', 'farmer'];
+      allow update: if isOwner(userId)
+        && request.resource.data.role == resource.data.role;
+    }
+
+    // Admin records are created and managed from a trusted environment (for
+    // example, the Firebase console). Users may only read their own marker.
+    match /admins/{userId} {
+      allow read: if isOwner(userId);
     }
 
     match /wallets/{userId} {
@@ -37,20 +62,84 @@ service cloud.firestore {
     match /listings/{listingId} {
       allow read: if true;
       allow create: if signedIn() && request.resource.data.farmerId == request.auth.uid;
-      allow update, delete: if signedIn() && resource.data.farmerId == request.auth.uid;
+      allow delete: if signedIn() && resource.data.farmerId == request.auth.uid;
+      allow update: if signedIn() && (
+        resource.data.farmerId == request.auth.uid ||
+        (
+          request.auth.uid != resource.data.farmerId &&
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['quantity', 'updatedAt']) &&
+          request.resource.data.quantity is number &&
+          request.resource.data.quantity >= 0 &&
+          request.resource.data.quantity < resource.data.quantity
+        )
+      );
+    }
+
+    // Helper: Admin marker stored in /admins/{uid} { enabled: true }
+    function isAdmin() {
+      return hasAdminRole()
+        || (signedIn()
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+          && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.enabled == true);
     }
 
     match /orders/{orderId} {
       allow create: if signedIn() && request.resource.data.buyerId == request.auth.uid;
       allow read: if signedIn()
-        && (resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
-      allow update: if signedIn()
-        && (resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
+        && (isAdmin() || resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
+      // Dispatch details and delivery status are controlled from the
+      // administrator-only logistics board, so neither party can falsely
+      // mark an order as delivered or alter the delivery address.
+      allow update: if isAdmin();
+    }
+
+    // End-of-day statements are created by an administrator and are readable
+    // by the farmer whose balance they describe.
+    match /farmerSettlements/{settlementId} {
+      allow create, update: if isAdmin();
+      allow read: if signedIn() && (isAdmin() || resource.data.farmerId == request.auth.uid);
+    }
+
+    // Farmers can request a payout to their saved account. An administrator
+    // reviews and updates the request before any external transfer is made.
+    match /withdrawalRequests/{requestId} {
+      allow create: if signedIn()
+        && request.resource.data.farmerId == request.auth.uid
+        && hasVerifiedKyc()
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0
+        && request.resource.data.status == 'pending';
+      allow read: if signedIn()
+        && (isAdmin() || resource.data.farmerId == request.auth.uid);
+      allow update: if isAdmin();
+    }
+
+    // KYC is submitted only from the withdrawal flow. Farmers can create a
+    // pending submission or replace one that was rejected; only admins can
+    // verify or reject it.
+    match /kycSubmissions/{farmerId} {
+      allow create: if isOwner(farmerId)
+        && request.resource.data.farmerId == request.auth.uid
+        && request.resource.data.status == 'pending';
+      allow update: if isAdmin()
+        || (isOwner(farmerId)
+          && resource.data.status == 'rejected'
+          && request.resource.data.farmerId == request.auth.uid
+          && request.resource.data.status == 'pending');
+      allow read: if isOwner(farmerId) || isAdmin();
+    }
+
+
+    // Lega cy sales records are readable only by the farmer who earned them.
+    match /sales/{saleId} {
+      allow read: if signedIn() && resource.data.farmerId == request.auth.uid;
     }
 
     match /notifications/{notificationId} {
       allow create: if signedIn() && request.resource.data.senderId == request.auth.uid;
-      allow read, update: if signedIn() && resource.data.recipientId == request.auth.uid;
+      allow read, update: if signedIn()
+        && (isAdmin() || resource.data.recipientId == request.auth.uid);
     }
 
     match /savedFarms/{savedFarmId} {
@@ -59,15 +148,18 @@ service cloud.firestore {
     }
 
     match /conversations/{conversationId} {
-      allow create: if isNewConversationParticipant();
-      allow read, update, delete: if isConversationParticipant();
+      // Admin dispatch notices may create or update the buyer/farmer thread.
+      allow create: if isNewConversationParticipant() || isAdmin();
+      allow read: if isConversationParticipant() || isAdmin();
+      allow update, delete: if isConversationParticipant() || isAdmin();
 
       match /messages/{messageId} {
         allow read: if signedIn()
-          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
-        allow create: if signedIn()
-          && request.resource.data.senderId == request.auth.uid
-          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+          && (isAdmin() || request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants);
+        allow create: if isAdmin()
+          || (signedIn()
+            && request.resource.data.senderId == request.auth.uid
+            && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants);
       }
     }
   }

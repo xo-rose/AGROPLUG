@@ -1,13 +1,19 @@
-# TODO - Buyer Orders page
+# TODO - AgroPlug Dashboard
 
-- [ ] Inspect current `buyers/order.html` structure and missing main content / JS.
-- [ ] Compare with existing buyer dashboard order loading logic (from `buyers/marketplace.html`).
-- [ ] Add UI sections (tabs/containers) for **Recent Orders** and **Old Orders** inside `buyers/order.html`.
-- [ ] Add a `buyers/order.js` (or inline script) that:
-  - Authenticates buyer
-  - Loads buyer orders from Firestore `orders` where `buyerId == uid`
-  - Splits orders into recent vs old (e.g., by time window)
-  - Renders each list with status/date/amount/product info
-- [ ] Ensure existing sidebar + mobile menu + logout handler are wired on `buyers/order.html`.
-- [ ] Quick sanity test: open `buyers/order.html` in browser; confirm lists render.
+- [x] Create standalone dashboard page: `agroplug-dashboard.html` (repo root)
+- [x] Implement dashboard UI + logic to show:
+  - [x] total app users (best-effort)
+  - [x] total transactions (from `orders`)
+  - [x] qualifying farmer profit (≥ ₦20,000)
+  - [x] AgroPlug commission at 5% (only when profit ≥ ₦20,000)
+  - [x] transactions table (buyer ↔ farmer)
+- [x] Update Firestore rules to allow admin marker to read any `orders`:
+  - [x] Add `/admins/{uid}` marker + `isAdmin()` helper
+  - [x] Permit read/update of `/orders` when `isAdmin()`
+
+- [ ] (Manual) Create an admin marker document in Firestore:
+  - Path: `/admins/<ADMIN_UID>`
+  - Data: `{ enabled: true }`
+- [ ] Test in browser: open `agroplug-dashboard.html` after signing in as the admin
+- [ ] If total users fails due to rules, decide whether to expose `/users` via admin rule or a separate stats doc
 

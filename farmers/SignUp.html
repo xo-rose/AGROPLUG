@@ -70,9 +70,36 @@
             class="w-full border border-slate-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white">
             <option value="farmer" selected>Farmer</option>
             <option value="buyer">Buyer</option>
+            <option value="admin" disabled>Admin (assigned by owner)</option>
           </select>
         </div>
       </div>
+
+      <fieldset id="payoutDetails" class="mb-6 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
+        <legend class="px-1 text-sm font-bold text-emerald-900">Farmer payout account</legend>
+        <p class="mb-3 text-xs leading-relaxed text-emerald-800">We use these details to prepare your end-of-day balance transfer. Your details are visible only to you and authorised AgroPlug administrators.</p>
+        <div class="mb-3">
+          <label for="accountName" class="text-sm font-semibold text-slate-700">Account Name</label>
+          <input type="text" id="accountName" autocomplete="name" placeholder="Name on the bank account"
+            class="mt-1 w-full border border-slate-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+        </div>
+        <div class="mb-3">
+          <label for="bankName" class="text-sm font-semibold text-slate-700">Bank Name</label>
+          <input type="text" id="bankName" autocomplete="organization" placeholder="e.g. Access Bank"
+            class="mt-1 w-full border border-slate-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+        </div>
+        <div class="mb-3">
+          <label for="bankCode" class="text-sm font-semibold text-slate-700">Paystack Bank Code</label>
+          <input type="text" id="bankCode" placeholder="e.g. 058" maxlength="10"
+            class="mt-1 w-full border border-slate-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+          <p class="mt-1 text-xs text-slate-500">Use the bank code shown in your Paystack bank list.</p>
+        </div>
+        <div>
+          <label for="accountNumber" class="text-sm font-semibold text-slate-700">Account Number</label>
+          <input type="text" id="accountNumber" inputmode="numeric" autocomplete="off" maxlength="10" pattern="[0-9]{10}" placeholder="10-digit account number"
+            class="mt-1 w-full border border-slate-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" />
+        </div>
+      </fieldset>
 
       <div class="mb-6">
         <label for="password" class="font-semibold text-slate-700">Password</label>
@@ -122,6 +149,23 @@
   <script type="module" src="signup.js"></script>
 
   <script>
+
+    const roleSelect = document.getElementById("role");
+    const payoutDetails = document.getElementById("payoutDetails");
+    const payoutInputs = ["accountName", "bankName", "bankCode", "accountNumber"].map((id) => document.getElementById(id));
+
+    function updatePayoutFields() {
+      const isFarmer = roleSelect?.value !== "buyer";
+      payoutDetails?.classList.toggle("hidden", !isFarmer);
+      payoutInputs.forEach((input) => {
+        if (!input) return;
+        input.required = isFarmer;
+        input.disabled = !isFarmer;
+      });
+    }
+
+    roleSelect?.addEventListener("change", updatePayoutFields);
+    updatePayoutFields();
 
     // FOR THE HIDE AND SHOW PASSWORD
     const togglePassword =

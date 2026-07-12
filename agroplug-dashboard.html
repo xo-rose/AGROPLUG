@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgroPlug | Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="icon" href="images/Agroplug_logo.png" />
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Use existing config file patterns in repo -->
+    <script src="buyers/firebase-config.js"></script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <!-- Top header -->
+    <header class="bg-[#0A4D26] text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <img src="images/Agroplug_logo.png" alt="AgroPlug" class="h-10 w-10 rounded-xl bg-white/10" />
+                <div class="leading-tight">
+                    <div class="font-black text-xl sm:text-2xl">Agro<span class="text-[#3CD670]">Plug</span> Dashboard
+                    </div>
+                    <div class="text-xs sm:text-sm text-white/70">Paid orders • Platform commission • User count</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="hidden sm:flex items-center gap-2 glass rounded-2xl px-3 py-2">
+                    <i class="fa-solid fa-shield-halved text-[#3CD670]"></i>
+                    <span class="text-xs">Admin access required</span>
+                </div>
+                <a href="logistics.html"
+                    class="bg-emerald-600 hover:bg-emerald-700 border border-emerald-400/40 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                    <i class="fa-solid fa-truck-fast mr-1"></i> Logistics
+                </a>
+                <button id="logoutBtn"
+                    class="bg-white/10 hover:bg-white/15 border border-white/20 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+        <!-- Auth + status -->
+        <section class="mb-6">
+            <div class="bg-[#0A4D26] rounded-2xl p-4 sm:p-5 text-white shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h2 class="font-bold text-lg">Admin Status</h2>
+                        <p class="text-sm text-white/70">Access is verified against your admin marker before data loads.</p>
+                    </div>
+                    <div class="text-sm">
+                        <div class="font-semibold">User: <span id="adminUserLabel">—</span></div>
+                        <div class="text-white/70">Role: <span id="adminRoleLabel">—</span></div>
+                    </div>
+                </div>
+                <div id="authMessage" class="mt-3 hidden text-white/90 text-sm"></div>
+            </div>
+        </section>
+
+        <!-- Metrics -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-slate-500">Total app users</p>
+                        <p id="totalUsers" class="text-2xl font-black">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
+                        <i class="fa-solid fa-right-left"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-slate-500">Paid transactions</p>
+                        <p id="totalTransactions" class="text-2xl font-black">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-slate-500">Qualifying paid order value (≥ ₦20,000)</p>
+                        <p id="qualifyingProfit" class="text-2xl font-black">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-slate-500">AgroPlug commission (5%)</p>
+                        <p id="platformCommission" class="text-2xl font-black">—</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed table -->
+        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div
+                class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                    <h2 class="font-bold text-lg">Transactions (Buyer ↔ Farmer)</h2>
+                    <p class="text-sm text-slate-500">Paid orders aggregated from the Firestore <code>orders</code> collection.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="closeBusinessBtn"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60">
+                        <i class="fa-solid fa-money-bill-transfer"></i> Close business &amp; send balances
+                    </button>
+                    <button id="refreshBtn"
+                        class="bg-[#0A4D26] hover:bg-emerald-900 text-white px-4 py-2 rounded-xl text-sm font-bold">
+                        <i class="fa-solid fa-rotate"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-5">
+                <div id="settlementStatus" class="hidden mb-4 rounded-xl border px-4 py-3 text-sm" role="status"></div>
+                <div id="loadingState" class="flex items-center gap-3 text-slate-600">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Loading dashboard…</span>
+                </div>
+
+                <div class="overflow-x-auto hidden" id="tableWrap">
+                    <table class="w-full min-w-[900px] border-collapse">
+                        <thead>
+                            <tr class="text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                                <th class="p-3">Order</th>
+                                <th class="p-3">Buyer</th>
+                                <th class="p-3">Farmer</th>
+                                <th class="p-3">Order value</th>
+                                <th class="p-3">Commission (5% on qualifying paid orders)</th>
+                                <th class="p-3">Payment status</th>
+                                <th class="p-3">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+
+                <div id="emptyState" class="hidden text-slate-500 text-sm">
+                    No transactions available.
+                </div>
+
+                <div id="errorState" class="hidden text-red-600 text-sm mt-4"></div>
+            </div>
+        </section>
+
+        <section class="mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-slate-100">
+                <h2 class="font-bold text-lg">Withdrawal requests</h2>
+                <p class="text-sm text-slate-500">Approve a request to send it to the secure Paystack payout worker.</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[720px] border-collapse">
+                    <thead><tr class="text-left text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
+                        <th class="p-3">Farmer</th><th class="p-3">Amount</th><th class="p-3">Bank account</th><th class="p-3">Requested</th><th class="p-3">Action</th>
+                    </tr></thead>
+                    <tbody id="withdrawalsBody" class="divide-y divide-slate-100"><tr><td colspan="5" class="p-4 text-sm text-slate-500">Loading requests…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-slate-100">
+                <h2 class="font-bold text-lg">KYC verification queue</h2>
+                <p class="text-sm text-slate-500">Verify a farmer's identity before their withdrawal requests can be submitted.</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[800px] border-collapse">
+                    <thead><tr class="text-left text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
+                        <th class="p-3">Farmer</th><th class="p-3">Phone</th><th class="p-3">ID type</th><th class="p-3">Address</th><th class="p-3">Submitted</th><th class="p-3">Action</th>
+                    </tr></thead>
+                    <tbody id="kycBody" class="divide-y divide-slate-100"><tr><td colspan="6" class="p-4 text-sm text-slate-500">Loading KYC submissions…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Helpers
+        function formatNaira(amount) {
+            return `₦${Number(amount || 0).toLocaleString('en-NG')}`;
+        }
+        function getTimestampValue(value) {
+            if (!value) return 0;
+            if (typeof value.toMillis === 'function') return value.toMillis();
+            if (typeof value.toDate === 'function') return value.toDate().getTime();
+            const d = new Date(value);
+            return isNaN(d.getTime()) ? 0 : d.getTime();
+        }
+        function formatDateTime(value) {
+            const ts = getTimestampValue(value);
+            if (!ts) return '—';
+            return new Intl.DateTimeFormat('en-NG', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: 'numeric', minute: '2-digit'
+            }).format(new Date(ts));
+        }
+
+        function escapeHtml(value) {
+            const node = document.createElement('div');
+            node.textContent = String(value ?? '');
+            return node.innerHTML;
+        }
+
+        const USERS_DOC_LIMIT_WARNING = 20000; // not used, but left as note
+        const COMMISSION_RATE = 0.05; // 5%
+        const QUALIFYING_THRESHOLD = 20000;
+
+        const el = {
+            totalUsers: document.getElementById('totalUsers'),
+            totalTransactions: document.getElementById('totalTransactions'),
+            qualifyingProfit: document.getElementById('qualifyingProfit'),
+            platformCommission: document.getElementById('platformCommission'),
+            transactionsBody: document.getElementById('transactionsBody'),
+            loadingState: document.getElementById('loadingState'),
+            tableWrap: document.getElementById('tableWrap'),
+            emptyState: document.getElementById('emptyState'),
+            errorState: document.getElementById('errorState'),
+            authMessage: document.getElementById('authMessage'),
+            adminUserLabel: document.getElementById('adminUserLabel'),
+            adminRoleLabel: document.getElementById('adminRoleLabel'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            closeBusinessBtn: document.getElementById('closeBusinessBtn'),
+            settlementStatus: document.getElementById('settlementStatus'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            withdrawalsBody: document.getElementById('withdrawalsBody'),
+            kycBody: document.getElementById('kycBody'),
+        };
+
+        let loadedOrders = [];
+
+        function setError(msg) {
+            el.errorState.textContent = msg;
+            el.errorState.classList.remove('hidden');
+            el.loadingState.classList.add('hidden');
+            el.tableWrap.classList.add('hidden');
+        }
+
+        function commissionForOrder(orderValue) {
+            const value = Number(orderValue || 0);
+            if (value >= QUALIFYING_THRESHOLD) return value * COMMISSION_RATE;
+            return 0;
+        }
+
+        function getOrderValue(order) {
+            return Number(order.totalPrice || order.amount || 0);
+        }
+
+        function isPaid(order) {
+            return String(order.paymentStatus || '').toLowerCase() === 'paid';
+        }
+
+        function getBusinessDayBounds() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const key = [start.getFullYear(), String(start.getMonth() + 1).padStart(2, '0'), String(start.getDate()).padStart(2, '0')].join('-');
+            return { start: start.getTime(), end: end.getTime(), key };
+        }
+
+        function showSettlementStatus(message, type = 'info') {
+            const styles = {
+                info: 'border-blue-200 bg-blue-50 text-blue-800',
+                success: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+                error: 'border-red-200 bg-red-50 text-red-700'
+            };
+            el.settlementStatus.textContent = message;
+            el.settlementStatus.className = `mb-4 rounded-xl border px-4 py-3 text-sm ${styles[type] || styles.info}`;
+        }
+
+        async function commitInBatches(items, write) {
+            const chunkSize = 400;
+            for (let index = 0; index < items.length; index += chunkSize) {
+                const batch = db.batch();
+                items.slice(index, index + chunkSize).forEach(item => write(batch, item));
+                await batch.commit();
+            }
+        }
+
+        async function closeBusinessDay() {
+            const user = auth.currentUser;
+            if (!user || !(await verifyAdminAccess(user))) {
+                showSettlementStatus('Only an administrator can close the business day.', 'error');
+                return;
+            }
+
+            const { start, end, key } = getBusinessDayBounds();
+            const payableOrders = loadedOrders.filter(order => {
+                const created = getTimestampValue(order.createdAt || order.timestamp);
+                return !order.settlementId && order.farmerId && created >= start && created < end;
+            });
+
+            if (!payableOrders.length) {
+                showSettlementStatus('There are no unsettled paid orders for today.', 'info');
+                return;
+            }
+
+            const byFarmer = new Map();
+            payableOrders.forEach(order => {
+                const current = byFarmer.get(order.farmerId) || {
+                    farmerId: order.farmerId,
+                    farmerName: order.farmerName || 'Farmer',
+                    grossAmount: 0,
+                    commissionAmount: 0,
+                    orderIds: []
+                };
+                const value = getOrderValue(order);
+                current.grossAmount += value;
+                current.commissionAmount += commissionForOrder(value);
+                current.orderIds.push(order.id);
+                byFarmer.set(order.farmerId, current);
+            });
+
+            const settlements = Array.from(byFarmer.values()).map(item => ({
+                ...item,
+                netAmount: item.grossAmount - item.commissionAmount,
+                // A deterministic id makes a repeated click safe for the same farmer and day.
+                id: `${key}_${item.farmerId}`
+            }));
+            const totalNet = settlements.reduce((sum, item) => sum + item.netAmount, 0);
+            const confirmed = window.confirm(
+                `Close business for ${key} and send ${settlements.length} farmer balance notification(s) totaling ${formatNaira(totalNet)}?`
+            );
+            if (!confirmed) return;
+
+            el.closeBusinessBtn.disabled = true;
+            showSettlementStatus('Recording settlements and sending farmer balance notifications…', 'info');
+            try {
+                await commitInBatches(settlements, (batch, settlement) => {
+                    const settlementRef = db.collection('farmerSettlements').doc(settlement.id);
+                    const notificationRef = db.collection('notifications').doc(`settlement_${settlement.id}`);
+                    batch.set(settlementRef, {
+                        farmerId: settlement.farmerId,
+                        farmerName: settlement.farmerName,
+                        businessDate: key,
+                        grossAmount: settlement.grossAmount,
+                        commissionAmount: settlement.commissionAmount,
+                        netAmount: settlement.netAmount,
+                        orderIds: settlement.orderIds,
+                        status: 'sent',
+                        sentBy: user.uid,
+                        sentAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                    batch.set(notificationRef, {
+                        type: 'farmer_settlement',
+                        title: 'End-of-day balance sent',
+                        message: `Your balance for ${key} is ${formatNaira(settlement.netAmount)} after ${formatNaira(settlement.commissionAmount)} platform commission.`,
+                        recipientId: settlement.farmerId,
+                        senderId: user.uid,
+                        farmerId: settlement.farmerId,
+                        settlementId: settlement.id,
+                        read: false,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                });
+                await commitInBatches(payableOrders, (batch, order) => {
+                    const settlement = settlements.find(item => item.farmerId === order.farmerId);
+                    batch.update(db.collection('orders').doc(order.id), {
+                        settlementId: settlement.id,
+                        settlementStatus: 'sent',
+                        settledAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                showSettlementStatus(`Business closed: ${formatNaira(totalNet)} recorded for ${settlements.length} farmer${settlements.length === 1 ? '' : 's'} and notifications sent.`, 'success');
+                await render();
+            } catch (error) {
+                console.error('End-of-day settlement failed:', error);
+                showSettlementStatus(error?.message || 'Unable to close the business day. No external transfer was made.', 'error');
+            } finally {
+                el.closeBusinessBtn.disabled = false;
+            }
+        }
+
+        async function verifyAdminAccess(user) {
+            const adminSnap = await db.collection('admins').doc(user.uid).get();
+            if (adminSnap.exists && adminSnap.data().enabled === true) return true;
+
+            const profileSnap = await db.collection('users').doc(user.uid).get();
+            return profileSnap.exists && profileSnap.data().role === 'admin';
+        }
+
+        async function countTotalUsers() {
+            // NOTE: if your firestore.rules prevents reading /users globally,
+            // this will fail. In that case dashboard will still show transaction metrics.
+            const snap = await db.collection('users').get();
+            return snap.size;
+        }
+
+        async function loadTransactions() {
+            const ordersSnap = await db.collection('orders').orderBy('createdAt', 'desc').limit(200).get();
+            const rows = ordersSnap.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(isPaid);
+            return rows;
+        }
+
+        function maskAccountNumber(number) {
+            const value = String(number || '');
+            return value ? `******${value.slice(-4)}` : '—';
+        }
+
+        async function loadWithdrawalRequests() {
+            const snap = await db.collection('withdrawalRequests').where('status', '==', 'pending').get();
+            const requests = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                .sort((a, b) => getTimestampValue(a.createdAt) - getTimestampValue(b.createdAt));
+            if (!requests.length) {
+                el.withdrawalsBody.innerHTML = '<tr><td colspan="5" class="p-4 text-sm text-slate-500">No pending withdrawal requests.</td></tr>';
+                return;
+            }
+            el.withdrawalsBody.innerHTML = requests.map(request => {
+                const account = request.payoutAccount || {};
+                return `<tr class="hover:bg-slate-50/50"><td class="p-3 text-sm font-semibold">${escapeHtml(request.farmerName || request.farmerId)}</td><td class="p-3 text-sm font-bold">${formatNaira(request.amount)}</td><td class="p-3 text-sm">${escapeHtml(account.bankName || 'Bank')} • ${escapeHtml(maskAccountNumber(account.accountNumber))}</td><td class="p-3 text-sm text-slate-500">${formatDateTime(request.createdAt)}</td><td class="p-3"><button data-withdrawal-id="${escapeHtml(request.id)}" class="approve-withdrawal bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold">Approve &amp; pay</button></td></tr>`;
+            }).join('');
+            document.querySelectorAll('.approve-withdrawal').forEach(button => {
+                button.addEventListener('click', () => approveWithdrawal(button.dataset.withdrawalId));
+            });
+        }
+
+        async function approveWithdrawal(requestId) {
+            const user = auth.currentUser;
+            if (!user || !(await verifyAdminAccess(user))) return;
+            if (!window.confirm('Approve this withdrawal? The secure Paystack payout worker will then initiate the transfer.')) return;
+            try {
+                await db.collection('withdrawalRequests').doc(requestId).update({
+                    status: 'approved',
+                    approvedBy: user.uid,
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await loadWithdrawalRequests();
+            } catch (error) {
+                console.error('Withdrawal approval failed:', error);
+                window.alert(error?.message || 'Unable to approve this withdrawal request.');
+            }
+        }
+
+        async function loadKycSubmissions() {
+            const snap = await db.collection('kycSubmissions').where('status', '==', 'pending').get();
+            const submissions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                .sort((a, b) => getTimestampValue(a.submittedAt) - getTimestampValue(b.submittedAt));
+            if (!submissions.length) {
+                el.kycBody.innerHTML = '<tr><td colspan="6" class="p-4 text-sm text-slate-500">No KYC submissions awaiting review.</td></tr>';
+                return;
+            }
+            el.kycBody.innerHTML = submissions.map(kyc => `<tr class="hover:bg-slate-50/50"><td class="p-3 text-sm font-semibold">${escapeHtml(kyc.fullName || kyc.farmerId)}</td><td class="p-3 text-sm">${escapeHtml(kyc.phone || '—')}</td><td class="p-3 text-sm">${escapeHtml(kyc.idType || '—')}</td><td class="p-3 text-sm max-w-xs">${escapeHtml(kyc.address || '—')}</td><td class="p-3 text-sm text-slate-500">${formatDateTime(kyc.submittedAt)}</td><td class="p-3 whitespace-nowrap"><button data-kyc-id="${escapeHtml(kyc.id)}" class="verify-kyc bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold">Verify</button><button data-reject-kyc-id="${escapeHtml(kyc.id)}" class="reject-kyc ml-2 bg-red-50 hover:bg-red-100 text-red-700 px-3 py-2 rounded-lg text-xs font-bold">Reject</button></td></tr>`).join('');
+            document.querySelectorAll('.verify-kyc').forEach(button => button.addEventListener('click', () => reviewKyc(button.dataset.kycId, 'verified')));
+            document.querySelectorAll('.reject-kyc').forEach(button => button.addEventListener('click', () => reviewKyc(button.dataset.rejectKycId, 'rejected')));
+        }
+
+        async function reviewKyc(kycId, status) {
+            const user = auth.currentUser;
+            if (!user || !(await verifyAdminAccess(user))) return;
+            let reviewNote = '';
+            if (status === 'rejected') {
+                reviewNote = window.prompt('Give the farmer a brief reason for rejecting this KYC submission:') || '';
+                if (!reviewNote.trim()) return;
+            } else if (!window.confirm('Verify this farmer\'s KYC? They will be able to request withdrawals.')) return;
+            try {
+                await db.collection('kycSubmissions').doc(kycId).update({
+                    status, reviewNote, reviewedBy: user.uid,
+                    reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await loadKycSubmissions();
+            } catch (error) {
+                console.error('KYC review failed:', error);
+                window.alert(error?.message || 'Unable to update KYC verification.');
+            }
+        }
+
+        async function render() {
+            el.loadingState.classList.remove('hidden');
+            el.tableWrap.classList.add('hidden');
+            el.emptyState.classList.add('hidden');
+            el.errorState.classList.add('hidden');
+            el.transactionsBody.innerHTML = '';
+
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    setError('Not signed in.');
+                    return;
+                }
+
+                el.adminUserLabel.textContent = `${user.displayName || user.email || user.uid}`;
+
+                const isAdmin = await verifyAdminAccess(user);
+                if (!isAdmin) {
+                    el.adminRoleLabel.textContent = 'not authorised';
+                    setError('This account is not an administrator. Set its user role to admin or add an enabled admin marker in Firestore.');
+                    return;
+                }
+                el.adminRoleLabel.textContent = 'admin';
+
+                // Total users (best effort)
+                let totalUsers = null;
+                try {
+                    totalUsers = await countTotalUsers();
+                } catch (e) {
+                    totalUsers = null;
+                    // keep quiet - rules might block
+                }
+                el.totalUsers.textContent = (totalUsers === null) ? '—' : String(totalUsers);
+
+                // Transactions
+                const orders = await loadTransactions();
+                loadedOrders = orders;
+                await loadWithdrawalRequests();
+                await loadKycSubmissions();
+
+                el.totalTransactions.textContent = String(orders.length);
+
+                let totalQualifyingProfit = 0;
+                let totalCommission = 0;
+
+                const bodyRows = orders.map(o => {
+                    const buyer = o.buyerName || o.buyerEmail || o.buyerId || 'Buyer';
+                    const farmer = o.farmerName || o.farmerId || 'Farmer';
+                    const orderValue = getOrderValue(o);
+                    const commission = commissionForOrder(orderValue);
+                    totalQualifyingProfit += commission > 0 ? orderValue : 0;
+                    totalCommission += commission;
+
+                    const status = o.orderStatus || o.paymentStatus || 'pending';
+                    const createdAt = o.createdAt || o.timestamp;
+
+                    const qualifyLabel = orderValue >= QUALIFYING_THRESHOLD
+                        ? `<span class="inline-flex items-center gap-2 px-2 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">Qualifies</span>`
+                        : `<span class="inline-flex items-center gap-2 px-2 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">Below ₦20k</span>`;
+
+                    return `
+            <tr class="hover:bg-slate-50/50 transition">
+              <td class="p-3 text-sm font-bold">#${String(o.id).slice(0, 10)}</td>
+              <td class="p-3 text-sm">${escapeHtml(buyer)}</td>
+              <td class="p-3 text-sm">${escapeHtml(farmer)}</td>
+              <td class="p-3 text-sm font-bold">${formatNaira(orderValue)} ${qualifyLabel}</td>
+              <td class="p-3 text-sm font-bold">${formatNaira(commission)}</td>
+              <td class="p-3 text-sm">${escapeHtml(status)}</td>
+              <td class="p-3 text-sm text-slate-500">${formatDateTime(createdAt)}</td>
+            </tr>
+          `;
+                }).join('');
+
+                el.qualifyingProfit.textContent = formatNaira(totalQualifyingProfit);
+                el.platformCommission.textContent = formatNaira(totalCommission);
+
+                if (!orders.length) {
+                    el.emptyState.classList.remove('hidden');
+                } else {
+                    el.transactionsBody.innerHTML = bodyRows;
+                    el.tableWrap.classList.remove('hidden');
+                }
+
+                el.loadingState.classList.add('hidden');
+            } catch (err) {
+                setError(err?.message ? String(err.message) : 'Failed to load dashboard');
+                console.error(err);
+            }
+        }
+
+        // Auth setup
+        const onReady = () => {
+            auth.onAuthStateChanged((user) => {
+                if (!user) {
+                    window.location.href = 'buyers/login.html';
+                    return;
+                }
+                render();
+            });
+
+            el.refreshBtn.addEventListener('click', render);
+            el.closeBusinessBtn.addEventListener('click', closeBusinessDay);
+            el.logoutBtn.addEventListener('click', () => {
+                auth.signOut().then(() => window.location.href = 'buyers/login.html');
+            });
+        };
+
+        // If firebase-config loads without DOMContentLoaded, still safe
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', onReady);
+        } else {
+            onReady();
+        }
+    </script>
+
+</body>
+
+</html>

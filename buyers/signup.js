@@ -113,7 +113,9 @@ if (signupForm) {
                 fullname: fullName,
                 email: email,
                 phone: phone,
-                role: "buyer",
+                // Only regular app roles are ever created from the public form.
+                // Admin access is granted separately by a trusted admin marker.
+                role: role,
                 createdAt: new Date().toISOString()
             });
         } catch (firestoreError) {

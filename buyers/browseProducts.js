@@ -1,6 +1,8 @@
 // ==========================================
 // PAYSTACK CONFIGURATIONS
 // ==========================================
+// Set the current Paystack test or live public key here. This is intentionally
+// the only key used by the Browse Produce checkout.
 const PAYSTACK_PUBLIC_KEY = "pk_test_411590b82445d671e70b557796ab587b9b40f62d";
 const MY_SUBACCOUNT_ID = "ACCT_gdl5amv3xl03utv";
 const ENABLE_PAYSTACK_SUBACCOUNTS = false;
@@ -602,6 +604,13 @@ async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, a
             }
         }
 
+        // All transaction reads are complete above. Create the order and
+        // reduce stock atomically to prevent overselling.
+        transaction.update(productRef, {
+            quantity: currentQuantity - quantity,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
         transaction.set(orderRef, {
             productId: product.id,
             productName: product.productName || "",
@@ -630,7 +639,6 @@ async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, a
     });
 
     await recordOptionalOrderSideEffects({
-        productRef,
         walletRef,
         product,
         user,
@@ -652,7 +660,6 @@ async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, a
 
 async function recordOptionalOrderSideEffects(details) {
     const {
-        productRef,
         walletRef,
         product,
         user,
@@ -662,15 +669,6 @@ async function recordOptionalOrderSideEffects(details) {
         paymentMethod,
         orderId
     } = details;
-
-    try {
-        await productRef.update({
-            quantity: firebase.firestore.FieldValue.increment(-quantity),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-    } catch (error) {
-        console.warn("Stock update skipped by Firestore rules:", error);
-    }
 
     if (paymentMethod === "wallet") {
         try {
@@ -803,8 +801,13 @@ function executePaystackTransaction(quantity, assignedDeliveryDate, fulfillmentD
         return;
     }
 
-    if (!window.PaystackPop) {
+    if (!window.Paystack) {
         alert("Paystack engine script was blocked or failed to download properly.");
+        return;
+    }
+
+    if (!/^pk_(test|live)_/.test(PAYSTACK_PUBLIC_KEY)) {
+        alert("The Paystack public key is missing or invalid. Update PAYSTACK_PUBLIC_KEY before trying again.");
         return;
     }
 
@@ -847,11 +850,11 @@ function executePaystackTransaction(quantity, assignedDeliveryDate, fulfillmentD
         });
 
         const paystackConfig = {
-            key: "pk_test_411590b82445d671e70b557796ab587b9b40f62d", 
+            key: "pk_test_411590b82445d671e70b557796ab587b9b40f62d",
             email: user.email,
-            amount: amountInKobo, 
+            amount: amountInKobo,
             currency: "NGN",
-            ref: transactionRef,
+            reference: transactionRef,
             metadata: {
                 buyerId: user.uid,
                 productId: product.id,
@@ -862,22 +865,25 @@ function executePaystackTransaction(quantity, assignedDeliveryDate, fulfillmentD
                 pickupLocation: fulfillmentDetails.pickupLocation,
                 premiumDeliveryRequired: fulfillmentDetails.premiumRequired
             },
-            callback: function (response) {
+            onSuccess: function (response) {
                 savePaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, response, fulfillmentDetails);
             },
-            onClose: function () {
+            onCancel: function () {
                 currentActiveProduct = null;
                 console.log("Paystack interaction frame closed.");
+            },
+            onError: function (error) {
+                console.error("Paystack checkout error:", error);
+                alert(`Paystack could not authorize this payment: ${error?.message || "Please try again."}`);
             }
         };
 
         if (ENABLE_PAYSTACK_SUBACCOUNTS && targetSubaccount) {
-            paystackConfig.subaccount = targetSubaccount;
+            paystackConfig.subaccountCode = targetSubaccount;
         }
 
-        const handler = PaystackPop.setup(paystackConfig);
-
-        handler.openIframe();
+        const popup = new Paystack();
+        popup.newTransaction(paystackConfig);
     } catch (error) {
         console.error("Paystack setup failed:", error);
         alert(`Paystack could not start: ${error.message || "Unknown error"}`);
