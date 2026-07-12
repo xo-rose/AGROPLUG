@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroPlug | Logistics Dispatch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="buyers/firebase-config.js"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+    <header class="bg-[#0A4D26] text-white">
+        <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+            <a href="agroplug-dashboard.html" class="text-xl font-black">Agro<span class="text-[#3CD670]">Plug</span> Logistics</a>
+            <button id="logoutBtn" class="rounded-lg border border-white/25 px-3 py-2 text-sm font-semibold hover:bg-white/10">Log out</button>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900">Safe dispatch queue</h1>
+                <p class="mt-1 text-sm text-slate-600">Dispatch paid orders with a carrier record so buyers can see <strong>In transit</strong> instead of Pending.</p>
+            </div>
+            <span id="queueCount" class="w-fit rounded-full bg-amber-50 px-3 py-1 text-sm font-bold text-amber-700">Loading orders…</span>
+        </div>
+
+        <div id="accessMessage" class="mb-5 hidden rounded-xl border px-4 py-3 text-sm" role="alert"></div>
+        <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[900px] border-collapse">
+                    <thead><tr class="border-b border-slate-100 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <th class="p-4">Order</th><th class="p-4">Buyer</th><th class="p-4">Fulfilment</th><th class="p-4">Destination</th><th class="p-4">Paid</th><th class="p-4">Dispatch</th>
+                    </tr></thead>
+                    <tbody id="ordersBody" class="divide-y divide-slate-100"><tr><td colspan="6" class="p-5 text-sm text-slate-500">Checking the dispatch queue…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="dispatchDialog" class="w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-slate-200 p-0 shadow-2xl backdrop:bg-slate-900/50">
+        <form id="dispatchForm" class="p-6">
+            <div class="flex items-start justify-between gap-4"><div><h2 class="text-lg font-black text-slate-900">Confirm dispatch</h2><p id="dispatchOrderLabel" class="mt-1 text-sm text-slate-500"></p></div><button type="button" id="closeDialog" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+            <input id="dispatchOrderId" type="hidden">
+            <div class="mt-5 grid gap-4">
+                <div><label class="text-sm font-semibold text-slate-700" for="carrierName">Carrier or rider name</label><input id="carrierName" required maxlength="80" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="e.g. Chinedu Okafor"></div>
+                <div><label class="text-sm font-semibold text-slate-700" for="carrierPhone">Carrier phone number</label><input id="carrierPhone" required type="tel" maxlength="30" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="e.g. 08012345678"></div>
+                <div><label class="text-sm font-semibold text-slate-700" for="trackingReference">Tracking reference</label><input id="trackingReference" required readonly class="mt-1 w-full cursor-not-allowed rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 font-mono text-sm text-slate-600" aria-describedby="trackingReferenceHelp"><p id="trackingReferenceHelp" class="mt-1 text-xs text-slate-500">Generated automatically for this dispatch.</p></div>
+                <div><label class="text-sm font-semibold text-slate-700" for="estimatedArrival">Estimated arrival</label><input id="estimatedArrival" required type="datetime-local" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500"></div>
+            </div>
+            <p id="dispatchStatus" class="mt-4 text-sm" role="status"></p>
+            <button id="confirmDispatchBtn" type="submit" class="mt-4 w-full rounded-xl bg-emerald-600 py-3 font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"><i class="fa-solid fa-truck-fast mr-2"></i>Mark as in transit</button>
+        </form>
+    </dialog>
+    <script src="logistics.js"></script>
+</body>
+</html>

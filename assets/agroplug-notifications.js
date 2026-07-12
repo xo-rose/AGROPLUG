@@ -41,6 +41,10 @@
             return "order.html";
         }
 
+        if (notification.type === "farmer_settlement") {
+            return "earnings.html";
+        }
+
         return "#";
     }
 

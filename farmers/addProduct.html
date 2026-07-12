@@ -27,6 +27,10 @@
 
 <body
     class="bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWdyaWN1bHR1cmV8ZW58MHx8MHx8fDA%3D')] font-sans antialiased text-slate-800 bg-cover object-cover">
+    <header class="fixed inset-x-0 top-0 z-[60] flex items-center justify-between bg-[#0A4D26] px-4 py-3 text-white sm:hidden">
+        <a href="dashboard.html" class="font-black text-xl">Agro<span class="text-[#3CD670]">Plug</span></a>
+        <button id="mobileMenuBtn" type="button" aria-label="Open navigation" aria-expanded="false" class="rounded-lg p-2 hover:bg-white/10"><i class="fa-solid fa-bars text-xl"></i></button>
+    </header>
     <div class="bg-black/40 inset-0 absolute ">
 
         <!-- Sidebar Drawer (Responsive Drawer Panel) -->
@@ -89,7 +93,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                    <a href="earnings.html"
                             class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                             <i class="fa-solid fa-wallet text-base opacity-75"></i>
                             <span>Earnings</span>
@@ -112,7 +116,8 @@
                     <span>Logout</span>
                 </a>
             </div>
-        </aside>
+    </aside>
+    <div id="sidebarBackdrop" class="fixed inset-0 z-40 hidden bg-black/50 backdrop-blur-sm sm:hidden"></div>
         
         <!--LISTING-->
         <div class="flex justify-center items-center min-h-screen">
@@ -423,7 +428,7 @@
 
                     const status = document.getElementById("uploadStatus");
                     if (status) {
-                        status.textContent = `${getImageUploadMessage(error)} Saving a compressed local image instead.`;
+                        status.textContent = `${getImageUploadMessage(error)} Saving a compressed fallback image instead.`;
                         status.className = "text-xs text-amber-700 mt-2";
                     }
 
@@ -530,9 +535,9 @@
                         progress.style.width = "100%";
 
                         // Success message
-                        alert(imageResult.imageProvider === "imgbb"
-                            ? "Product uploaded successfully!"
-                            : "Product saved with a compressed local image. Update the ImgBB API key for hosted image uploads.");
+                        alert(imageResult.imageProvider === "local-compressed"
+                            ? "Product saved with a compressed fallback image. Check the ImgBB API key for hosted images."
+                            : "Product uploaded successfully!");
 
                         // Redirect to listings page
                         window.location.href = "mylistings.html";
@@ -565,6 +570,7 @@
                 }
             })();
         </script>
+        <script src="sidebar.js"></script>
         <script src="/assets/agroplug-chatbot.js"></script>
 </body>
 

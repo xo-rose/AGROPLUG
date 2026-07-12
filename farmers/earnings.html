@@ -40,7 +40,7 @@
                 </button>
             </div>
 
-            <div class="flex items-center gap-3 bg-emerald-950/35 rounded-xl p-3 mb-5 border border-emerald-800/30">
+            <!-- <div class="flex items-center gap-3 bg-emerald-950/35 rounded-xl p-3 mb-5 border border-emerald-800/30">
                 <div class="relative w-11 h-11 shrink-0">
                     <img id="sidebarProfileImage"
                         src="https://ui-avatars.com/api/?name=Farmer&background=0A4D26&color=ffffff"
@@ -53,11 +53,11 @@
                     <span id="farmerName" class="block font-semibold text-sm tracking-wide truncate text-white">Loading Profile...</span>
                     <span class="text-[10px] text-[#3CD670] font-medium">Verified Farmer</span>
                 </div>
-            </div>
+            </div> -->
 
             <ul id="menuList" class="space-y-1 font-medium">
                 <li>
-                    <a href="dashboard.html" class="flex bg-emerald-700/50 border border-emerald-600/30 rounded-xl items-center p-3 text-white gap-3 transition text-sm font-semibold">
+                    <a href="dashboard.html" class="flex  items-center p-3 text-white gap-3 transition text-sm font-semibold">
                         <i class="fa-solid fa-house-chimney text-base text-[#3CD670]"></i>
                         <span>Dashboard</span>
                     </a>
@@ -95,6 +95,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="withdrawal.html" class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
+                        <i class="fa-solid fa-building-columns text-base opacity-75"></i>
+                        <span>Withdraw Funds</span>
+                    </a>
+                </li>
+                <li>
                     <a href="settings.html" class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                         <i class="fa-solid fa-user text-base opacity-75"></i>
                         <span>Profile</span>
@@ -113,16 +119,17 @@
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-40 hidden transition-opacity sm:hidden"></div>
 
-    <main class="sm:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 max-w-(screen-xl) mx-auto transition-all">
+    <main class="sm:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 max-w-screen-xl mx-auto transition-all">
 
+        <!-- Top Nav -->
         <nav class="mb-8" id="navbar">
             <div class="flex justify-between items-center gap-4">
                 <div class="flex flex-col">
                     <h2 class="text-slate-900 font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-2">
-                        Earnings History
+                        Earnings
                     </h2>
                     <span class="text-slate-500 text-xs sm:text-sm mt-0.5">
-                        View your farming earnings record.
+                        Your net farming income after applicable platform charges — daily, monthly & yearly.
                     </span>
                 </div>
 
@@ -133,19 +140,137 @@
             </div>
         </nav>
 
-        <section class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex items-center justify-between gap-4">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 tracking-tight">Earnings</h3>
-                    <p class="text-sm text-slate-500 mt-1">Latest payouts and completed sales.</p>
+        <!-- Payout transparency -->
+        <section class="mb-6 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5">
+            <div class="mb-4">
+                <h3 class="font-bold text-slate-900">Your available balance</h3>
+                <p class="text-sm text-slate-600">This is your balance only: unpaid paid orders, minus applicable charges and pending withdrawal requests. The 5% charge applies only to orders of ₦20,000 and above.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                <div class="rounded-xl bg-white border border-slate-200 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Your unpaid paid orders</p>
+                    <p id="payoutGross" class="mt-1 text-xl font-black text-slate-900">₦0</p>
                 </div>
-                <div class="text-xs text-slate-500">
-                    Showing latest <span id="earningsCountLabel" class="font-semibold text-slate-700">—</span>
+                <div class="rounded-xl bg-white border border-slate-200 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Your AgroPlug charge (5%)</p>
+                    <p id="payoutCommission" class="mt-1 text-xl font-black text-amber-600">₦0</p>
+                </div>
+                <div class="rounded-xl bg-white border border-slate-200 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Pending withdrawals</p>
+                    <p id="pendingWithdrawals" class="mt-1 text-xl font-black text-slate-900">₦0</p>
+                </div>
+                <div class="rounded-xl bg-[#0A4D26] p-4 text-white">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-100">Your available balance</p>
+                    <p id="payoutBalance" class="mt-1 text-xl font-black">₦0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Cards -->
+        <div id="summaryGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+            <!-- Today -->
+            <button id="card-day" data-period="day"
+                class="summary-card group relative flex flex-col gap-3 rounded-2xl border border-amber-100 p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200 text-left w-full outline-none">
+                <div class="flex items-center justify-between">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+                        <i class="fa-solid fa-sun text-amber-500 text-base"></i>
+                    </div>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Today</span>
+                </div>
+                <div>
+                    <p id="earningsDay" class="text-2xl font-black text-slate-900 tracking-tight">₦0</p>
+                    <p class="text-[11px] text-slate-400 mt-1 font-medium">Your net earnings today</p>
+                </div>
+                <span class="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-b-2xl transition-all duration-300 ease-out"></span>
+            </button>
+
+            <!-- This Month -->
+            <button id="card-month" data-period="month"
+                class="summary-card group relative flex flex-col gap-3 rounded-2xl border border-blue-100 p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200 text-left w-full outline-none">
+                <div class="flex items-center justify-between">
+                    <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-days text-blue-500 text-base"></i>
+                    </div>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Month</span>
+                </div>
+                <div>
+                    <p id="earningsMonth" class="text-2xl font-black text-slate-900 tracking-tight">₦0</p>
+                    <p class="text-[11px] text-slate-400 mt-1 font-medium">Your net earnings this month</p>
+                </div>
+                <span class="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-b-2xl transition-all duration-300 ease-out"></span>
+            </button>
+
+            <!-- This Year -->
+            <button id="card-year" data-period="year"
+                class="summary-card group relative flex flex-col gap-3 rounded-2xl border border-purple-100 p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200 text-left w-full outline-none">
+                <div class="flex items-center justify-between">
+                    <div class="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center">
+                        <i class="fa-solid fa-chart-line text-purple-500 text-base"></i>
+                    </div>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Year</span>
+                </div>
+                <div>
+                    <p id="earningsYear" class="text-2xl font-black text-slate-900 tracking-tight">₦0</p>
+                    <p class="text-[11px] text-slate-400 mt-1 font-medium">Your net earnings this year</p>
+                </div>
+                <span class="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-b-2xl transition-all duration-300 ease-out"></span>
+            </button>
+
+            <!-- All Time -->
+            <button id="card-all" data-period="all"
+                class="summary-card group relative flex flex-col gap-3 rounded-2xl border border-emerald-100 p-5 bg-white shadow-sm hover:shadow-md transition-all duration-200 text-left w-full outline-none">
+                <div class="flex items-center justify-between">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                        <i class="fa-solid fa-wallet text-emerald-600 text-base"></i>
+                    </div>
+                    <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</span>
+                </div>
+                <div>
+                    <p id="earningsAll" class="text-2xl font-black text-slate-900 tracking-tight">₦0</p>
+                    <p class="text-[11px] text-slate-400 mt-1 font-medium">Your all-time net earnings</p>
+                </div>
+                <span class="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-b-2xl transition-all duration-300 ease-out"></span>
+            </button>
+
+        </div>
+
+        <!-- Transactions Table -->
+        <section class="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h3 id="listHeading" class="text-base font-bold text-slate-900 tracking-tight">Transactions — Today</h3>
+                    <p class="text-sm text-slate-500 mt-1">
+                        Showing <span id="earningsCountLabel" class="font-semibold text-slate-700">—</span> transaction(s)
+                    </p>
+                </div>
+
+                <!-- Period Tab Pills -->
+                <div class="flex gap-1 bg-slate-100 p-1 rounded-xl shrink-0">
+                    <button data-period="day"
+                        class="period-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 bg-[#0A4D26] text-white shadow-md">
+                        Today
+                    </button>
+                    <button data-period="month"
+                        class="period-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 text-slate-500 bg-white hover:bg-slate-50">
+                        Month
+                    </button>
+                    <button data-period="year"
+                        class="period-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 text-slate-500 bg-white hover:bg-slate-50">
+                        Year
+                    </button>
+                    <button data-period="all"
+                        class="period-tab text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 text-slate-500 bg-white hover:bg-slate-50">
+                        All
+                    </button>
                 </div>
             </div>
 
             <div id="earningsContainer" class="divide-y divide-slate-100" style="min-height: 220px">
-                <div class="p-5 text-sm text-slate-500">Loading earnings...</div>
+                <div class="flex flex-col items-center justify-center gap-3 py-14 text-slate-400 animate-pulse">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl text-emerald-400"></i>
+                    <p class="text-sm">Loading your earnings…</p>
+                </div>
             </div>
         </section>
 

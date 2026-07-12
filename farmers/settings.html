@@ -92,7 +92,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="earnings.html"
                             class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                             <i class="fa-solid fa-wallet text-base opacity-75"></i>
                             <span>Earnings</span>
@@ -196,13 +196,44 @@
                                             class="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white" />
                                     </div>
 
-                                    <div class="flex items-end">
-                                        <button id="saveBtn" type="submit"
-                                            class="w-full rounded-xl bg-emerald-600 text-white px-4 py-3 font-semibold text-sm hover:bg-emerald-700 transition shadow-sm shadow-emerald-600/20">
-                                            Save Changes
-                                        </button>
+                                </div>
+
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700"><i class="fa-solid fa-building-columns"></i></div>
+                                        <div>
+                                            <p class="text-sm font-bold text-emerald-950">Payout account</p>
+                                            <p class="mt-1 text-xs leading-relaxed text-emerald-800">Add or update the account AgroPlug should use for your withdrawal requests.</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700" for="accountName">Account Name</label>
+                                            <input id="accountName" name="accountName" type="text" autocomplete="name" placeholder="Name on the bank account"
+                                                class="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700" for="bankName">Bank Name</label>
+                                            <input id="bankName" name="bankName" type="text" autocomplete="organization" placeholder="e.g. Access Bank"
+                                                class="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white" />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-slate-700" for="bankCode">Paystack Bank Code</label>
+                                            <input id="bankCode" name="bankCode" type="text" maxlength="10" placeholder="e.g. 058"
+                                                class="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white" />
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="block text-sm font-semibold text-slate-700" for="accountNumber">Account Number</label>
+                                        <input id="accountNumber" name="accountNumber" type="text" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" autocomplete="off" placeholder="10-digit account number"
+                                            class="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-white" />
                                     </div>
                                 </div>
+
+                                <button id="saveBtn" type="submit"
+                                    class="w-full rounded-xl bg-emerald-600 text-white px-4 py-3 font-semibold text-sm hover:bg-emerald-700 transition shadow-sm shadow-emerald-600/20">
+                                    Save Changes
+                                </button>
 
                                 <div id="settingsMessage" class="hidden rounded-xl border px-4 py-3 text-sm"></div>
 

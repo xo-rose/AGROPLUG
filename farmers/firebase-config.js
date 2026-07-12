@@ -36,7 +36,8 @@ auth.onAuthStateChanged(async (user) => {
             "settings.html",
             "orders.html",
             "order.html",
-            "earnings.html"
+            "earnings.html",
+            "withdrawal.html"
         ];
 
         const currentPage =

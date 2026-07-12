@@ -31,6 +31,14 @@ const closeBtn = document.getElementById("closeBtn");
 // Track target routing location globally across modal clicks
 let targetRedirectionUrl = "";
 
+async function isAdmin(userId) {
+    const adminSnapshot = await getDoc(doc(db, "admins", userId));
+    if (adminSnapshot.exists() && adminSnapshot.data().enabled === true) return true;
+
+    const userSnapshot = await getDoc(doc(db, "users", userId));
+    return userSnapshot.exists() && userSnapshot.data().role === "admin";
+}
+
 // Dynamic Popup State Manager
 function showPopup(message, isSuccess = true, redirectUrl = "") {
     if (!overlayText || !modal) {
@@ -82,7 +90,13 @@ if (loginForm) {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // 2. Fetch the profile metadata mapping document from Firestore
+            // Admins may sign in from either the buyer or farmer login page.
+            if (await isAdmin(user.uid)) {
+                window.location.href = "../agroplug-dashboard.html";
+                return;
+            }
+
+            // Fetch the profile metadata mapping document from Firestore.
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
 

@@ -36,6 +36,10 @@
 </style>
 
 <body class="bg-slate-50 min-h-screen text-slate-800 antialiased">
+    <header class="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-[#0A4D26] px-4 py-3 text-white sm:hidden">
+        <a href="dashboard.html" class="font-black text-xl">Agro<span class="text-[#3CD670]">Plug</span></a>
+        <button id="mobileMenuBtn" type="button" aria-label="Open navigation" aria-expanded="false" class="rounded-lg p-2 hover:bg-white/10"><i class="fa-solid fa-bars text-xl"></i></button>
+    </header>
 
     <!-- Sidebar Navigation -->
      <aside id="sidebar"
@@ -99,7 +103,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="earnings.html"
                         class="flex items-center p-3 text-emerald-100/90 hover:bg-emerald-800/40 hover:text-white rounded-xl text-sm gap-3 transition">
                         <i class="fa-solid fa-wallet text-base opacity-75"></i>
                         <span>Earnings</span>
@@ -123,6 +127,7 @@
             </a>
         </div>
     </aside>
+    <div id="sidebarBackdrop" class="fixed inset-0 z-40 hidden bg-black/50 backdrop-blur-sm sm:hidden"></div>
 
     <!-- Main Workspace Viewport -->
     <div class="flex-1 md:pl-64 min-h-screen flex flex-col pt-[72px] md:pt-0">
@@ -164,6 +169,7 @@
     </div>
 
     <script src="order.js"></script>
+    <script src="sidebar.js"></script>
     <script src="/assets/agroplug-chatbot.js"></script>
 </body>
 

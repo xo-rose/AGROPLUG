@@ -65,12 +65,27 @@ if (signupForm) {
         const phoneEl = document.getElementById("phoneNumber") || document.getElementById("phone");
         const passwordEl = document.getElementById("password");
         const roleEl = document.getElementById("role");
+        const accountNameEl = document.getElementById("accountName");
+        const bankNameEl = document.getElementById("bankName");
+        const bankCodeEl = document.getElementById("bankCode");
+        const accountNumberEl = document.getElementById("accountNumber");
 
         const fullName = fullNameEl ? fullNameEl.value.trim() : "User";
         const email = emailEl ? emailEl.value.trim() : "";
         const phone = phoneEl ? phoneEl.value.trim() : "";
         const password = passwordEl ? passwordEl.value : "";
         const role = roleEl?.value === "buyer" ? "buyer" : "farmer";
+        const payoutAccount = {
+            accountName: accountNameEl ? accountNameEl.value.trim() : "",
+            bankName: bankNameEl ? bankNameEl.value.trim() : "",
+            bankCode: bankCodeEl ? bankCodeEl.value.trim() : "",
+            accountNumber: accountNumberEl ? accountNumberEl.value.replace(/\s/g, "") : ""
+        };
+
+        if (role === "farmer" && (!payoutAccount.accountName || !payoutAccount.bankName || !payoutAccount.bankCode || !/^\d{10}$/.test(payoutAccount.accountNumber))) {
+            showPopup("Enter the account name, bank name, Paystack bank code, and a valid 10-digit account number.", false);
+            return;
+        }
 
         let user = null;
 
@@ -120,7 +135,10 @@ if (signupForm) {
                 fullname: fullName,
                 email: email,
                 phone: phone,
-                role: "farmer",
+                // Only regular app roles are ever created from the public form.
+                // Admin access is granted separately by a trusted admin marker.
+                role: role,
+                ...(role === "farmer" ? { payoutAccount } : {}),
                 createdAt: new Date().toISOString()
             });
             

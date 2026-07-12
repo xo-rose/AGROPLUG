@@ -122,13 +122,16 @@ function renderMessages(messages) {
         const isMine = msg.senderId === currentUser.uid;
         const fallbackRole = isMine ? ROLE : "buyer";
         const senderRole = String(msg.senderRole || fallbackRole).toLowerCase();
+        const isSystemMessage = senderRole === "system";
         const isBuyerMessage = senderRole === "buyer";
-        const bubbleClass = isBuyerMessage
+        const bubbleClass = isSystemMessage
+            ? "bg-slate-100 text-slate-700 border border-slate-200"
+            : isBuyerMessage
             ? "bg-blue-600 text-white"
             : "bg-emerald-600 text-white";
-        const metaClass = isBuyerMessage ? "text-blue-100" : "text-emerald-100";
-        const roleLabel = isBuyerMessage ? "Buyer" : "Farmer";
-        const alignClass = isMine ? "justify-end" : "justify-start";
+        const metaClass = isSystemMessage ? "text-slate-500" : isBuyerMessage ? "text-blue-100" : "text-emerald-100";
+        const roleLabel = isSystemMessage ? "AgroPlug logistics" : isBuyerMessage ? "Buyer" : "Farmer";
+        const alignClass = isSystemMessage ? "justify-center" : isMine ? "justify-end" : "justify-start";
 
         html += `
       <div class="flex ${alignClass} mt-3">

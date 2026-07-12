@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroPlug | Withdraw Funds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+    <header class="bg-[#0A4D26] text-white">
+        <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+            <a href="dashboard.html" class="flex items-center gap-2 font-black text-xl">Agro<span class="text-[#3CD670]">Plug</span></a>
+            <a href="earnings.html" class="rounded-lg border border-white/25 px-3 py-2 text-sm font-semibold hover:bg-white/10"><i class="fa-solid fa-wallet mr-1"></i> Earnings</a>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+        <div class="mb-6">
+            <h1 class="text-2xl font-black text-slate-900">Withdraw funds</h1>
+            <p class="mt-1 text-sm text-slate-600">Request payment of your available balance to your saved bank account.</p>
+        </div>
+
+        <section class="mb-5 rounded-2xl bg-[#0A4D26] p-6 text-white shadow-sm">
+            <p class="text-sm font-semibold text-emerald-100">Available to withdraw after charge</p>
+            <p id="availableBalance" class="mt-2 text-4xl font-black">₦0</p>
+            <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <div class="rounded-xl bg-white/10 p-3"><span class="block text-emerald-100 text-xs">Gross paid orders</span><span id="grossAmount" class="font-bold">₦0</span></div>
+                <div class="rounded-xl bg-white/10 p-3"><span class="block text-emerald-100 text-xs">5% platform charge</span><span id="commissionAmount" class="font-bold">₦0</span></div>
+            </div>
+        </section>
+
+        <section id="kycSection" class="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="flex items-start gap-3">
+                <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <h2 class="font-bold text-slate-900">Verify your identity</h2>
+                    <p id="kycDescription" class="mt-1 text-sm text-slate-500">KYC verification is required before you can request a withdrawal. Your details are reviewed by AgroPlug to help prevent fraud.</p>
+                </div>
+            </div>
+            <form id="kycForm" class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="sm:col-span-2">
+                    <label for="kycFullName" class="text-sm font-semibold text-slate-700">Legal full name</label>
+                    <input id="kycFullName" required autocomplete="name" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="As shown on your ID">
+                </div>
+                <div>
+                    <label for="kycPhone" class="text-sm font-semibold text-slate-700">Phone number</label>
+                    <input id="kycPhone" required type="tel" autocomplete="tel" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="e.g. 08012345678">
+                </div>
+                <div>
+                    <label for="kycIdType" class="text-sm font-semibold text-slate-700">Government ID type</label>
+                    <select id="kycIdType" required class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500"><option value="">Select ID type</option><option>National ID (NIN)</option><option>Voter's card</option><option>Driver's licence</option><option>International passport</option></select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="kycAddress" class="text-sm font-semibold text-slate-700">Residential address</label>
+                    <textarea id="kycAddress" required rows="2" autocomplete="street-address" class="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="Your current residential address"></textarea>
+                </div>
+                <div class="sm:col-span-2"><button id="kycSubmitBtn" type="submit" class="w-full rounded-xl bg-slate-900 py-3 font-bold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"><i class="fa-solid fa-paper-plane mr-2"></i>Submit KYC for review</button></div>
+            </form>
+            <p id="kycStatus" class="mt-3 text-sm" role="status"></p>
+        </section>
+
+        <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 class="font-bold text-slate-900">Send withdrawal request</h2>
+            <p class="mt-1 text-sm text-slate-500">Your request is reviewed before any bank transfer is made.</p>
+            <div id="accountDetails" class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Loading your payout account…</div>
+            <form id="withdrawalForm" class="mt-5">
+                <label for="withdrawalAmount" class="text-sm font-semibold text-slate-700">Amount to withdraw</label>
+                <div class="relative mt-1">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">₦</span>
+                    <input id="withdrawalAmount" type="number" min="1" step="0.01" inputmode="decimal" required class="w-full rounded-xl border border-slate-300 py-3 pl-9 pr-4 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500" placeholder="0.00">
+                </div>
+                <button id="withdrawalBtn" type="submit" class="mt-4 w-full rounded-xl bg-emerald-600 py-3 font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"><i class="fa-solid fa-building-columns mr-2"></i>Request withdrawal</button>
+                <p id="formStatus" class="mt-3 text-center text-sm" role="status"></p>
+            </form>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div class="border-b border-slate-100 p-5"><h2 class="font-bold text-slate-900">Withdrawal requests</h2></div>
+            <div id="requestList" class="divide-y divide-slate-100 p-5 text-sm text-slate-500">Loading requests…</div>
+        </section>
+    </main>
+    <script src="withdrawal.js"></script>
+    <script src="/assets/agroplug-chatbot.js"></script>
+</body>
+</html>

@@ -2,25 +2,32 @@
 const footer = document.getElementById(`Footer`)
 const nav = document.getElementById('navbar');
 const links = document.querySelectorAll('.nav-link');
+const LogoText = document.getElementById("LogoText");
 window.addEventListener("scroll", () => {
     if (window.scrollY > 600) {
         // When scrolled: add background shade and darken text
         nav.classList.add("bg-white", "shadow-md");
         nav.classList.remove("bg-white/30", "shadow-md", "backdrop-blur-lg");
 
+        LogoText.classList.remove("text-white");
+        LogoText.classList.add("text-slate-900");
+
         links.forEach(link => {
             link.classList.remove("text-white", "hover:text-emerald-600");
             link.classList.add("text-emerald-600", "hover:text-emerald-500");
         });
-    } else {
+    }  else {
         // Back to original top state
         nav.classList.remove("bg-white");
-        nav.classList.add("bg-black", "shadow-md", "backdrop-blur-lg");
+        nav.classList.add("bg-white/30", "shadow-md", "backdrop-blur-lg");
 
         links.forEach(link => {
             link.classList.add("text-white", "hover:text-emerald-500");
             link.classList.remove("text-emerald-600", "hover:text-emerald-600");
         });
+        LogoText.classList.add("text-white");
+        // LogoText.classList.add("text-slate-800");
+        
     }
 });
 
@@ -213,7 +220,7 @@ const closeBtn = document.getElementById("closeBtn");
 const appQrLink = document.getElementById("appQrLink");
 const appQrCode = document.getElementById("appQrCode");
 
-const appPreviewUrl = new URL("./assets/preview.png", window.location.href).href;
+const appPreviewUrl = new URL("https://ibb.co/zh7xH6p0  ", window.location.href).href;
 if (appQrLink && appQrCode) {
     appQrLink.href = appPreviewUrl;
     appQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(appPreviewUrl)}`;

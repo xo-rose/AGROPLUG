@@ -125,13 +125,16 @@ function renderMessages(messages) {
     const isMine = msg.senderId === currentUser.uid;
     const fallbackRole = isMine ? ROLE : "farmer";
     const senderRole = String(msg.senderRole || fallbackRole).toLowerCase();
+    const isSystemMessage = senderRole === "system";
     const isBuyerMessage = senderRole === "buyer";
-    const bubbleClass = isBuyerMessage
+    const bubbleClass = isSystemMessage
+      ? "bg-slate-100 text-slate-700 border border-slate-200"
+      : isBuyerMessage
       ? "bg-blue-600 text-white"
       : "bg-emerald-600 text-white";
-    const metaClass = isBuyerMessage ? "text-blue-100" : "text-emerald-100";
-    const roleLabel = isBuyerMessage ? "Buyer" : "Farmer";
-    const alignClass = isMine ? "justify-end" : "justify-start";
+    const metaClass = isSystemMessage ? "text-slate-500" : isBuyerMessage ? "text-blue-100" : "text-emerald-100";
+    const roleLabel = isSystemMessage ? "AgroPlug logistics" : isBuyerMessage ? "Buyer" : "Farmer";
+    const alignClass = isSystemMessage ? "justify-center" : isMine ? "justify-end" : "justify-start";
 
     html += `
       <div class="flex ${alignClass} mt-3">
@@ -439,6 +442,24 @@ init();
 
 // Expose for browseProducts.js inline buttons (if used)
 window.__openBuyerChat = openChatWithFarmer;
+
+function setupSidebarMobileMenu() {
+  const menuToggle = document.getElementById("menuToggle");
+  const menuList = document.getElementById("menuList");
+  const toggleIcon = document.getElementById("toggleIcon");
+  const sidebar = document.getElementById("sidebar");
+  if (!menuToggle || !menuList || !toggleIcon || !sidebar) return;
+
+  menuToggle.addEventListener("click", () => {
+    menuList.classList.toggle("hidden");
+    const isOpen = !menuList.classList.contains("hidden");
+    toggleIcon.className = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+    sidebar.classList.toggle("h-screen", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+}
+
+setupSidebarMobileMenu();
 
 // Logout
 (function setupLogout() {
