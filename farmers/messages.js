@@ -135,14 +135,12 @@ function renderMessages(messages) {
 
         html += `
       <div class="flex ${alignClass} mt-3">
-        <div class="px-4 py-2 rounded-xl max-w-[80%] text-sm ${bubbleClass}">
+        <div class="px-2 py-2 rounded-xl max-w-[80%] text-sm ${bubbleClass}">
           <div class="text-[10px] font-semibold uppercase tracking-wide opacity-80 mb-1">
             ${roleLabel}
           </div>
           ${escapeHtml(msg.text)}
-          <div class="text-[10px] opacity-80 mt-1 ${metaClass}">
-            ${escapeHtml(formatDate(msg.createdAt))}
-          </div>
+
         </div>
       </div>
     `;
