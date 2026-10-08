@@ -6,6 +6,7 @@
 const PAYSTACK_PUBLIC_KEY = "pk_test_411590b82445d671e70b557796ab587b9b40f62d";
 const MY_SUBACCOUNT_ID = "ACCT_gdl5amv3xl03utv";
 const ENABLE_PAYSTACK_SUBACCOUNTS = false;
+const secureFunctions = firebase.functions();
 let currentActiveProduct = null; 
 let latestWalletBalance = 0;
 let buyerPremiumActive = false;
@@ -98,9 +99,9 @@ function loadListings() {
                 latestListingDocs = [];
                 container.innerHTML = `
                     <div class="col-span-full bg-white p-8 rounded-2xl shadow text-center">
-                        <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-4"></i>
+                        <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
                         <h3 class="text-xl font-bold">No Products Available</h3>
-                        <p class="text-gray-500 mt-2">Farmers have not uploaded any products yet.</p>
+                        <p class="text-slate-500 mt-2">Farmers have not uploaded any products yet.</p>
                     </div>
                 `;
                 return;
@@ -145,9 +146,9 @@ function renderListings() {
         const selectedGroup = productFilterGroups.find((group) => group.id === activeProductFilter);
         container.innerHTML = `
             <div class="col-span-full bg-white p-8 rounded-2xl shadow text-center">
-                <i class="fa-solid fa-filter-circle-xmark text-5xl text-gray-300 mb-4"></i>
+                <i class="fa-solid fa-filter-circle-xmark text-5xl text-slate-300 mb-4"></i>
                 <h3 class="text-xl font-bold">No ${escapeHtml(selectedGroup?.title || "Products")} Available</h3>
-                <p class="text-gray-500 mt-2">Try another produce section.</p>
+                <p class="text-slate-500 mt-2">Try another produce section.</p>
             </div>
         `;
         return;
@@ -213,7 +214,7 @@ function renderProductCard(doc) {
             <div class="p-4">
                 <div class="flex justify-between items-start gap-3">
                     <h3 class="font-bold text-base leading-snug">${escapeHtml(item.productName || 'Unnamed Product')}</h3>
-                    <span class="${isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded-full text-xs whitespace-nowrap">${isAvailable ? 'Available' : 'Unavailable'}</span>
+                    <span class="${isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'} px-2 py-1 rounded-full text-xs whitespace-nowrap">${isAvailable ? 'Available' : 'Unavailable'}</span>
                 </div>
                 <p class="text-emerald-600 font-bold text-lg mt-1.5">
                     ₦${Number(item.price || 0).toLocaleString()}
@@ -224,7 +225,7 @@ function renderProductCard(doc) {
                     <p><i class="fa-solid fa-location-dot mr-2"></i> ${escapeHtml(item.location || 'N/A')}</p>
                     <p><i class="fa-solid fa-cubes mr-2"></i> Quantity: ${quantity.toLocaleString()} ${escapeHtml(item.unit || '')}</p>
                 </div>
-                <p class="mt-2 text-xs text-gray-500 line-clamp-2">${escapeHtml(item.description || '')}</p>
+                <p class="mt-2 text-xs text-slate-500 line-clamp-2">${escapeHtml(item.description || '')}</p>
                 <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
                     <button onclick="buyProduct('${doc.id}')" ${isAvailable ? '' : 'disabled'} class="w-full ${isAvailable ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-300 cursor-not-allowed'} text-white py-2 rounded-lg transition font-medium">
                         Buy Now
@@ -275,13 +276,10 @@ if (logoutBtn) {
 }
 
 // ==========================================
-// HELPER: GENERATE RANDOM DELIVERY WINDOW
+// Delivery dates are confirmed by dispatch after a secure order is created.
 // ==========================================
 function generateRandomDeliveryDate() {
-    const today = new Date();
-    const randomDaysAhead = Math.floor(Math.random() * (7 - 3 + 1)) + 3; // 3 to 7 days
-    today.setDate(today.getDate() + randomDaysAhead);
-    return today.toISOString().split('T')[0];
+    return "Dispatch will confirm";
 }
 
 function parseMoney(value) {
@@ -378,7 +376,7 @@ function updateFulfillmentStatus() {
 
     if (isDoorstep && !buyerPremiumActive) {
         fulfillmentStatus.textContent = "Doorstep delivery requires an AgroPlug Premium subscription.";
-        fulfillmentStatus.className = "text-xs text-amber-600 mt-2";
+        fulfillmentStatus.className = "text-xs text-slate-600 mt-2";
     } else if (isDoorstep) {
         fulfillmentStatus.textContent = "Premium doorstep delivery will use your delivery address.";
         fulfillmentStatus.className = "text-xs text-emerald-600 mt-2";
@@ -536,194 +534,21 @@ function closeCheckoutModal(clearProduct = true) {
 // ==========================================
 // LAUNCH PAYSTACK INTEGRATION VIA IFRAME
 // ==========================================
-async function ensureOrderConversation(product, user) {
-    if (!product.farmerId) return;
-
-    const conversationId = getConversationId(user.uid, product.farmerId);
-    await db.collection("conversations").doc(conversationId).set({
-        buyerId: user.uid,
-        farmerId: product.farmerId,
-        buyerName: getBuyerDisplayName(user),
-        farmerName: product.farmerName || "Farmer",
-        participants: [user.uid, product.farmerId],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
+function callableErrorMessage(error, fallback) {
+    return error?.message || error?.details || fallback;
 }
 
-async function createPaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, paymentData, fulfillmentDetails) {
-    const productRef = db.collection("listings").doc(product.id);
-    const orderRef = db.collection("orders").doc();
-    const walletRef = db.collection("wallets").doc(user.uid);
-    const userRef = db.collection("users").doc(user.uid);
-    const paymentReference = paymentData.reference || `AGRO_WALLET_${Date.now()}`;
-    const paymentMethod = paymentData.paymentMethod || "bank";
-
-    await db.runTransaction(async (transaction) => {
-        const productSnap = await transaction.get(productRef);
-
-        if (!productSnap.exists) {
-            throw new Error("This product is no longer available.");
-        }
-
-        const liveProduct = productSnap.data();
-        const currentQuantity = Number(liveProduct.quantity || 0);
-
-        if (currentQuantity < quantity) {
-            throw new Error(`Only ${currentQuantity} units are available now.`);
-        }
-
-        if (paymentMethod === "wallet") {
-            const walletSnap = await transaction.get(walletRef);
-            const walletBalance = walletSnap.exists ? Number(walletSnap.data().balance || 0) : 0;
-            let userSnap = null;
-            let availableBalance = walletBalance;
-
-            if (!walletSnap.exists) {
-                userSnap = await transaction.get(userRef);
-                availableBalance = userSnap.exists ? Number(userSnap.data().walletBalance || 0) : 0;
-            }
-
-            if (availableBalance < totalPrice) {
-                throw new Error(`Insufficient wallet balance. You need ${formatNaira(totalPrice)}.`);
-            }
-
-            if (walletSnap.exists) {
-                transaction.set(walletRef, {
-                    buyerId: user.uid,
-                    buyerEmail: user.email || "",
-                    balance: firebase.firestore.FieldValue.increment(-totalPrice),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-            } else {
-                transaction.set(userRef, {
-                    walletBalance: userSnap.exists
-                        ? firebase.firestore.FieldValue.increment(-totalPrice)
-                        : availableBalance - totalPrice,
-                    walletUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-            }
-        }
-
-        // All transaction reads are complete above. Create the order and
-        // reduce stock atomically to prevent overselling.
-        transaction.update(productRef, {
-            quantity: currentQuantity - quantity,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        transaction.set(orderRef, {
-            productId: product.id,
-            productName: product.productName || "",
-            productImageUrl: product.imageUrl || "",
-            farmerId: product.farmerId || "",
-            farmerName: product.farmerName || "",
-            buyerId: user.uid,
-            buyerName: getBuyerDisplayName(user),
-            buyerEmail: user.email || "",
-            quantity,
-            unit: product.unit || product.category || "unit",
-            unitPrice,
-            totalPrice,
-            deliveryDate: assignedDeliveryDate,
-            fulfillmentMethod: fulfillmentDetails.fulfillmentMethod,
-            pickupLocation: fulfillmentDetails.pickupLocation,
-            deliveryAddress: fulfillmentDetails.deliveryAddress,
-            premiumDeliveryRequired: fulfillmentDetails.premiumRequired,
-            paymentReference,
-            paymentMethod,
-            paymentStatus: "paid",
-            orderStatus: "pending",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-    });
-
-    await recordOptionalOrderSideEffects({
-        walletRef,
-        product,
-        user,
+async function savePaidOrder(product, quantity, response, fulfillmentDetails) {
+    const finalizeBankOrder = secureFunctions.httpsCallable("finalizeBankOrder");
+    const result = await finalizeBankOrder({
+        productId: product.id,
         quantity,
-        totalPrice,
-        paymentReference,
-        paymentMethod,
-        orderId: orderRef.id
+        reference: response.reference,
+        fulfillment: fulfillmentDetails
     });
-
-    try {
-        await ensureOrderConversation(product, user);
-    } catch (error) {
-        console.warn("Order chat conversation skipped by Firestore rules:", error);
-    }
-
-    return orderRef.id;
-}
-
-async function recordOptionalOrderSideEffects(details) {
-    const {
-        walletRef,
-        product,
-        user,
-        quantity,
-        totalPrice,
-        paymentReference,
-        paymentMethod,
-        orderId
-    } = details;
-
-    if (paymentMethod === "wallet") {
-        try {
-            await walletRef.collection("transactions").doc(paymentReference).set({
-                type: "purchase",
-                amount: totalPrice,
-                currency: "NGN",
-                status: "success",
-                orderId,
-                productId: product.id,
-                productName: product.productName || "",
-                reference: paymentReference,
-                buyerId: user.uid,
-                farmerId: product.farmerId || "",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        } catch (error) {
-            console.warn("Wallet purchase transaction history skipped by Firestore rules:", error);
-        }
-    }
-
-    if (product.farmerId) {
-        try {
-            await db.collection("notifications").add({
-                type: "order_placed",
-                title: "New order placed",
-                recipientId: product.farmerId,
-                senderId: user.uid,
-                farmerId: product.farmerId,
-                buyerId: user.uid,
-                buyerName: getBuyerDisplayName(user),
-                orderId,
-                productName: product.productName || "",
-                message: `${getBuyerDisplayName(user)} placed an order for ${quantity} ${product.unit || product.category || "unit"} of ${product.productName || "your produce"}.`,
-                read: false,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        } catch (error) {
-            console.warn("Farmer notification skipped by Firestore rules:", error);
-        }
-    }
-}
-
-async function savePaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, response, fulfillmentDetails) {
-    try {
-        await createPaidOrder(product, user, quantity, unitPrice, totalPrice, assignedDeliveryDate, {
-            reference: response.reference,
-            paymentMethod: "bank"
-        }, fulfillmentDetails);
-        currentActiveProduct = null;
-        alert("Payment Successful!\nReference: " + response.reference);
-    } catch (error) {
-        console.error("Firestore Order Save Failure:", error);
-        alert("Payment settled successfully, but the order record failed to register inside the database.");
-    }
+    currentActiveProduct = null;
+    alert(`Payment successful. Your order has been recorded.\nReference: ${response.reference}`);
+    return result.data;
 }
 
 async function executeWalletTransaction(quantity, assignedDeliveryDate, fulfillmentDetails) {
@@ -763,10 +588,13 @@ async function executeWalletTransaction(quantity, assignedDeliveryDate, fulfillm
 
     try {
         const reference = `AGRO_WALLET_ORDER_${Date.now()}`;
-        await createPaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, {
+        const createWalletOrder = secureFunctions.httpsCallable("createWalletOrder");
+        await createWalletOrder({
+            productId: product.id,
+            quantity: finalQuantity,
             reference,
-            paymentMethod: "wallet"
-        }, fulfillmentDetails);
+            fulfillment: fulfillmentDetails
+        });
 
         closeCheckoutModal();
         currentActiveProduct = null;
@@ -776,7 +604,7 @@ async function executeWalletTransaction(quantity, assignedDeliveryDate, fulfillm
         if (error.code === "permission-denied") {
             alert("Firestore rules blocked this wallet checkout. Deploy the updated firestore.rules file, then try again.");
         } else {
-            alert(error.message || "Wallet checkout failed. Please try again.");
+            alert(callableErrorMessage(error, "Wallet checkout failed. Please try again."));
         }
     } finally {
         if (payBtn) {
@@ -866,7 +694,11 @@ function executePaystackTransaction(quantity, assignedDeliveryDate, fulfillmentD
                 premiumDeliveryRequired: fulfillmentDetails.premiumRequired
             },
             onSuccess: function (response) {
-                savePaidOrder(product, user, finalQuantity, unitPrice, totalPrice, assignedDeliveryDate, response, fulfillmentDetails);
+                savePaidOrder(product, finalQuantity, response, fulfillmentDetails)
+                    .catch((error) => {
+                        console.error("Secure order confirmation failed:", error);
+                        alert(callableErrorMessage(error, "Payment was received but the order could not be confirmed. Contact support with your payment reference."));
+                    });
             },
             onCancel: function () {
                 currentActiveProduct = null;

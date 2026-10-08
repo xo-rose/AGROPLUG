@@ -242,7 +242,7 @@ function renderEarningsTable(container, earnings, activePeriod) {
         const label  = e.type === "order_paid" ? "Order Payment" : "Sale";
         const labelColor =
             e.type === "order_paid"
-                ? "bg-blue-50 text-blue-700 border-blue-100"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                 : "bg-emerald-50 text-emerald-700 border-emerald-100";
 
         return `

@@ -127,22 +127,20 @@ function renderMessages(messages) {
         const bubbleClass = isSystemMessage
             ? "bg-slate-100 text-slate-700 border border-slate-200"
             : isBuyerMessage
-            ? "bg-blue-600 text-white"
+            ? "bg-emerald-600 text-white"
             : "bg-emerald-600 text-white";
-        const metaClass = isSystemMessage ? "text-slate-500" : isBuyerMessage ? "text-blue-100" : "text-emerald-100";
+        const metaClass = isSystemMessage ? "text-slate-500" : isBuyerMessage ? "text-emerald-100" : "text-emerald-100";
         const roleLabel = isSystemMessage ? "AgroPlug logistics" : isBuyerMessage ? "Buyer" : "Farmer";
         const alignClass = isSystemMessage ? "justify-center" : isMine ? "justify-end" : "justify-start";
 
         html += `
       <div class="flex ${alignClass} mt-3">
-        <div class="px-4 py-2 rounded-xl max-w-[80%] text-sm ${bubbleClass}">
+        <div class="px-2 py-2 rounded-xl max-w-[80%] text-sm ${bubbleClass}">
           <div class="text-[10px] font-semibold uppercase tracking-wide opacity-80 mb-1">
             ${roleLabel}
           </div>
           ${escapeHtml(msg.text)}
-          <div class="text-[10px] opacity-80 mt-1 ${metaClass}">
-            ${escapeHtml(formatDate(msg.createdAt))}
-          </div>
+
         </div>
       </div>
     `;

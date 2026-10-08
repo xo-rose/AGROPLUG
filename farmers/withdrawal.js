@@ -2,6 +2,7 @@ let currentUser = null;
 let availableBalance = 0;
 let payoutAccount = null;
 let kycStatus = "";
+const secureFunctions = firebase.functions();
 
 const naira = (amount) => `₦${Number(amount || 0).toLocaleString("en-NG", { maximumFractionDigits: 2 })}`;
 const statusEl = document.getElementById("formStatus");
@@ -106,7 +107,7 @@ function renderRequests(docs) {
     list.innerHTML = docs.map(({ id, ...request }) => {
         const when = timestampValue(request.createdAt) ? new Intl.DateTimeFormat("en-NG", { dateStyle: "medium", timeStyle: "short" }).format(new Date(timestampValue(request.createdAt))) : "Just now";
         const state = String(request.status || "pending");
-        return `<div class="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"><div><p class="font-bold text-slate-800">${naira(request.amount)}</p><p class="text-xs text-slate-500">${when}</p></div><span class="rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold capitalize text-amber-700">${escapeHtml(state)}</span></div>`;
+        return `<div class="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"><div><p class="font-bold text-slate-800">${naira(request.amount)}</p><p class="text-xs text-slate-500">${when}</p></div><span class="rounded-full bg-slate-50 px-2 py-1 text-xs font-semibold capitalize text-slate-700">${escapeHtml(state)}</span></div>`;
     }).join("");
 }
 
@@ -125,21 +126,9 @@ document.getElementById("withdrawalForm").addEventListener("submit", async (even
     button.disabled = true;
     setStatus("Submitting your withdrawal request…");
     try {
-        await db.collection("withdrawalRequests").add({
-            farmerId: currentUser.uid,
-            farmerName: currentUser.displayName || currentUser.email || "Farmer",
-            amount,
-            currency: "NGN",
-            status: "pending",
-            payoutAccount: {
-                accountName: payoutAccount.accountName,
-                bankName: payoutAccount.bankName,
-                bankCode: payoutAccount.bankCode,
-                accountNumber: payoutAccount.accountNumber
-            },
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        availableBalance -= amount;
+        const requestWithdrawal = secureFunctions.httpsCallable("requestWithdrawal");
+        const result = await requestWithdrawal({ amount });
+        availableBalance = Number(result.data?.available || 0);
         document.getElementById("availableBalance").textContent = naira(availableBalance);
         document.getElementById("withdrawalAmount").max = String(availableBalance);
         document.getElementById("withdrawalAmount").value = "";

@@ -1,4 +1,5 @@
 const PAYSTACK_PUBLIC_KEY = "pk_test_411590b82445d671e70b557796ab587b9b40f62d";
+const secureFunctions = firebase.functions();
 
 const menuToggle = document.getElementById("menuToggle");
 const menuList = document.getElementById("menuList");
@@ -177,75 +178,10 @@ function listenForWalletBalance(userId) {
     );
 }
 
-async function recordWalletFunding(user, amount, response) {
-    const walletRef = db.collection("wallets").doc(user.uid);
-    const userRef = db.collection("users").doc(user.uid);
-    const transactionRef = walletRef.collection("transactions").doc(response.reference);
-    const fundingRecord = {
-        type: "funding",
-        amount,
-        currency: "NGN",
-        status: "success",
-        paymentStatus: "paid",
-        reference: response.reference,
-        paystackReference: response.reference,
-        buyerId: user.uid,
-        buyerEmail: user.email || "",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    const walletUpdate = {
-        buyerId: user.uid,
-        buyerEmail: user.email || "",
-        balance: firebase.firestore.FieldValue.increment(amount),
-        lastFundingAmount: amount,
-        lastFundingReference: response.reference,
-        lastFundingStatus: "success",
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    const userWalletUpdate = {
-        walletBalance: firebase.firestore.FieldValue.increment(amount),
-        lastFundingAmount: amount,
-        lastFundingReference: response.reference,
-        lastFundingStatus: "success",
-        walletUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    let walletWriteSucceeded = false;
-    let userProfileWriteSucceeded = false;
-    let walletWriteError = null;
-    let userProfileWriteError = null;
-
-    try {
-        await walletRef.set(walletUpdate, { merge: true });
-        walletWriteSucceeded = true;
-    } catch (error) {
-        walletWriteError = error;
-        console.warn("Wallet document update failed:", error);
-    }
-
-    try {
-        await userRef.set(userWalletUpdate, { merge: true });
-        userProfileWriteSucceeded = true;
-    } catch (error) {
-        userProfileWriteError = error;
-        console.warn("User profile wallet update failed:", error);
-    }
-
-    if (!walletWriteSucceeded && !userProfileWriteSucceeded) {
-        throw walletWriteError || userProfileWriteError || new Error("Wallet update failed.");
-    }
-
-    try {
-        await transactionRef.set(fundingRecord);
-    } catch (error) {
-        console.warn("Wallet subcollection transaction record failed:", error);
-    }
-
-    try {
-        await db.collection("walletTransactions").doc(response.reference).set(fundingRecord);
-    } catch (error) {
-        console.warn("Top-level wallet transaction record failed:", error);
-    }
+async function recordWalletFunding(response) {
+    const confirmWalletFunding = secureFunctions.httpsCallable("confirmWalletFunding");
+    const result = await confirmWalletFunding({ reference: response.reference });
+    return result.data;
 }
 
 function startWalletFunding(amount) {
@@ -298,7 +234,7 @@ function startWalletFunding(amount) {
                 try {
                     setWalletStatus("Confirming wallet funding...");
                     setModalMessage("Confirming wallet funding...");
-                    recordWalletFunding(user, amount, response)
+                    recordWalletFunding(response)
                         .then(() => {
                             setWalletStatus(`Wallet funded successfully. Reference: ${response.reference}`, "success");
                             setModalMessage(`Wallet funded successfully. Reference: ${response.reference}`, "success");

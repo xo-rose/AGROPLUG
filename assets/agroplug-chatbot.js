@@ -78,7 +78,7 @@
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
         <button id="agroplugAssistantBtn" type="button"
-            class="fixed bottom-6 right-6 z-[90] bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-105 transition-all duration-300"
+            class="fixed bottom-6 right-6 z-[90] bg-gradient-to-r from-emerald-500 to-emerald-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-105 transition-all duration-300"
             aria-label="Open AgroPlug assistant">
             <i class="fa-solid fa-robot text-2xl" aria-hidden="true"></i>
             <span class="sr-only">Open assistant</span>

@@ -68,13 +68,13 @@
                         container.innerHTML = `
                     <div class="col-span-full bg-white p-8 rounded-2xl shadow text-center">
 
-                        <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-4"></i>
+                        <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
 
                         <h3 class="text-xl font-bold">
                             No Products Found
                         </h3>
 
-                        <p class="text-gray-500 mt-2">
+                        <p class="text-slate-500 mt-2">
                             Upload your first product.
                         </p>
 
@@ -119,7 +119,7 @@
                                     ${item.productName || 'Unnamed Product'}
                                 </h3>
 
-                                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
+                                <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs">
                                     Active
                                 </span>
 
@@ -148,7 +148,7 @@
 
                             </div>
 
-                            <p class="mt-3 text-sm text-gray-500">
+                            <p class="mt-3 text-sm text-slate-500">
                                 ${item.description || ''}
                             </p>
 
