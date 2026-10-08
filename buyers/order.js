@@ -40,14 +40,14 @@ function statusBadgeClass(status) {
     }
 
     if (["in_transit", "shipped"].includes(normalized)) {
-        return "bg-blue-50 text-blue-700 border-blue-100";
+        return "bg-emerald-50 text-emerald-700 border-emerald-100";
     }
 
     if (["cancelled", "failed"].includes(normalized)) {
         return "bg-red-50 text-red-700 border-red-100";
     }
 
-    return "bg-amber-50 text-amber-700 border-amber-100";
+    return "bg-slate-50 text-slate-700 border-slate-100";
 }
 
 function orderIconClass(status) {
@@ -58,10 +58,10 @@ function orderIconClass(status) {
     }
 
     if (["in_transit", "shipped"].includes(normalized)) {
-        return "fa-solid fa-truck-fast text-blue-500";
+        return "fa-solid fa-truck-fast text-emerald-500";
     }
 
-    return "fa-solid fa-box text-amber-500";
+    return "fa-solid fa-box text-slate-500";
 }
 
 function formatDate(value) {

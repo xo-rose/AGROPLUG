@@ -162,7 +162,7 @@
         <!-- AI ASSISTANT BUTTON -->
         <div class="fixed bottom-6 right-6 z-50">
             <button id="assistantBtn"
-                class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
+                class="bg-gradient-to-r from-emerald-500 to-emerald-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 transition-all duration-300">
                 <i class="fa-solid fa-robot text-2xl"></i>
             </button>
         </div>
@@ -429,7 +429,7 @@
                     const status = document.getElementById("uploadStatus");
                     if (status) {
                         status.textContent = `${getImageUploadMessage(error)} Saving a compressed fallback image instead.`;
-                        status.className = "text-xs text-amber-700 mt-2";
+                        status.className = "text-xs text-slate-700 mt-2";
                     }
 
                     return {

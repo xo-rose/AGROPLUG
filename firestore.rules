@@ -32,13 +32,18 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      // Public signup may create only normal marketplace roles. A role cannot
-      // be changed by the user after signup; promote admins in Firebase
-      // Console or through a trusted server.
       allow create: if isOwner(userId)
-        && request.resource.data.role in ['buyer', 'farmer'];
+        && request.resource.data.role in ['buyer', 'farmer']
+        && request.resource.data.keys().hasOnly([
+          'fullname', 'email', 'phone', 'role', 'createdAt', 'payoutAccount'
+        ]);
+      // Wallet balances, subscription flags, and roles are server-managed.
       allow update: if isOwner(userId)
-        && request.resource.data.role == resource.data.role;
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'fullname', 'email', 'phone', 'payoutAccount', 'profilePicUrl',
+          'profilePicProvider', 'updatedAt'
+        ]);
     }
 
     // Admin records are created and managed from a trusted environment (for
@@ -48,32 +53,23 @@ service cloud.firestore {
     }
 
     match /wallets/{userId} {
-      allow read, create, update: if isOwner(userId);
+      allow read: if isOwner(userId) || isAdmin();
 
       match /transactions/{transactionId} {
-        allow read, create: if isOwner(userId);
+        allow read: if isOwner(userId) || isAdmin();
       }
     }
 
     match /walletTransactions/{transactionId} {
-      allow read, create: if signedIn() && request.resource.data.buyerId == request.auth.uid;
+      allow read: if signedIn() && (isAdmin() || resource.data.buyerId == request.auth.uid);
     }
 
     match /listings/{listingId} {
       allow read: if true;
       allow create: if signedIn() && request.resource.data.farmerId == request.auth.uid;
       allow delete: if signedIn() && resource.data.farmerId == request.auth.uid;
-      allow update: if signedIn() && (
-        resource.data.farmerId == request.auth.uid ||
-        (
-          request.auth.uid != resource.data.farmerId &&
-          request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['quantity', 'updatedAt']) &&
-          request.resource.data.quantity is number &&
-          request.resource.data.quantity >= 0 &&
-          request.resource.data.quantity < resource.data.quantity
-        )
-      );
+      // Stock changes are made only by secure Cloud Functions during checkout.
+      allow update: if signedIn() && resource.data.farmerId == request.auth.uid;
     }
 
     // Helper: Admin marker stored in /admins/{uid} { enabled: true }
@@ -85,12 +81,8 @@ service cloud.firestore {
     }
 
     match /orders/{orderId} {
-      allow create: if signedIn() && request.resource.data.buyerId == request.auth.uid;
       allow read: if signedIn()
         && (isAdmin() || resource.data.buyerId == request.auth.uid || resource.data.farmerId == request.auth.uid);
-      // Dispatch details and delivery status are controlled from the
-      // administrator-only logistics board, so neither party can falsely
-      // mark an order as delivered or alter the delivery address.
       allow update: if isAdmin();
     }
 
@@ -104,12 +96,6 @@ service cloud.firestore {
     // Farmers can request a payout to their saved account. An administrator
     // reviews and updates the request before any external transfer is made.
     match /withdrawalRequests/{requestId} {
-      allow create: if signedIn()
-        && request.resource.data.farmerId == request.auth.uid
-        && hasVerifiedKyc()
-        && request.resource.data.amount is number
-        && request.resource.data.amount > 0
-        && request.resource.data.status == 'pending';
       allow read: if signedIn()
         && (isAdmin() || resource.data.farmerId == request.auth.uid);
       allow update: if isAdmin();
@@ -148,10 +134,25 @@ service cloud.firestore {
     }
 
     match /conversations/{conversationId} {
-      // Admin dispatch notices may create or update the buyer/farmer thread.
-      allow create: if isNewConversationParticipant() || isAdmin();
+      allow create: if isAdmin()
+        || (isNewConversationParticipant()
+          && request.resource.data.participants.size() == 2
+          && request.resource.data.keys().hasOnly([
+            'buyerId', 'farmerId', 'buyerName', 'farmerName', 'participants',
+            'createdAt', 'lastMessageAt', 'lastMessagePreview', 'lastSenderId',
+            'unreadCountBuyer', 'unreadCountFarmer'
+          ]));
       allow read: if isConversationParticipant() || isAdmin();
-      allow update, delete: if isConversationParticipant() || isAdmin();
+      allow update: if isAdmin()
+        || (isConversationParticipant()
+          && request.resource.data.participants == resource.data.participants
+          && request.resource.data.buyerId == resource.data.buyerId
+          && request.resource.data.farmerId == resource.data.farmerId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'lastMessageAt', 'lastMessagePreview', 'lastSenderId',
+            'unreadCountBuyer', 'unreadCountFarmer'
+          ]));
+      allow delete: if isAdmin();
 
       match /messages/{messageId} {
         allow read: if signedIn()

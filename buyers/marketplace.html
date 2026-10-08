@@ -144,7 +144,7 @@
                                 class="p-3 bg-white text-slate-600 rounded-xl border border-slate-200/80 hover:bg-slate-50 shadow-sm transition relative">
                                 <i class="fa-regular fa-bell text-sm"></i>
                                 <span id="notificationBadge"
-                                    class="hidden absolute -top-1 -right-1 bg-rose-500 rounded-full min-w-5 h-5 px-1 border-2 border-white flex justify-center items-center text-[10px] text-white font-bold">0</span>
+                                    class="hidden absolute -top-1 -right-1 bg-red-500 rounded-full min-w-5 h-5 px-1 border-2 border-white flex justify-center items-center text-[10px] text-white font-bold">0</span>
                             </button>
                         </div>
                     </div>
@@ -167,26 +167,26 @@
 
                     <div class="bg-white rounded-2xl p-5 flex items-center gap-4 border border-slate-200/60 shadow-sm">
                         <div
-                            class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-cart-shopping text-blue-600 text-lg"></i>
+                            class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-cart-shopping text-emerald-600 text-lg"></i>
                         </div>
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Procured</p>
                             <h2 id="totalProcuredCount" class="text-2xl font-bold text-slate-900 mt-0.5">0 Batches</h2>
-                            <p id="totalProcuredNote" class="text-[11px] text-blue-600 font-medium mt-0.5">Successful
+                            <p id="totalProcuredNote" class="text-[11px] text-emerald-600 font-medium mt-0.5">Successful
                                 orders</p>
                         </div>
                     </div>
 
                     <div class="bg-white rounded-2xl p-5 flex items-center gap-4 border border-slate-200/60 shadow-sm">
                         <div
-                            class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-wallet text-amber-600 text-lg"></i>
+                            class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-wallet text-slate-600 text-lg"></i>
                         </div>
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Wallet Balance</p>
                             <h2 id="walletBalance" class="text-2xl font-bold text-slate-900 mt-0.5">₦0</h2>
-                            <p id="walletBalanceNote" class="text-[11px] text-amber-600 font-medium mt-0.5">Ready for
+                            <p id="walletBalanceNote" class="text-[11px] text-slate-600 font-medium mt-0.5">Ready for
                                 fast checkout</p>
                         </div>
                     </div>
@@ -208,27 +208,27 @@
                             <p class="font-medium text-xs text-slate-700 truncate">Search Yields</p>
                         </button>
                         <button type="button" data-quick-action="track"
-                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-amber-200 hover:bg-amber-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
+                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-slate-200 hover:bg-slate-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
                             <i
-                                class="fa-solid fa-location-dot text-amber-700 text-xl shrink-0 group-hover:scale-110 transition"></i>
+                                class="fa-solid fa-location-dot text-slate-700 text-xl shrink-0 group-hover:scale-110 transition"></i>
                             <p class="font-medium text-xs text-slate-700 truncate">Track Order</p>
                         </button>
                         <button type="button" data-quick-action="fund"
-                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-purple-200 hover:bg-purple-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
+                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-slate-200 hover:bg-slate-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
                             <i
-                                class="fa-solid fa-credit-card text-purple-600 text-xl shrink-0 group-hover:scale-110 transition"></i>
+                                class="fa-solid fa-credit-card text-slate-600 text-xl shrink-0 group-hover:scale-110 transition"></i>
                             <p class="font-medium text-xs text-slate-700 truncate">Fund Wallet</p>
                         </button>
                         <button type="button" data-quick-action="rate"
-                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-yellow-200 hover:bg-yellow-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
+                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
                             <i
-                                class="fa-solid fa-star text-yellow-600 text-xl shrink-0 group-hover:scale-110 transition"></i>
+                                class="fa-solid fa-star text-emerald-600 text-xl shrink-0 group-hover:scale-110 transition"></i>
                             <p class="font-medium text-xs text-slate-700 truncate">Rate Supplier</p>
                         </button>
                         <button type="button" data-quick-action="invoices"
-                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-rose-200 hover:bg-rose-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
+                            class="border border-slate-100 rounded-xl p-3.5 flex items-center gap-3 hover:shadow-md hover:border-red-200 hover:bg-red-50/20 transition duration-200 cursor-pointer bg-slate-50/50 group text-left">
                             <i
-                                class="fa-solid fa-receipt text-rose-500 text-xl shrink-0 group-hover:scale-110 transition"></i>
+                                class="fa-solid fa-receipt text-red-500 text-xl shrink-0 group-hover:scale-110 transition"></i>
                             <p class="font-medium text-xs text-slate-700 truncate">Invoices</p>
                         </button>
                         <button type="button" data-quick-action="help"
@@ -298,7 +298,7 @@
     <!--ASSISTANT-->
     <div class="fixed bottom-6 right-6 z-50 cursor-pointer group">
         <div
-            class="bg-gradient-to-r from-emerald-500 to-green-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-all duration-300">
+            class="bg-gradient-to-r from-emerald-500 to-emerald-600 w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-all duration-300">
             <i class="fa-solid fa-robot text-2xl"></i>
         </div>
     </div>
@@ -435,14 +435,14 @@
             }
 
             if (["in_transit", "shipped"].includes(normalized)) {
-                return "bg-blue-50 text-blue-700 border-blue-100";
+                return "bg-emerald-50 text-emerald-700 border-emerald-100";
             }
 
             if (["cancelled", "failed"].includes(normalized)) {
                 return "bg-red-50 text-red-700 border-red-100";
             }
 
-            return "bg-amber-50 text-amber-700 border-amber-100";
+            return "bg-slate-50 text-slate-700 border-slate-100";
         }
 
         function orderIconClass(status) {
@@ -453,10 +453,10 @@
             }
 
             if (["in_transit", "shipped"].includes(normalized)) {
-                return "fa-solid fa-truck-fast text-blue-500";
+                return "fa-solid fa-truck-fast text-emerald-500";
             }
 
-            return "fa-solid fa-box text-amber-500";
+            return "fa-solid fa-box text-slate-500";
         }
 
         function renderTopListings(snapshot) {
@@ -473,7 +473,7 @@
                 const item = doc.data();
                 const quantity = Number(item.quantity || 0);
                 const unit = item.unit || item.category || "unit";
-                const quantityTone = quantity > 10 ? "text-emerald-600" : "text-rose-600";
+                const quantityTone = quantity > 10 ? "text-emerald-600" : "text-red-600";
                 const quantityText = quantity > 10
                     ? `${quantity.toLocaleString()} ${unit} available`
                     : `Running low: ${quantity.toLocaleString()} ${unit} left`;

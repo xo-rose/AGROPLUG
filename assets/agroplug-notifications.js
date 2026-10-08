@@ -93,7 +93,7 @@
         list.innerHTML = notifications.slice(0, 8).map((notification) => {
             const unreadClass = notification.read ? "bg-white" : "bg-emerald-50/70";
             const iconClass = notification.type === "message"
-                ? "fa-regular fa-comment-dots text-blue-600"
+                ? "fa-regular fa-comment-dots text-emerald-600"
                 : "fa-solid fa-basket-shopping text-emerald-600";
 
             return `
